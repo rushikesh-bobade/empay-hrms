@@ -92,7 +92,7 @@ export default function Landing() {
       </main>
 
       {/* Bottom Features Row */}
-      <section className="max-w-7xl mx-auto px-6 w-full pb-16 z-10 mt-8">
+      <section id="features" className="max-w-7xl mx-auto px-6 w-full pb-16 z-10 mt-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           <div className="bg-white rounded-[1.5rem] p-6 shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
@@ -127,6 +127,34 @@ export default function Landing() {
 
         </div>
       </section>
+
+      {/* About Section */}
+      <section id="about" className="bg-[#f8f9fc] py-20 border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-extrabold text-slate-900 mb-6">About EmPay</h2>
+          <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
+            EmPay was built to eliminate the friction between human resources and complex financial calculations. Our mission is to provide organizations with a seamless, intuitive platform that automatically handles attendance, leaves, and payroll so you can focus on growing your business.
+          </p>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="bg-white py-20 border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-extrabold text-slate-900 mb-6">Get in Touch</h2>
+          <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed mb-8">
+            Have questions about integrating EmPay into your organization? We'd love to hear from you.
+          </p>
+          <a href="mailto:rushikesh.g.bobade@gmail.com" className="inline-flex items-center px-8 py-3 rounded-xl text-base font-bold text-white bg-[#5b4bd4] shadow-xl shadow-[#5b4bd4]/30 hover:bg-[#4a3bc0] transition-transform hover:-translate-y-0.5">
+            Contact Support
+          </a>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 py-8 text-center border-t border-slate-800">
+        <p className="text-sm font-medium text-slate-400">© {new Date().getFullYear()} EmPay HRMS. Created by Rushikesh Bobade. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
