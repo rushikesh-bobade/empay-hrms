@@ -1,0 +1,23 @@
+{
+  "name": "empay-backend",
+  "version": "1.0.0",
+  "description": "EmPay - Smart HRMS Backend",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "seed": "node scripts/seed.js",
+    "migrate": "node src/config/db.js --migrate"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "pdfkit": "^0.15.0",
+    "pg": "^8.13.0"
+  }
+}
