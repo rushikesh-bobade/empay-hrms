@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
 import StatCard from '../../components/shared/StatCard';
-import { CalendarCheck, CalendarOff, Banknote, LogIn, LogOut, Loader2 } from 'lucide-react';
+import { CalendarCheck, CalendarOff, LogIn, LogOut, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
 
@@ -115,20 +115,6 @@ export default function EmployeeDashboard() {
           </div>
         </div>
       </div>
-
-      {/* Last Payslip */}
-      {data?.last_payslip && (
-        <div className="glass-card p-5 fade-in">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1">Last Salary</p>
-              <p className="text-2xl font-bold text-on-surface">₹{parseFloat(data.last_payslip.net_pay).toLocaleString()}</p>
-              <p className="text-xs text-on-surface-variant mt-1">Credited for {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][data.last_payslip.month - 1]} {data.last_payslip.year}</p>
-            </div>
-            <Banknote className="w-8 h-8 text-primary opacity-30" />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

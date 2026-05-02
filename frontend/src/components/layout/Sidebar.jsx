@@ -13,6 +13,7 @@ const roleMenus = {
     { label: 'Attendance', path: '/hr/attendance', icon: CalendarCheck },
     { label: 'Leaves', path: '/hr/leaves', icon: CalendarOff },
     { label: 'Payroll', path: '/payroll/payruns', icon: Banknote },
+    { label: 'Salary Structures', path: '/payroll/salary', icon: DollarSign },
     { label: 'Settings', path: '/admin/settings', icon: Settings },
   ],
   hr_officer: [
@@ -24,6 +25,7 @@ const roleMenus = {
   payroll_officer: [
     { label: 'Dashboard', path: '/payroll/dashboard', icon: LayoutDashboard },
     { label: 'Leave Approvals', path: '/payroll/leaves', icon: CheckSquare },
+    { label: 'Attendance', path: '/hr/attendance', icon: CalendarCheck },
     { label: 'Payruns', path: '/payroll/payruns', icon: Receipt },
     { label: 'Salary Structures', path: '/payroll/salary', icon: DollarSign },
   ],
@@ -31,7 +33,6 @@ const roleMenus = {
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { label: 'My Attendance', path: '/attendance', icon: CalendarCheck },
     { label: 'My Leaves', path: '/leaves', icon: CalendarOff },
-    { label: 'My Payslips', path: '/payslips', icon: FileText },
     { label: 'Directory', path: '/directory', icon: BookUser },
   ],
 };

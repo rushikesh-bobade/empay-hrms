@@ -91,6 +91,9 @@ export default function MyPayslips() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between"><span className="text-on-surface-variant">PF Employee (12%)</span><span className="text-on-surface">₹{parseFloat(slipDetail.pf_employee).toLocaleString()}</span></div>
                   <div className="flex justify-between"><span className="text-on-surface-variant">Professional Tax</span><span className="text-on-surface">₹{parseFloat(slipDetail.professional_tax).toLocaleString()}</span></div>
+                  {parseFloat(slipDetail.unpaid_deduction) > 0 && (
+                    <div className="flex justify-between"><span className="text-on-surface-variant">Loss of Pay (Unpaid Leave)</span><span className="text-on-surface">₹{parseFloat(slipDetail.unpaid_deduction).toLocaleString()}</span></div>
+                  )}
                   <div className="border-t border-white/10 pt-2 mt-2 flex justify-between font-semibold"><span className="text-on-surface">Total Deductions</span><span className="text-danger">₹{parseFloat(slipDetail.total_deductions).toLocaleString()}</span></div>
                 </div>
               </div>
@@ -102,7 +105,7 @@ export default function MyPayslips() {
             </div>
 
             <div className="mt-3 text-center">
-              <p className="text-xs text-on-surface-variant">Working Days: {slipDetail.working_days} · Present: {slipDetail.present_days} · Leave: {slipDetail.leaves_approved}</p>
+              <p className="text-xs text-on-surface-variant">Working Days: {slipDetail.working_days} · Present: {slipDetail.present_days} · Paid Leave: {slipDetail.leaves_approved} · Unpaid Leave: {slipDetail.unpaid_leave_days || 0}</p>
             </div>
           </div>
         </div>

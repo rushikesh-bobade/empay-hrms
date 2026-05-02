@@ -19,6 +19,6 @@ router.get('/monthly-summary', attendanceController.getMonthlySummary);
 router.get('/all', roleGuard(['admin', 'hr_officer', 'payroll_officer']), attendanceController.getAllAttendance);
 
 // GET /api/attendance/today
-router.get('/today', roleGuard(['admin', 'hr_officer']), attendanceController.getTodayAttendance);
+router.get('/today', roleGuard(['admin', 'hr_officer', 'payroll_officer']), attendanceController.getTodayAttendance);
 
 module.exports = router;

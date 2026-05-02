@@ -93,7 +93,8 @@ class PayrollService {
           `SELECT
              COUNT(*) FILTER (WHERE status = 'present') as present_count,
              COUNT(*) FILTER (WHERE status = 'half_day') as half_day_count,
-             COUNT(*) FILTER (WHERE status = 'on_leave') as on_leave_count
+             COUNT(*) FILTER (WHERE status = 'on_leave') as on_leave_count,
+             COUNT(*) FILTER (WHERE status = 'unpaid_leave') as unpaid_leave_count
            FROM attendance
            WHERE employee_id = $1
              AND EXTRACT(MONTH FROM date) = $2
@@ -103,27 +104,29 @@ class PayrollService {
 
         const att = attendance.rows[0];
         const present_days = parseFloat(att.present_count) + (parseFloat(att.half_day_count) * 0.5) + parseFloat(att.on_leave_count);
-        const leaves_approved = parseInt(att.on_leave_count);
+        const leaves_approved = parseInt(att.on_leave_count) + parseInt(att.unpaid_leave_count);
+        const unpaid_leave_days = parseInt(att.unpaid_leave_count);
 
         // Payroll calculation
         const per_day = parseFloat(emp.basic_salary) / working_days;
         const effective_basic = per_day * present_days;
+        const unpaid_deduction = per_day * unpaid_leave_days;
         const hra = (parseFloat(emp.hra_percent) / 100) * effective_basic;
         const special_allowance = parseFloat(emp.special_allowance);
         const gross_salary = effective_basic + hra + special_allowance;
         const pf_employee = 0.12 * effective_basic;
         const pf_employer = 0.12 * effective_basic;
         const professional_tax = gross_salary > 15000 ? 200 : 0;
-        const total_deductions = pf_employee + professional_tax;
+        const total_deductions = pf_employee + professional_tax + unpaid_deduction;
         const net_pay = gross_salary - total_deductions;
 
         await client.query(
           `INSERT INTO payslips (payrun_id, employee_id, working_days, present_days, leaves_approved,
-           basic, hra, special_allowance, gross_salary, pf_employee, pf_employer,
+           unpaid_leave_days, unpaid_deduction, basic, hra, special_allowance, gross_salary, pf_employee, pf_employer,
            professional_tax, total_deductions, net_pay)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,
           [payrunId, emp.employee_id, working_days,
-           present_days.toFixed(2), leaves_approved,
+           present_days.toFixed(2), leaves_approved, unpaid_leave_days, unpaid_deduction.toFixed(2),
            effective_basic.toFixed(2), hra.toFixed(2), special_allowance.toFixed(2),
            gross_salary.toFixed(2), pf_employee.toFixed(2), pf_employer.toFixed(2),
            professional_tax.toFixed(2), total_deductions.toFixed(2), net_pay.toFixed(2)]

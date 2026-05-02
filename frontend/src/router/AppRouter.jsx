@@ -29,7 +29,6 @@ import SalaryStructures from '../pages/payroll/SalaryStructures';
 import EmployeeDashboard from '../pages/employee/EmployeeDashboard';
 import MyAttendance from '../pages/employee/MyAttendance';
 import MyLeaves from '../pages/employee/MyLeaves';
-import MyPayslips from '../pages/employee/MyPayslips';
 import Directory from '../pages/employee/Directory';
 
 // Shared
@@ -82,7 +81,7 @@ export default function AppRouter() {
           {/* HR */}
           <Route path="/hr/dashboard" element={<ProtectedRoute allowedRoles={['hr_officer', 'admin']}><HRDashboard /></ProtectedRoute>} />
           <Route path="/hr/employees" element={<ProtectedRoute allowedRoles={['hr_officer', 'admin']}><Employees /></ProtectedRoute>} />
-          <Route path="/hr/attendance" element={<ProtectedRoute allowedRoles={['hr_officer', 'admin']}><HRAttendance /></ProtectedRoute>} />
+          <Route path="/hr/attendance" element={<ProtectedRoute allowedRoles={['hr_officer', 'admin', 'payroll_officer']}><HRAttendance /></ProtectedRoute>} />
           <Route path="/hr/leaves" element={<ProtectedRoute allowedRoles={['hr_officer', 'admin']}><HRLeaves /></ProtectedRoute>} />
 
           {/* Payroll */}
@@ -92,11 +91,10 @@ export default function AppRouter() {
           <Route path="/payroll/salary" element={<ProtectedRoute allowedRoles={['payroll_officer', 'admin']}><SalaryStructures /></ProtectedRoute>} />
 
           {/* Employee */}
-          <Route path="/dashboard" element={<EmployeeDashboard />} />
-          <Route path="/attendance" element={<MyAttendance />} />
-          <Route path="/leaves" element={<MyLeaves />} />
-          <Route path="/payslips" element={<MyPayslips />} />
-          <Route path="/directory" element={<Directory />} />
+          <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['employee']}><EmployeeDashboard /></ProtectedRoute>} />
+          <Route path="/attendance" element={<ProtectedRoute allowedRoles={['employee']}><MyAttendance /></ProtectedRoute>} />
+          <Route path="/leaves" element={<ProtectedRoute allowedRoles={['employee']}><MyLeaves /></ProtectedRoute>} />
+          <Route path="/directory" element={<ProtectedRoute allowedRoles={['employee']}><Directory /></ProtectedRoute>} />
 
           {/* Profile — all roles */}
           <Route path="/profile" element={<Profile />} />

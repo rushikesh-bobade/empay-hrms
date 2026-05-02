@@ -51,6 +51,9 @@ class UsersService {
     if (currentUser.role === 'hr_officer' && user.role !== 'employee' && currentUser.id !== id) {
       throw { status: 403, message: 'HR officers can only edit employee profiles' };
     }
+    if (currentUser.role === 'payroll_officer' && currentUser.id !== id) {
+      throw { status: 403, message: 'Payroll officers cannot modify employee data' };
+    }
 
     const fields = ['full_name', 'department', 'designation', 'phone', 'profile_pic'];
     // Only admin can change role

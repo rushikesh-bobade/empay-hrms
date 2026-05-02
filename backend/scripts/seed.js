@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { pool, initTables } = require('../src/config/db');
+const { pool, createTables } = require('../src/config/db');
 const bcrypt = require('bcrypt');
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 10;
@@ -16,9 +16,10 @@ const users = [
 ];
 
 const leaveTypesData = [
-  { name: "Casual Leave", description: "Personal errands and casual absences", max_days_per_year: 12 },
-  { name: "Sick Leave", description: "Medical illness or health reasons", max_days_per_year: 6 },
-  { name: "Earned Leave", description: "Planned vacation or earned rest days", max_days_per_year: 15 },
+  { name: "Casual Leave", description: "Personal errands and casual absences", max_days_per_year: 12, is_paid: true },
+  { name: "Sick Leave", description: "Medical illness or health reasons", max_days_per_year: 6, is_paid: true },
+  { name: "Earned Leave", description: "Planned vacation or earned rest days", max_days_per_year: 15, is_paid: true },
+  { name: "Unpaid Leave", description: "Time-off without pay", max_days_per_year: 30, is_paid: false },
 ];
 
 const salaryData = [
@@ -44,7 +45,7 @@ async function seed() {
     console.log('🌱 Starting seed...');
     
     // Init tables
-    await initTables();
+    await createTables();
     
     // Clear existing data in order
     await client.query('DELETE FROM payslips');
@@ -74,8 +75,8 @@ async function seed() {
     const leaveTypeMap = {};
     for (const lt of leaveTypesData) {
       const result = await client.query(
-        `INSERT INTO leave_types (name, description, max_days_per_year) VALUES ($1, $2, $3) RETURNING *`,
-        [lt.name, lt.description, lt.max_days_per_year]
+        `INSERT INTO leave_types (name, description, max_days_per_year, is_paid) VALUES ($1, $2, $3, $4) RETURNING *`,
+        [lt.name, lt.description, lt.max_days_per_year, lt.is_paid]
       );
       leaveTypeMap[lt.name] = result.rows[0];
     }

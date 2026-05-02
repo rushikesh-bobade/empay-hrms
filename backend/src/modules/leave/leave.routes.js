@@ -19,7 +19,7 @@ router.post('/allocation', roleGuard(['admin', 'hr_officer']), leaveController.u
 router.post('/request', leaveController.createRequest);
 router.get('/requests/my', leaveController.getMyRequests);
 router.get('/requests/all', roleGuard(['admin', 'hr_officer', 'payroll_officer']), leaveController.getAllRequests);
-router.patch('/requests/:id/approve', roleGuard(['admin', 'payroll_officer']), leaveController.approveRequest);
-router.patch('/requests/:id/reject', roleGuard(['admin', 'payroll_officer']), leaveController.rejectRequest);
+router.patch('/requests/:id/approve', roleGuard(['payroll_officer']), leaveController.approveRequest);
+router.patch('/requests/:id/reject', roleGuard(['payroll_officer']), leaveController.rejectRequest);
 
 module.exports = router;

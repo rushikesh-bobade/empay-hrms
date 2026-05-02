@@ -7,7 +7,7 @@ const roleGuard = require('../../middleware/roleGuard');
 router.use(authMiddleware);
 
 // GET /api/users
-router.get('/', roleGuard(['admin', 'hr_officer', 'payroll_officer']), usersController.getAll);
+router.get('/', roleGuard(['admin', 'hr_officer', 'payroll_officer', 'employee']), usersController.getAll);
 
 // GET /api/users/:id
 router.get('/:id', usersController.getById);

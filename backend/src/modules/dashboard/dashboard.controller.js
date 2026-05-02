@@ -124,14 +124,7 @@ const getEmployeeDashboard = async (req, res) => {
       WHERE la.employee_id = $1 AND la.year = $2
     `, [employeeId, currentYear]);
 
-    // Last payslip
-    const lastPayslip = await pool.query(`
-      SELECT p.month, p.year, ps.gross_salary, ps.net_pay
-      FROM payslips ps
-      JOIN payruns p ON ps.payrun_id = p.id
-      WHERE ps.employee_id = $1
-      ORDER BY p.year DESC, p.month DESC LIMIT 1
-    `, [employeeId]);
+
 
     // Recent attendance (last 7 days)
     const recentAtt = await pool.query(`
@@ -152,7 +145,6 @@ const getEmployeeDashboard = async (req, res) => {
       data: {
         attendance_this_month: attSummary.rows[0],
         leave_balance: leaveBalance.rows,
-        last_payslip: lastPayslip.rows[0] || null,
         recent_attendance: recentAtt.rows,
         today_attendance: todayAtt.rows[0] || null,
       },

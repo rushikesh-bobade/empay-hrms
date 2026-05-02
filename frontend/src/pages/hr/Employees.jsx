@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import RoleBadge from '../../components/shared/RoleBadge';
-import { Search, X, Loader2 } from 'lucide-react';
+import { Search, X, Loader2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Employees() {
@@ -11,6 +11,8 @@ export default function Employees() {
   const [search, setSearch] = useState('');
   const [editUser, setEditUser] = useState(null);
   const [form, setForm] = useState({});
+  const [showAdd, setShowAdd] = useState(false);
+  const [addForm, setAddForm] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
   const fetchEmployees = async () => {
@@ -40,14 +42,32 @@ export default function Employees() {
     setSubmitting(false);
   };
 
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await api.post('/auth/register', { ...addForm, role: 'employee' });
+      toast.success('Employee created successfully');
+      setShowAdd(false);
+      setAddForm({});
+      fetchEmployees();
+    } catch (err) { toast.error(err.response?.data?.message || 'Failed to create employee'); }
+    setSubmitting(false);
+  };
+
   const getInitials = (name) => name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
 
   return (
     <div className="space-y-6">
       <PageHeader title="Employees" subtitle="View and manage all employees." />
-      <div className="relative w-72">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-outline" />
-        <input type="text" placeholder="Search employees..." value={search} onChange={e => setSearch(e.target.value)} className="input-glass w-full pl-10 pr-4 py-2 text-sm rounded-xl" />
+      <div className="flex items-center justify-between">
+        <div className="relative w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-outline" />
+          <input type="text" placeholder="Search employees..." value={search} onChange={e => setSearch(e.target.value)} className="input-glass w-full pl-10 pr-4 py-2 text-sm rounded-xl" />
+        </div>
+        <button onClick={() => setShowAdd(true)} className="btn-glow flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg,#4d8eff,#571bc1)' }}>
+          <Plus className="w-4 h-4" /> Add Employee
+        </button>
       </div>
 
       <div className="glass-card overflow-hidden fade-in">
@@ -90,6 +110,28 @@ export default function Employees() {
               ))}
               <button type="submit" disabled={submitting} className="btn-glow w-full py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50" style={{background:'linear-gradient(135deg,#4d8eff,#571bc1)'}}>
                 {submitting ? <Loader2 className="w-4 h-4 animate-spin mx-auto"/> : 'Save Changes'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showAdd && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAdd(false)}>
+          <div className="glass-card-strong w-full max-w-md p-6 fade-in" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold text-on-surface">Add New Employee</h2>
+              <button onClick={() => setShowAdd(false)} className="p-1.5 rounded-lg hover:bg-white/5"><X className="w-4 h-4 text-on-surface-variant" /></button>
+            </div>
+            <form onSubmit={handleAdd} className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
+              {['full_name', 'email', 'password', 'department', 'designation', 'phone'].map(f => (
+                <div key={f}>
+                  <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">{f.replace('_', ' ')}</label>
+                  <input type={f === 'password' ? 'password' : f === 'email' ? 'email' : 'text'} required value={addForm[f] || ''} onChange={e => setAddForm(p => ({ ...p, [f]: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" />
+                </div>
+              ))}
+              <button type="submit" disabled={submitting} className="btn-glow w-full py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 mt-4" style={{ background: 'linear-gradient(135deg,#4d8eff,#571bc1)' }}>
+                {submitting ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Create Employee'}
               </button>
             </form>
           </div>

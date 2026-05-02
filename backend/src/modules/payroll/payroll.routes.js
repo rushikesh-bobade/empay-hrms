@@ -12,7 +12,7 @@ router.get('/salary-structure', roleGuard(['admin', 'payroll_officer']), payroll
 router.get('/salary-structure/:employee_id', roleGuard(['admin', 'payroll_officer']), payrollController.getSalaryStructure);
 
 // Payruns
-router.post('/payrun/generate', roleGuard(['admin', 'payroll_officer']), payrollController.generatePayrun);
+router.post('/payrun/generate', roleGuard(['payroll_officer']), payrollController.generatePayrun);
 router.get('/payruns', roleGuard(['admin', 'payroll_officer']), payrollController.getPayruns);
 router.get('/payruns/:id/payslips', roleGuard(['admin', 'payroll_officer']), payrollController.getPayrunPayslips);
 

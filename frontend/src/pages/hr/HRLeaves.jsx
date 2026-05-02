@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
-import { X, Loader2, Plus } from 'lucide-react';
+import { X, Loader2, Plus, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function HRLeaves() {
@@ -35,6 +35,16 @@ export default function HRLeaves() {
       api.get(`/leave/allocation/${selectedEmp}`).then(res => setAllocations(res.data.data)).catch(() => {});
     }
   }, [selectedEmp]);
+
+  const handleAction = async (id, action) => {
+    try {
+      await api.patch(`/leave/requests/${id}/${action}`);
+      toast.success(`Leave ${action}d successfully`);
+      // Refresh requests
+      api.get('/leave/requests/all', { params: statusFilter ? { status: statusFilter } : {} })
+         .then(reqRes => setRequests(reqRes.data.data));
+    } catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
+  };
 
   const handleAllocSubmit = async (e) => {
     e.preventDefault();

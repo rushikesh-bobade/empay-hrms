@@ -152,7 +152,10 @@ class LeaveService {
 
       // Get the request
       const reqResult = await client.query(
-        'SELECT * FROM leave_requests WHERE id = $1',
+        `SELECT lr.*, lt.is_paid 
+         FROM leave_requests lr
+         JOIN leave_types lt ON lr.leave_type_id = lt.id
+         WHERE lr.id = $1`,
         [requestId]
       );
       if (reqResult.rows.length === 0) {
@@ -179,18 +182,19 @@ class LeaveService {
         [request.total_days, request.employee_id, request.leave_type_id, currentYear]
       );
 
-      // Create attendance records with 'on_leave' status for each working day
+      // Create attendance records with 'on_leave' or 'unpaid_leave' status for each working day
       const current = new Date(request.start_date);
       const endDate = new Date(request.end_date);
+      const attendanceStatus = request.is_paid ? 'on_leave' : 'unpaid_leave';
       while (current <= endDate) {
         const day = current.getDay();
         if (day !== 0 && day !== 6) {
           const dateStr = current.toISOString().split('T')[0];
           await client.query(
             `INSERT INTO attendance (employee_id, date, status)
-             VALUES ($1, $2, 'on_leave')
-             ON CONFLICT (employee_id, date) DO UPDATE SET status = 'on_leave'`,
-            [request.employee_id, dateStr]
+             VALUES ($1, $2, $3)
+             ON CONFLICT (employee_id, date) DO UPDATE SET status = $3`,
+            [request.employee_id, dateStr, attendanceStatus]
           );
         }
         current.setDate(current.getDate() + 1);

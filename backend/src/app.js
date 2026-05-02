@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { initTables } = require('./config/db');
+const { createTables } = require('./config/db');
 
 // Import routes
 const authRoutes = require('./modules/auth/auth.routes');
@@ -49,7 +49,7 @@ app.use((err, req, res, next) => {
 // Start server
 const startServer = async () => {
   try {
-    await initTables();
+    await createTables();
     app.listen(PORT, () => {
       console.log(`🚀 EmPay API running on http://localhost:${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
