@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import { X, Loader2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import { useSocket } from '../../context/SocketContext';
+import SearchableSelect from '../../components/shared/SearchableSelect';
 
 export default function HRLeaves() {
   const [tab, setTab] = useState('requests');
@@ -16,8 +18,9 @@ export default function HRLeaves() {
   const [showAllocDialog, setShowAllocDialog] = useState(false);
   const [allocForm, setAllocForm] = useState({ employee_id: '', leave_type_id: '', allocated_days: '', year: new Date().getFullYear() });
   const [submitting, setSubmitting] = useState(false);
+  const { socket } = useSocket();
 
-  useEffect(() => {
+  const fetchRequests = useCallback(() => {
     Promise.all([
       api.get('/leave/requests/all', { params: statusFilter ? { status: statusFilter } : {} }),
       api.get('/users'),
@@ -31,6 +34,17 @@ export default function HRLeaves() {
   }, [statusFilter]);
 
   useEffect(() => {
+    fetchRequests();
+  }, [fetchRequests]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleUpdate = () => fetchRequests();
+    socket.on('leave_updated', handleUpdate);
+    return () => socket.off('leave_updated', handleUpdate);
+  }, [socket, fetchRequests]);
+
+  useEffect(() => {
     if (selectedEmp) {
       api.get(`/leave/allocation/${selectedEmp}`).then(res => setAllocations(res.data.data)).catch(() => {});
     }
@@ -38,6 +52,10 @@ export default function HRLeaves() {
 
   const handleAllocSubmit = async (e) => {
     e.preventDefault();
+    if (!allocForm.employee_id) {
+      toast.error('Please select an employee');
+      return;
+    }
     setSubmitting(true);
     try {
       await api.post('/leave/allocation', allocForm);
@@ -73,7 +91,7 @@ export default function HRLeaves() {
               </button>
             ))}
           </div>
-          <div className="glass-card overflow-hidden fade-in">
+          <div className="glass-panel rounded-2xl overflow-hidden fade-in">
             <table className="w-full glass-table">
               <thead><tr><th>Employee</th><th>Leave Type</th><th>Start</th><th>End</th><th>Days</th><th>Reason</th><th>Status</th><th>Applied On</th></tr></thead>
               <tbody>
@@ -99,10 +117,14 @@ export default function HRLeaves() {
       {tab === 'allocation' && (
         <>
           <div className="flex items-center gap-4">
-            <select value={selectedEmp} onChange={e => setSelectedEmp(e.target.value)} className="input-glass px-3 py-2 text-sm rounded-xl min-w-[250px]">
-              <option value="">Select Employee</option>
-              {employees.map(e => <option key={e.id} value={e.id}>{e.full_name} ({e.email})</option>)}
-            </select>
+            <div className="w-64">
+              <SearchableSelect 
+                options={employees.map(e => ({ value: e.id, label: `${e.full_name} (${e.email})` }))}
+                value={selectedEmp}
+                onChange={setSelectedEmp}
+                placeholder="Select Employee"
+              />
+            </div>
             <button onClick={() => { setAllocForm({ employee_id: '', leave_type_id: '', allocated_days: '', year: new Date().getFullYear() }); setShowAllocDialog(true); }}
               className="btn-glow flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg,#4d8eff,#571bc1)' }}>
               <Plus className="w-4 h-4" /> Allocate Leave
@@ -110,7 +132,7 @@ export default function HRLeaves() {
           </div>
 
           {selectedEmp && (
-            <div className="glass-card overflow-hidden fade-in">
+            <div className="glass-panel rounded-2xl overflow-hidden fade-in">
               <table className="w-full glass-table">
                 <thead><tr><th>Leave Type</th><th>Allocated</th><th>Used</th><th>Remaining</th></tr></thead>
                 <tbody>
@@ -131,7 +153,7 @@ export default function HRLeaves() {
 
       {showAllocDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAllocDialog(false)}>
-          <div className="glass-card-strong w-full max-w-md p-6 fade-in" onClick={e => e.stopPropagation()}>
+          <div className="glass-panel-elevated w-full max-w-md p-6 fade-in" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-bold text-on-surface">Allocate Leave</h2>
               <button onClick={() => setShowAllocDialog(false)} className="p-1.5 rounded-lg hover:bg-white/5"><X className="w-4 h-4 text-on-surface-variant" /></button>
@@ -139,10 +161,12 @@ export default function HRLeaves() {
             <form onSubmit={handleAllocSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Employee</label>
-                <select value={allocForm.employee_id} onChange={e => setAllocForm(f => ({ ...f, employee_id: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required>
-                  <option value="">Select</option>
-                  {employees.map(e => <option key={e.id} value={e.id}>{e.full_name}</option>)}
-                </select>
+                <SearchableSelect 
+                  options={employees.map(e => ({ value: e.id, label: e.full_name }))}
+                  value={allocForm.employee_id}
+                  onChange={val => setAllocForm(f => ({ ...f, employee_id: val }))}
+                  placeholder="Select Employee"
+                />
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Leave Type</label>

@@ -1,21 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import { Check, X as XIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { useSocket } from '../../context/SocketContext';
 
 export default function LeaveApprovals() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
+  const { socket } = useSocket();
 
-  const fetchRequests = () => {
+  const fetchRequests = useCallback(() => {
     setLoading(true);
     const params = statusFilter ? { status: statusFilter } : {};
     api.get('/leave/requests/all', { params }).then(res => { setRequests(res.data.data); setLoading(false); }).catch(() => setLoading(false));
-  };
+  }, [statusFilter]);
 
-  useEffect(() => { fetchRequests(); }, [statusFilter]);
+  useEffect(() => { fetchRequests(); }, [fetchRequests]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleUpdate = () => fetchRequests();
+    socket.on('leave_updated', handleUpdate);
+    return () => socket.off('leave_updated', handleUpdate);
+  }, [socket, fetchRequests]);
 
   const handleAction = async (id, action) => {
     try {
@@ -37,7 +46,7 @@ export default function LeaveApprovals() {
         ))}
       </div>
 
-      <div className="glass-card overflow-hidden fade-in">
+      <div className="glass-panel rounded-2xl overflow-hidden fade-in">
         <table className="w-full glass-table">
           <thead><tr><th>Employee</th><th>Department</th><th>Leave Type</th><th>Start</th><th>End</th><th>Days</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody>

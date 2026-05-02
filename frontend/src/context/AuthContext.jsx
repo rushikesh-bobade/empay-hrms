@@ -54,9 +54,12 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const updateUser = useCallback((data) => {
-    setUser((prev) => ({ ...prev, ...data }));
-    localStorage.setItem('empay_user', JSON.stringify({ ...user, ...data }));
-  }, [user]);
+    setUser((prev) => {
+      const updated = { ...prev, ...data };
+      localStorage.setItem('empay_user', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, token, isAuthenticated, isLoading, login, logout, updateUser }}>

@@ -1,8 +1,15 @@
 const attendanceService = require('./attendance.service');
+const { getIo } = require('../../config/socket');
 
 const markAttendance = async (req, res) => {
   try {
     const data = await attendanceService.markAttendance(req.user.id);
+    // Broadcast real-time event to all connected clients
+    try {
+      getIo().emit('attendance_updated', { employee_id: req.user.id, ...data });
+    } catch (e) {
+      console.error('Socket emit error:', e);
+    }
     res.json({ success: true, message: `Successfully ${data.action === 'checked_in' ? 'checked in' : 'checked out'}`, data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message || 'Internal server error' });

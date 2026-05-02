@@ -1,8 +1,11 @@
 const payrollService = require('./payroll.service');
+const { getIo } = require('../../config/socket');
 
 const upsertSalaryStructure = async (req, res) => {
   try {
     const data = await payrollService.upsertSalaryStructure(req.body);
+    const io = getIo();
+    if (io) io.emit('salary_updated', data);
     res.json({ success: true, message: 'Salary structure saved', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });
@@ -34,6 +37,8 @@ const generatePayrun = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Month and year are required' });
     }
     const data = await payrollService.generatePayrun(parseInt(month), parseInt(year), req.user.id);
+    const io = getIo();
+    if (io) io.emit('payrun_generated', data);
     res.json({ success: true, message: 'Payrun generated successfully', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });

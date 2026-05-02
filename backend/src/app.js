@@ -1,7 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { initTables } = require('./config/db');
+const path = require('path');
+const http = require('http');
+const { initTables, pool } = require('./config/db');
+const { initSocket } = require('./config/socket');
 
 // Import routes
 const authRoutes = require('./modules/auth/auth.routes');
@@ -12,7 +15,11 @@ const payrollRoutes = require('./modules/payroll/payroll.routes');
 const dashboardRoutes = require('./modules/dashboard/dashboard.routes');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
+
+// Initialize WebSockets
+initSocket(server);
 
 // Middleware
 app.use(cors({
@@ -22,6 +29,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
@@ -30,9 +40,35 @@ app.use('/api/leave', leaveRoutes);
 app.use('/api/payroll', payrollRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ success: true, message: 'EmPay API is running', timestamp: new Date().toISOString() });
+// Enhanced health check with DB pool stats
+app.get('/api/health', async (req, res) => {
+  try {
+    const dbResult = await pool.query('SELECT NOW() as server_time, current_database() as db_name, version() as db_version');
+    const dbInfo = dbResult.rows[0];
+    res.json({
+      success: true,
+      message: 'EmPay API is running',
+      timestamp: new Date().toISOString(),
+      database: {
+        connected: true,
+        name: dbInfo.db_name,
+        server_time: dbInfo.server_time,
+        version: dbInfo.db_version.split(' ').slice(0, 2).join(' '),
+        pool: {
+          total: pool.totalCount,
+          idle: pool.idleCount,
+          waiting: pool.waitingCount,
+        },
+      },
+    });
+  } catch (error) {
+    res.json({
+      success: true,
+      message: 'EmPay API is running',
+      timestamp: new Date().toISOString(),
+      database: { connected: false, error: error.message },
+    });
+  }
 });
 
 // 404 handler
@@ -50,7 +86,7 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     await initTables();
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`🚀 EmPay API running on http://localhost:${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
     });

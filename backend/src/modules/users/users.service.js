@@ -1,4 +1,7 @@
 const { pool } = require('../../config/db');
+const bcrypt = require('bcrypt');
+
+const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 10;
 
 class UsersService {
   async getAll(filters = {}) {
@@ -107,6 +110,78 @@ class UsersService {
       throw { status: 404, message: 'User not found' };
     }
     return result.rows[0];
+  }
+
+  async changePassword(id, oldPassword, newPassword) {
+    // Get user with password_hash
+    const result = await pool.query('SELECT id, password_hash FROM users WHERE id = $1', [id]);
+    if (result.rows.length === 0) {
+      throw { status: 404, message: 'User not found' };
+    }
+
+    const user = result.rows[0];
+    const isValid = await bcrypt.compare(oldPassword, user.password_hash);
+    if (!isValid) {
+      throw { status: 400, message: 'Current password is incorrect' };
+    }
+
+    const newHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+    await pool.query('UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2', [newHash, id]);
+    return true;
+  }
+
+  async updateProfilePic(id, filePath) {
+    const result = await pool.query(
+      `UPDATE users SET profile_pic = $1, updated_at = NOW() WHERE id = $2
+       RETURNING id, full_name, email, role, department, designation, phone, profile_pic, date_joined, is_active`,
+      [filePath, id]
+    );
+    if (result.rows.length === 0) {
+      throw { status: 404, message: 'User not found' };
+    }
+    return result.rows[0];
+  }
+
+  async getDirectory(search) {
+    let query = `SELECT id, full_name, email, role, department, designation, phone, profile_pic
+                 FROM users WHERE is_active = true`;
+    const params = [];
+    if (search) {
+      query += ` AND (full_name ILIKE $1 OR email ILIKE $1 OR department ILIKE $1)`;
+      params.push(`%${search}%`);
+    }
+    query += ' ORDER BY full_name ASC';
+    const result = await pool.query(query, params);
+    return result.rows;
+  }
+
+  async getMessages(userId1, userId2, limit = 50, offset = 0) {
+    const result = await pool.query(
+      `SELECT m.id, m.sender_id, m.receiver_id, m.text, m.is_read, m.created_at
+       FROM messages m
+       WHERE (m.sender_id = $1 AND m.receiver_id = $2)
+          OR (m.sender_id = $2 AND m.receiver_id = $1)
+       ORDER BY m.created_at ASC
+       LIMIT $3 OFFSET $4`,
+      [userId1, userId2, limit, offset]
+    );
+    return result.rows;
+  }
+
+  async sendMessage(senderId, receiverId, text) {
+    const result = await pool.query(
+      `INSERT INTO messages (sender_id, receiver_id, text)
+       VALUES ($1, $2, $3) RETURNING *`,
+      [senderId, receiverId, text]
+    );
+    return result.rows[0];
+  }
+
+  async markMessagesRead(userId, senderId) {
+    await pool.query(
+      `UPDATE messages SET is_read = true WHERE receiver_id = $1 AND sender_id = $2 AND is_read = false`,
+      [userId, senderId]
+    );
   }
 }
 

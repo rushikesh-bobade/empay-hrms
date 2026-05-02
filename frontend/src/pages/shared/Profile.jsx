@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
@@ -6,12 +6,16 @@ import RoleBadge from '../../components/shared/RoleBadge';
 import { Loader2, Camera } from 'lucide-react';
 import { toast } from 'sonner';
 
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
+
 export default function Profile() {
   const { user, updateUser } = useAuth();
   const [form, setForm] = useState({
     full_name: user?.full_name || '', phone: user?.phone || '', department: user?.department || '', designation: user?.designation || '',
   });
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleSave = async (e) => {
     e.preventDefault(); setSaving(true);
@@ -23,7 +27,32 @@ export default function Profile() {
     setSaving(false);
   };
 
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      return toast.error('Image must be under 5MB');
+    }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('avatar', file);
+      const res = await api.post(`/users/${user.id}/avatar`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      updateUser({ profile_pic: res.data.data.profile_pic });
+      toast.success('Profile picture updated');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Upload failed');
+    }
+    setUploading(false);
+  };
+
   const getInitials = (name) => name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
+  const profilePicUrl = user?.profile_pic ? `${SERVER_URL}${user.profile_pic}` : null;
 
   return (
     <div className="space-y-6">
@@ -31,14 +60,23 @@ export default function Profile() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Card */}
-        <div className="glass-card p-6 flex flex-col items-center text-center fade-in">
+        <div className="glass-panel rounded-2xl p-6 flex flex-col items-center text-center fade-in">
           <div className="relative">
-            <div className="w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold"
-              style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
-              {getInitials(user?.full_name)}
-            </div>
-            <button className="absolute bottom-0 right-0 p-2 rounded-full" style={{ background: 'rgba(77,142,255,0.3)', border: '1px solid rgba(77,142,255,0.5)' }}>
-              <Camera className="w-3.5 h-3.5 text-primary" />
+            {profilePicUrl ? (
+              <img src={profilePicUrl} alt={user?.full_name} className="w-24 h-24 rounded-full object-cover border-2 border-white/20" />
+            ) : (
+              <div className="w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold"
+                style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
+                {getInitials(user?.full_name)}
+              </div>
+            )}
+            <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="absolute bottom-0 right-0 p-2 rounded-full transition-all hover:scale-110"
+              style={{ background: 'rgba(77,142,255,0.3)', border: '1px solid rgba(77,142,255,0.5)' }}>
+              {uploading ? <Loader2 className="w-3.5 h-3.5 text-primary animate-spin" /> : <Camera className="w-3.5 h-3.5 text-primary" />}
             </button>
           </div>
           <h2 className="text-lg font-bold text-on-surface mt-4">{user?.full_name}</h2>
@@ -52,7 +90,7 @@ export default function Profile() {
         </div>
 
         {/* Edit Form */}
-        <div className="lg:col-span-2 glass-card p-6 fade-in">
+        <div className="lg:col-span-2 glass-panel rounded-2xl p-6 fade-in">
           <h3 className="text-lg font-semibold text-on-surface mb-5">Update Information</h3>
           <form onSubmit={handleSave} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">

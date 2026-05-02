@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import AppLayout from './components/layout/AppLayout';
 import Landing from './pages/public/Landing';
 import Login from './pages/auth/Login';
@@ -20,6 +21,8 @@ import MyLeaves from './pages/employee/MyLeaves';
 import MyPayslips from './pages/employee/MyPayslips';
 import Directory from './pages/employee/Directory';
 import Profile from './pages/shared/Profile';
+import { SidebarProvider } from './context/SidebarContext';
+import { SocketProvider } from './context/SocketContext';
 import { Toaster } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
@@ -40,6 +43,23 @@ function RoleRedirect() {
   return <Navigate to={redirects[user?.role] || '/dashboard'} replace />;
 }
 
+function ThemedToaster() {
+  const { isDark } = useTheme();
+  return (
+    <Toaster
+      theme={isDark ? 'dark' : 'light'}
+      position="top-right"
+      richColors
+      closeButton
+      toastOptions={{
+        style: isDark
+          ? { background: '#171f33', border: '1px solid rgba(255,255,255,0.1)', color: '#dae2fd' }
+          : { background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', color: '#1e293b' }
+      }}
+    />
+  );
+}
+
 function AppRoutes() {
   return (
     <Routes>
@@ -57,7 +77,7 @@ function AppRoutes() {
         {/* Admin */}
         <Route path="admin/dashboard" element={<ProtectedRoute roles={['admin']}><AdminDashboard /></ProtectedRoute>} />
         <Route path="admin/users" element={<ProtectedRoute roles={['admin']}><UserManagement /></ProtectedRoute>} />
-        <Route path="admin/settings" element={<ProtectedRoute roles={['admin']}><Settings /></ProtectedRoute>} />
+        <Route path="settings" element={<ProtectedRoute roles={['admin', 'hr_officer', 'payroll_officer', 'employee']}><Settings /></ProtectedRoute>} />
         {/* HR */}
         <Route path="hr/dashboard" element={<ProtectedRoute roles={['admin', 'hr_officer']}><HRDashboard /></ProtectedRoute>} />
         <Route path="hr/employees" element={<ProtectedRoute roles={['admin', 'hr_officer']}><Employees /></ProtectedRoute>} />
@@ -77,12 +97,16 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-        <Toaster theme="dark" position="top-right" richColors closeButton toastOptions={{
-          style: { background: '#171f33', border: '1px solid rgba(255,255,255,0.1)', color: '#dae2fd' }
-        }} />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <SocketProvider>
+            <SidebarProvider>
+              <AppRoutes />
+              <ThemedToaster />
+            </SidebarProvider>
+          </SocketProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

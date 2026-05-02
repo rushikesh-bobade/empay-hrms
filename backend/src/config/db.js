@@ -112,6 +112,16 @@ const initTables = async () => {
         created_at TIMESTAMPTZ DEFAULT NOW(),
         UNIQUE(payrun_id, employee_id)
       );
+
+      CREATE TABLE IF NOT EXISTS messages (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        text TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_messages_participants ON messages(sender_id, receiver_id, created_at);
     `);
     console.log('✅ All tables initialized successfully');
   } catch (err) {

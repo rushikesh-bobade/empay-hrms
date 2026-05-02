@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import { Plus, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useSocket } from '../../context/SocketContext';
 
 export default function MyLeaves() {
   const [tab, setTab] = useState('balance');
@@ -13,13 +14,22 @@ export default function MyLeaves() {
   const [showApply, setShowApply] = useState(false);
   const [form, setForm] = useState({ leave_type_id: '', start_date: '', end_date: '', reason: '' });
   const [submitting, setSubmitting] = useState(false);
+  const { socket } = useSocket();
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     Promise.all([api.get('/leave/allocation/my'), api.get('/leave/requests/my'), api.get('/leave/types')])
       .then(([aRes, rRes, tRes]) => { setAllocations(aRes.data.data); setRequests(rRes.data.data); setLeaveTypes(tRes.data.data); setLoading(false); })
       .catch(() => setLoading(false));
-  };
-  useEffect(() => { fetchData(); }, []);
+  }, []);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleUpdate = () => fetchData();
+    socket.on('leave_updated', handleUpdate);
+    return () => socket.off('leave_updated', handleUpdate);
+  }, [socket, fetchData]);
 
   const calcDays = () => {
     if (!form.start_date || !form.end_date) return 0;

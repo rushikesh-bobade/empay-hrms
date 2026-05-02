@@ -2,7 +2,7 @@ const { pool } = require('../../config/db');
 
 class AttendanceService {
   async markAttendance(employeeId) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA');
     
     // Check existing record for today
     const existing = await pool.query(
@@ -24,8 +24,18 @@ class AttendanceService {
 
     const record = existing.rows[0];
 
+    if (!record.check_in) {
+      // Record exists (e.g., marked on_leave or absent), but no check_in yet
+      const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const result = await pool.query(
+        `UPDATE attendance SET check_in = $1, status = 'present' WHERE id = $2 RETURNING *`,
+        [now, record.id]
+      );
+      return { action: 'checked_in', record: result.rows[0] };
+    }
+
     if (!record.check_out) {
-      // Record exists, no check-out — update check-out
+      // Record exists, check_in exists, no check-out — update check-out
       const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
       const result = await pool.query(
         `UPDATE attendance SET check_out = $1 WHERE id = $2 RETURNING *`,
@@ -34,8 +44,13 @@ class AttendanceService {
       return { action: 'checked_out', record: result.rows[0] };
     }
 
-    // Already checked out
-    throw { status: 400, message: 'Already checked out today' };
+    // Already checked out -> Check back in by resetting check_out and updating check_in to now?
+    // Wait, if they check back in, does check_in time change? No, we just resume the shift.
+    const result = await pool.query(
+      `UPDATE attendance SET check_out = NULL WHERE id = $1 RETURNING *`,
+      [record.id]
+    );
+    return { action: 'checked_in', record: result.rows[0] };
   }
 
   async getMyAttendance(employeeId, filters = {}) {
@@ -106,8 +121,7 @@ class AttendanceService {
   }
 
   async getTodayAttendance() {
-    const today = new Date().toISOString().split('T')[0];
-
+    const today = new Date().toLocaleDateString('en-CA');
     const result = await pool.query(
       `SELECT u.id, u.full_name, u.email, u.department, u.designation, u.profile_pic,
               a.check_in, a.check_out, COALESCE(a.status, 'absent') as status

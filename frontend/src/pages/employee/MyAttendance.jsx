@@ -3,6 +3,7 @@ import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import StatCard from '../../components/shared/StatCard';
 import { CalendarCheck, UserX, Clock, CalendarOff } from 'lucide-react';
+import { useSocket } from '../../context/SocketContext';
 
 export default function MyAttendance() {
   const [records, setRecords] = useState([]);
@@ -10,8 +11,9 @@ export default function MyAttendance() {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [summary, setSummary] = useState({});
+  const { socket } = useSocket();
 
-  useEffect(() => {
+  const fetchRecords = () => {
     setLoading(true);
     Promise.all([
       api.get('/attendance/my', { params: { month, year } }),
@@ -21,7 +23,18 @@ export default function MyAttendance() {
       setSummary(sumRes.data.data);
       setLoading(false);
     }).catch(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchRecords();
   }, [month, year]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleUpdate = () => fetchRecords();
+    socket.on('attendance_updated', handleUpdate);
+    return () => socket.off('attendance_updated', handleUpdate);
+  }, [socket, month, year]);
 
   // Build calendar grid
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -64,8 +77,8 @@ export default function MyAttendance() {
             const dayOfWeek = new Date(year, month - 1, day).getDay();
             const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
             const isFuture = new Date(year, month - 1, day) > new Date();
-            const bg = isFuture ? 'transparent' : isWeekend ? 'rgba(195, 14, 14, 0.91)' : record ? `${statusColors[record.status]}20` : 'rgba(213, 35, 35, 0.94)';
-            const border = record ? `1px solid ${statusColors[record.status]}40` : '1px solid transparent';
+            const bg = isFuture ? 'transparent' : isWeekend ? 'rgba(255, 255, 255, 0.02)' : record ? `${statusColors[record.status]}20` : 'rgba(248, 113, 113, 0.1)';
+            const border = record ? `1px solid ${statusColors[record.status]}40` : isWeekend ? '1px solid transparent' : '1px solid rgba(248, 113, 113, 0.2)';
 
             return (
               <div key={day} className="aspect-square flex flex-col items-center justify-center rounded-xl text-sm transition-all hover:scale-105 cursor-default group relative" style={{ background: bg, border }}>

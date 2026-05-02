@@ -1,4 +1,5 @@
 const leaveService = require('./leave.service');
+const { getIo } = require('../../config/socket');
 
 const getLeaveTypes = async (req, res) => {
   try {
@@ -48,6 +49,7 @@ const upsertAllocation = async (req, res) => {
 const createRequest = async (req, res) => {
   try {
     const data = await leaveService.createRequest(req.user.id, req.body);
+    try { getIo().emit('leave_updated', { type: 'new_request', data }); } catch(e) {}
     res.status(201).json({ success: true, message: 'Leave request submitted', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });
@@ -75,6 +77,7 @@ const getAllRequests = async (req, res) => {
 const approveRequest = async (req, res) => {
   try {
     const data = await leaveService.approveRequest(req.params.id, req.user.id);
+    try { getIo().emit('leave_updated', { type: 'approved', data }); } catch(e) {}
     res.json({ success: true, message: 'Leave approved', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });
@@ -84,6 +87,7 @@ const approveRequest = async (req, res) => {
 const rejectRequest = async (req, res) => {
   try {
     const data = await leaveService.rejectRequest(req.params.id, req.user.id);
+    try { getIo().emit('leave_updated', { type: 'rejected', data }); } catch(e) {}
     res.json({ success: true, message: 'Leave rejected', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });

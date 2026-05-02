@@ -3,19 +3,32 @@ import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import StatCard from '../../components/shared/StatCard';
 import { CalendarCheck, UserX, Clock, CalendarOff } from 'lucide-react';
+import { useSocket } from '../../context/SocketContext';
 
 export default function HRAttendance() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
+  const { socket } = useSocket();
 
-  useEffect(() => {
+  const fetchRecords = () => {
     setLoading(true);
     api.get('/attendance/all', { params: { month, year } })
       .then(res => { setRecords(res.data.data); setLoading(false); })
       .catch(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchRecords();
   }, [month, year]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleUpdate = () => fetchRecords();
+    socket.on('attendance_updated', handleUpdate);
+    return () => socket.off('attendance_updated', handleUpdate);
+  }, [socket, month, year]);
 
   const summary = {
     present: records.filter(r => r.status === 'present').length,
@@ -46,7 +59,7 @@ export default function HRAttendance() {
         <StatCard title="On Leave" value={summary.on_leave} icon={CalendarOff} color="primary" />
       </div>
 
-      <div className="glass-card overflow-hidden fade-in">
+      <div className="glass-panel rounded-2xl overflow-hidden fade-in">
         <table className="w-full glass-table">
           <thead><tr><th>Employee</th><th>Date</th><th>Check In</th><th>Check Out</th><th>Status</th></tr></thead>
           <tbody>

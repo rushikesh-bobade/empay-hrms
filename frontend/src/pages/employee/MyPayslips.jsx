@@ -1,18 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import { Download, Eye, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { useSocket } from '../../context/SocketContext';
 
 export default function MyPayslips() {
   const [payslips, setPayslips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewSlip, setViewSlip] = useState(null);
   const [slipDetail, setSlipDetail] = useState(null);
+  const { socket } = useSocket();
 
-  useEffect(() => {
+  const fetchPayslips = useCallback(() => {
     api.get('/payroll/payslips/my').then(res => { setPayslips(res.data.data); setLoading(false); }).catch(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    fetchPayslips();
+  }, [fetchPayslips]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleUpdate = () => fetchPayslips();
+    socket.on('payrun_generated', handleUpdate);
+    return () => socket.off('payrun_generated', handleUpdate);
+  }, [socket, fetchPayslips]);
 
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -40,7 +53,7 @@ export default function MyPayslips() {
   return (
     <div className="space-y-6">
       <PageHeader title="My Payslips" subtitle="View and download your salary slips." />
-      <div className="glass-card overflow-hidden fade-in">
+      <div className="glass-panel rounded-2xl overflow-hidden fade-in">
         <table className="w-full glass-table">
           <thead><tr><th>Month</th><th>Year</th><th>Gross Salary</th><th>Deductions</th><th>Net Pay</th><th>Actions</th></tr></thead>
           <tbody>
@@ -67,7 +80,7 @@ export default function MyPayslips() {
 
       {viewSlip && slipDetail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setViewSlip(null)}>
-          <div className="glass-card-strong w-full max-w-2xl p-6 fade-in max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="glass-panel-elevated w-full max-w-2xl p-6 fade-in max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-lg font-bold text-on-surface">Salary Slip</h2>
@@ -77,7 +90,7 @@ export default function MyPayslips() {
             </div>
 
             <div className="grid grid-cols-2 gap-6">
-              <div className="glass-card p-4">
+              <div className="glass-panel rounded-2xl p-4">
                 <h3 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">⊕ Earnings</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between"><span className="text-on-surface-variant">Basic Salary</span><span className="text-on-surface">₹{parseFloat(slipDetail.basic).toLocaleString()}</span></div>
@@ -86,7 +99,7 @@ export default function MyPayslips() {
                   <div className="border-t border-white/10 pt-2 mt-2 flex justify-between font-semibold"><span className="text-on-surface">Gross Earnings</span><span className="text-primary">₹{parseFloat(slipDetail.gross_salary).toLocaleString()}</span></div>
                 </div>
               </div>
-              <div className="glass-card p-4">
+              <div className="glass-panel rounded-2xl p-4">
                 <h3 className="text-sm font-semibold text-danger mb-3 flex items-center gap-2">⊖ Deductions</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between"><span className="text-on-surface-variant">PF Employee (12%)</span><span className="text-on-surface">₹{parseFloat(slipDetail.pf_employee).toLocaleString()}</span></div>

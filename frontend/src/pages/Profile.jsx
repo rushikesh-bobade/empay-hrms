@@ -32,7 +32,7 @@ export default function Profile() {
         </button>
       </PageHeader>
 
-      <div className="glass-card rounded-xl p-6">
+      <div className="glass-panel rounded-2xl rounded-xl p-6">
         <div className="flex items-center gap-6 mb-8">
           <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
             {user?.full_name?.charAt(0)?.toUpperCase()}

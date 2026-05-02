@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import RoleBadge from '../../components/shared/RoleBadge';
 import { UserPlus, Search, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useSocket } from '../../context/SocketContext';
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -14,8 +17,9 @@ export default function UserManagement() {
   const [editUser, setEditUser] = useState(null);
   const [form, setForm] = useState({ full_name: '', email: '', password: '', role: 'employee', department: '', designation: '', phone: '' });
   const [submitting, setSubmitting] = useState(false);
+  const { socket } = useSocket();
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const params = {};
       if (search) params.search = search;
@@ -24,9 +28,16 @@ export default function UserManagement() {
       setUsers(res.data.data);
     } catch { /* empty */ }
     setLoading(false);
-  };
+  }, [search, roleFilter]);
 
-  useEffect(() => { fetchUsers(); }, [search, roleFilter]);
+  useEffect(() => { fetchUsers(); }, [fetchUsers]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleUpdate = () => fetchUsers();
+    socket.on('user_updated', handleUpdate);
+    return () => socket.off('user_updated', handleUpdate);
+  }, [socket, fetchUsers]);
 
   const openAdd = () => {
     setEditUser(null);
@@ -97,7 +108,7 @@ export default function UserManagement() {
       </div>
 
       {/* Table */}
-      <div className="glass-card overflow-hidden fade-in">
+      <div className="glass-panel rounded-2xl overflow-hidden fade-in">
         <div className="overflow-x-auto">
           <table className="w-full glass-table">
             <thead><tr>
@@ -112,10 +123,14 @@ export default function UserManagement() {
                 <tr key={u.id}>
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                        style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
-                        {getInitials(u.full_name)}
-                      </div>
+                      {u.profile_pic ? (
+                        <img src={`${SERVER_URL}${u.profile_pic}`} alt={u.full_name} className="w-8 h-8 rounded-full object-cover border border-white/20" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
+                          style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
+                          {getInitials(u.full_name)}
+                        </div>
+                      )}
                       <span className="font-medium text-on-surface">{u.full_name}</span>
                     </div>
                   </td>
@@ -146,7 +161,7 @@ export default function UserManagement() {
       {/* Dialog */}
       {showDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowDialog(false)}>
-          <div className="glass-card-strong w-full max-w-lg p-6 fade-in" onClick={e => e.stopPropagation()}>
+          <div className="glass-panel-elevated w-full max-w-lg p-6 fade-in" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-bold text-on-surface">{editUser ? 'Edit Employee' : 'Add Employee'}</h2>
               <button onClick={() => setShowDialog(false)} className="p-1.5 rounded-lg hover:bg-white/5"><X className="w-4 h-4 text-on-surface-variant" /></button>

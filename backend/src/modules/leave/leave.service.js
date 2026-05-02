@@ -185,7 +185,7 @@ class LeaveService {
       while (current <= endDate) {
         const day = current.getDay();
         if (day !== 0 && day !== 6) {
-          const dateStr = current.toISOString().split('T')[0];
+          const dateStr = current.toLocaleDateString('en-CA');
           await client.query(
             `INSERT INTO attendance (employee_id, date, status)
              VALUES ($1, $2, 'on_leave')
