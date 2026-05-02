@@ -18,7 +18,7 @@ class LeaveService {
   }
 
   // ----- Leave Allocations -----
-  async getMyAllocations(employeeId) {
+  /*async getMyAllocations(employeeId) {
     const currentYear = new Date().getFullYear();
     const result = await pool.query(
       `SELECT la.*, lt.name, lt.max_days_per_year,
@@ -30,7 +30,7 @@ class LeaveService {
       [employeeId, currentYear]
     );
     return result.rows;
-  }
+  }*/
 
   async getAllocationsByEmployee(employeeId) {
     const currentYear = new Date().getFullYear();
