@@ -38,7 +38,7 @@ const SCHEMA = `
     department       VARCHAR(100)  CHECK (department IS NULL OR LENGTH(TRIM(department)) >= 2),
     designation      VARCHAR(100)  CHECK (designation IS NULL OR LENGTH(TRIM(designation)) >= 2),
     phone            VARCHAR(20)   CHECK (phone IS NULL OR phone ~ '^[+]?[0-9\\s\\-()]{7,20}$'),
-    profile_pic      TEXT          CHECK (profile_pic IS NULL OR profile_pic ~ '^https?://'),
+    profile_pic      TEXT,
     date_joined      DATE          NOT NULL DEFAULT CURRENT_DATE CHECK (date_joined <= CURRENT_DATE),
     is_active        BOOLEAN       NOT NULL DEFAULT TRUE,
     created_at       TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
@@ -345,6 +345,13 @@ const initTables = async () => {
   try {
     await client.query('BEGIN');
     await client.query(SCHEMA);
+    // Drop restrictive profile_pic CHECK constraint if it exists (allows local paths like /avatars/...)
+    await client.query(`
+      DO $$ BEGIN
+        ALTER TABLE users DROP CONSTRAINT IF EXISTS users_profile_pic_check;
+      EXCEPTION WHEN undefined_object THEN NULL;
+      END $$;
+    `);
     await client.query('COMMIT');
     console.log('✅ All tables created successfully.');
   } catch (err) {
@@ -354,6 +361,65 @@ const initTables = async () => {
   } finally {
     client.release();
   }
+
+  // Seed demo data
+  await seedDemoData();
+};
+
+/**
+ * Seeds demo users and leave types if they don't exist.
+ * Uses ON CONFLICT to avoid duplicates on re-runs.
+ */
+const seedDemoData = async () => {
+  const bcrypt = require('bcrypt');
+  const ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 10;
+
+  const demoUsers = [
+    { full_name: 'Admin User',     email: 'admin@empay.com',   role: 'admin',           department: 'Management',  designation: 'System Admin' },
+    { full_name: 'Priya Sharma',   email: 'hr@empay.com',      role: 'hr_officer',      department: 'Human Resources', designation: 'HR Manager' },
+    { full_name: 'Rahul Verma',    email: 'payroll@empay.com',  role: 'payroll_officer', department: 'Finance',     designation: 'Payroll Manager' },
+    { full_name: 'Sneha Patil',    email: 'sneha@empay.com',    role: 'employee',        department: 'Engineering', designation: 'Software Engineer' },
+    { full_name: 'Amit Kumar',     email: 'amit@empay.com',     role: 'employee',        department: 'Engineering', designation: 'Frontend Developer' },
+    { full_name: 'Neha Gupta',     email: 'neha@empay.com',     role: 'employee',        department: 'Design',      designation: 'UI/UX Designer' },
+    { full_name: 'Vikram Singh',   email: 'vikram@empay.com',   role: 'employee',        department: 'Marketing',   designation: 'Marketing Lead' },
+    { full_name: 'Ananya Desai',   email: 'ananya@empay.com',   role: 'employee',        department: 'Finance',     designation: 'Financial Analyst' },
+  ];
+
+  const defaultPassword = 'Password@123';
+
+  for (const u of demoUsers) {
+    const exists = await pool.query('SELECT id FROM users WHERE email = $1', [u.email]);
+    if (exists.rows.length === 0) {
+      const hash = await bcrypt.hash(defaultPassword, ROUNDS);
+      await pool.query(
+        `INSERT INTO users (full_name, email, password_hash, role, department, designation)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [u.full_name, u.email, hash, u.role, u.department, u.designation]
+      );
+      console.log(`   👤 Seeded user: ${u.email} (${u.role})`);
+    }
+  }
+
+  // Seed default leave types
+  const leaveTypes = [
+    { name: 'Casual Leave',      description: 'For personal or casual reasons',     max_days: 12 },
+    { name: 'Sick Leave',        description: 'For illness or medical appointments', max_days: 10 },
+    { name: 'Earned Leave',      description: 'Accumulated earned/privilege leave',  max_days: 15 },
+    { name: 'Maternity Leave',   description: 'Maternity leave as per policy',       max_days: 180 },
+  ];
+
+  for (const lt of leaveTypes) {
+    const exists = await pool.query('SELECT id FROM leave_types WHERE name = $1', [lt.name]);
+    if (exists.rows.length === 0) {
+      await pool.query(
+        `INSERT INTO leave_types (name, description, max_days_per_year) VALUES ($1, $2, $3)`,
+        [lt.name, lt.description, lt.max_days]
+      );
+      console.log(`   📋 Seeded leave type: ${lt.name}`);
+    }
+  }
+
+  console.log('✅ Demo data seeding complete.');
 };
 
 // ─── Entry Point ──────────────────────────────────────────────────────────────

@@ -2,7 +2,7 @@ const { pool } = require('../../config/db');
 
 const getAdminDashboard = async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA');
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
     const currentYear = now.getFullYear();
@@ -99,7 +99,7 @@ const getEmployeeDashboard = async (req, res) => {
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
     const currentYear = now.getFullYear();
-    const today = now.toISOString().split('T')[0];
+    const today = now.toLocaleDateString('en-CA');
 
     // Attendance this month
     const attSummary = await pool.query(`
@@ -156,7 +156,7 @@ const getEmployeeDashboard = async (req, res) => {
 
 const getHRDashboard = async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA');
 
     const empCounts = await pool.query(`
       SELECT

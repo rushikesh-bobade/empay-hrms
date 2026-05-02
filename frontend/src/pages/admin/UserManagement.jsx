@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import RoleBadge from '../../components/shared/RoleBadge';
+import UserAvatar from '../../components/shared/UserAvatar';
 import { UserPlus, Search, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -42,6 +43,10 @@ export default function UserManagement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!editUser && form.password !== form.confirm_password) {
+      toast.error('Passwords do not match');
+      return;
+    }
     setSubmitting(true);
     try {
       if (editUser) {
@@ -67,7 +72,7 @@ export default function UserManagement() {
     } catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
   };
 
-  const getInitials = (name) => name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
+
 
   const filtered = users;
 
@@ -112,10 +117,7 @@ export default function UserManagement() {
                 <tr key={u.id}>
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                        style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
-                        {getInitials(u.full_name)}
-                      </div>
+                      <UserAvatar user={u} size="sm" />
                       <span className="font-medium text-on-surface">{u.full_name}</span>
                     </div>
                   </td>
@@ -163,9 +165,15 @@ export default function UserManagement() {
                 </div>
               </div>
               {!editUser && (
-                <div>
-                  <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Password</label>
-                  <input type="password" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Password</label>
+                    <input type="password" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required />
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Confirm Password</label>
+                    <input type="password" value={form.confirm_password || ''} onChange={e => setForm(f => ({ ...f, confirm_password: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required />
+                  </div>
                 </div>
               )}
               <div className="grid grid-cols-2 gap-4">

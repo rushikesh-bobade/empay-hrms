@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import RoleBadge from '../../components/shared/RoleBadge';
+import UserAvatar from '../../components/shared/UserAvatar';
 import { Search, Mail, Phone } from 'lucide-react';
 
 export default function Directory() {
@@ -15,8 +16,7 @@ export default function Directory() {
       .catch(() => setLoading(false));
   }, [search]);
 
-  const getInitials = (name) => name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
-  const gradients = ['linear-gradient(135deg, #4d8eff, #571bc1)', 'linear-gradient(135deg, #4cd7f6, #4d8eff)', 'linear-gradient(135deg, #a78bfa, #571bc1)', 'linear-gradient(135deg, #4ade80, #4d8eff)'];
+
 
   return (
     <div className="space-y-6">
@@ -34,9 +34,7 @@ export default function Directory() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {employees.map((e, idx) => (
             <div key={e.id} className="glass-card p-5 flex flex-col items-center text-center fade-in" style={{ animationDelay: `${idx * 50}ms` }}>
-              <div className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold mb-3" style={{ background: gradients[idx % gradients.length], color: 'white' }}>
-                {getInitials(e.full_name)}
-              </div>
+              <UserAvatar user={e} size="lg" />
               <h3 className="font-semibold text-on-surface text-sm">{e.full_name}</h3>
               <p className="text-xs text-on-surface-variant mt-0.5">{e.designation || e.role}</p>
               <div className="mt-2"><RoleBadge role={e.role} /></div>

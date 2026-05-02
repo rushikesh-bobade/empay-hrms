@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { SidebarProvider } from './context/SidebarContext';
 import AppLayout from './components/layout/AppLayout';
 import Landing from './pages/public/Landing';
 import Login from './pages/auth/Login';
@@ -113,8 +114,10 @@ export default function App() {
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <AppRoutes />
-          <ThemedToaster />
+          <SidebarProvider>
+            <AppRoutes />
+            <ThemedToaster />
+          </SidebarProvider>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

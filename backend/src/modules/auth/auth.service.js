@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { sendEmail } = require('../../utils/mailer');
+const { resetPasswordEmail, welcomeEmail } = require('../../utils/emailTemplates');
 
 class AuthService {
   async register(userData) {
@@ -22,6 +23,13 @@ class AuthService {
        RETURNING id, full_name, email, role, department, designation, phone, profile_pic, date_joined, is_active, created_at`,
       [full_name, email, password_hash, role, department, designation, phone]
     );
+
+    // Send welcome email with credentials (fire-and-forget — don't block registration)
+    const loginUrl = (process.env.FRONTEND_URL || 'http://localhost:5173') + '/login';
+    const html = welcomeEmail(full_name, email, password, role || 'employee', loginUrl);
+    sendEmail(email, 'Welcome to EmPay HRMS – Your Login Credentials', `Hi ${full_name}, your EmPay HRMS account is ready. Email: ${email}, Password: ${password}. Login at ${loginUrl}`, html)
+      .then(() => console.log(`📧 Welcome email sent to ${email}`))
+      .catch(err => console.error(`⚠️ Failed to send welcome email to ${email}:`, err.message));
 
     return result.rows[0];
   }
@@ -109,12 +117,13 @@ class AuthService {
     );
 
     const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+    const emailHtml = resetPasswordEmail(user.full_name, resetUrl);
     
     await sendEmail(
       email,
       'Password Reset Request - EmPay HRMS',
-      `Hi ${user.full_name},\n\nYou requested a password reset. Click here: ${resetUrl}\n\nIf you didn't request this, please ignore this email.`,
-      `<p>Hi ${user.full_name},</p><p>You requested a password reset. Click the link below to reset it:</p><p><a href="${resetUrl}">Reset Password</a></p><p>If you didn't request this, please ignore this email.</p>`
+      `Hi ${user.full_name}, you requested a password reset. Click here: ${resetUrl}`,
+      emailHtml
     );
   }
 

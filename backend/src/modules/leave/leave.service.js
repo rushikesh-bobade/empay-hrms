@@ -1,5 +1,6 @@
 const { pool } = require('../../config/db');
 const { sendEmail } = require('../../utils/mailer');
+const { leaveStatusEmail } = require('../../utils/emailTemplates');
 
 class LeaveService {
   // ----- Leave Types -----
@@ -217,11 +218,15 @@ class LeaveService {
       if (updated.rows[0] && updated.rows[0].email) {
         const employeeName = updated.rows[0].full_name;
         const leaveType = updated.rows[0].leave_type_name;
+        const sDate = new Date(request.start_date).toLocaleDateString();
+        const eDate = new Date(request.end_date).toLocaleDateString();
+        
+        const emailHtml = leaveStatusEmail(employeeName, leaveType, sDate, eDate, 'Approved');
         await sendEmail(
           updated.rows[0].email,
           'Leave Request Approved - EmPay HRMS',
-          `Hi ${employeeName},\n\nYour request for ${leaveType} from ${new Date(request.start_date).toLocaleDateString()} to ${new Date(request.end_date).toLocaleDateString()} has been approved.`,
-          `<p>Hi ${employeeName},</p><p>Your request for <strong>${leaveType}</strong> from ${new Date(request.start_date).toLocaleDateString()} to ${new Date(request.end_date).toLocaleDateString()} has been <strong>approved</strong>.</p>`
+          `Hi ${employeeName}, your request for ${leaveType} from ${sDate} to ${eDate} has been approved.`,
+          emailHtml
         );
       }
 
@@ -266,11 +271,15 @@ class LeaveService {
       const employeeName = updated.rows[0].full_name;
       const leaveType = updated.rows[0].leave_type_name;
       const request = updated.rows[0];
+      const sDate = new Date(request.start_date).toLocaleDateString();
+      const eDate = new Date(request.end_date).toLocaleDateString();
+      
+      const emailHtml = leaveStatusEmail(employeeName, leaveType, sDate, eDate, 'Rejected');
       await sendEmail(
         updated.rows[0].email,
         'Leave Request Rejected - EmPay HRMS',
-        `Hi ${employeeName},\n\nYour request for ${leaveType} from ${new Date(request.start_date).toLocaleDateString()} to ${new Date(request.end_date).toLocaleDateString()} has been rejected.`,
-        `<p>Hi ${employeeName},</p><p>Your request for <strong>${leaveType}</strong> from ${new Date(request.start_date).toLocaleDateString()} to ${new Date(request.end_date).toLocaleDateString()} has been <strong>rejected</strong>.</p>`
+        `Hi ${employeeName}, your request for ${leaveType} from ${sDate} to ${eDate} has been rejected.`,
+        emailHtml
       );
     }
 

@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import RoleBadge from '../../components/shared/RoleBadge';
+import UserAvatar from '../../components/shared/UserAvatar';
 import { Loader2, Camera } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -46,7 +47,7 @@ export default function Profile() {
     setUploading(false);
   };
 
-  const getInitials = (name) => name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
+
 
   return (
     <div className="space-y-6">
@@ -56,14 +57,7 @@ export default function Profile() {
         {/* Profile Card */}
         <div className="glass-card p-6 flex flex-col items-center text-center fade-in">
           <div className="relative">
-            {user?.profile_pic ? (
-              <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${user.profile_pic}`} alt="Profile" className="w-24 h-24 rounded-full object-cover border-4 border-surface" />
-            ) : (
-              <div className="w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold"
-                style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
-                {getInitials(user?.full_name)}
-              </div>
-            )}
+            <UserAvatar user={user} size="xl" className="border-4 border-surface" />
             <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
             <button 
               onClick={() => fileInputRef.current?.click()}

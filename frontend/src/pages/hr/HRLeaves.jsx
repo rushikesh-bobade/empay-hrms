@@ -1,8 +1,94 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
-import { X, Loader2, Plus, Check } from 'lucide-react';
+import { X, Loader2, Plus, Search, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
+
+// Reusable searchable employee picker
+function EmployeeSearch({ employees, value, onChange, placeholder = 'Search employee by name...' }) {
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
+
+  const selected = employees.find(e => e.id === value);
+  const filtered = query.trim()
+    ? employees.filter(e => e.full_name.toLowerCase().includes(query.toLowerCase()) || e.email.toLowerCase().includes(query.toLowerCase()))
+    : employees;
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e) => { if (wrapperRef.current && !wrapperRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleSelect = (emp) => {
+    onChange(emp.id);
+    setQuery('');
+    setOpen(false);
+  };
+
+  const handleClear = () => {
+    onChange('');
+    setQuery('');
+  };
+
+  return (
+    <div className="relative" ref={wrapperRef}>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-on-surface-variant pointer-events-none" />
+        {selected && !open ? (
+          <div className="input-glass w-full pl-9 pr-8 py-2.5 text-sm rounded-xl flex items-center justify-between cursor-pointer"
+            onClick={() => setOpen(true)}>
+            <span className="text-on-surface font-medium">{selected.full_name} <span className="text-on-surface-variant font-normal text-xs">({selected.email})</span></span>
+            <button type="button" onClick={(e) => { e.stopPropagation(); handleClear(); }} className="text-on-surface-variant hover:text-on-surface">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ) : (
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
+            onFocus={() => setOpen(true)}
+            placeholder={placeholder}
+            className="input-glass w-full pl-9 pr-8 py-2.5 text-sm rounded-xl"
+          />
+        )}
+        <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-on-surface-variant transition-transform ${open ? 'rotate-180' : ''}`} />
+      </div>
+
+      {open && (
+        <div className="absolute z-50 mt-1 w-full max-h-52 overflow-y-auto rounded-xl shadow-lg"
+          style={{ background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(20px)' }}>
+          {filtered.length === 0 ? (
+            <div className="px-4 py-3 text-sm text-on-surface-variant text-center">No employees found</div>
+          ) : (
+            filtered.slice(0, 20).map(emp => (
+              <button key={emp.id} type="button"
+                onClick={() => handleSelect(emp)}
+                className={`w-full text-left px-4 py-2.5 text-sm transition-all flex items-center gap-3 hover:bg-[var(--sidebar-hover)] ${value === emp.id ? 'bg-primary/10' : ''}`}>
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-[0.6rem] font-bold flex-shrink-0"
+                  style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
+                  {emp.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                </div>
+                <div className="min-w-0">
+                  <div className="text-on-surface font-medium truncate">{emp.full_name}</div>
+                  <div className="text-[0.65rem] text-on-surface-variant truncate">{emp.email} · {emp.department || 'N/A'}</div>
+                </div>
+              </button>
+            ))
+          )}
+          {filtered.length > 20 && (
+            <div className="px-4 py-2 text-xs text-on-surface-variant text-center border-t" style={{ borderColor: 'var(--glass-border)' }}>
+              Showing 20 of {filtered.length} — type to narrow results
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function HRLeaves() {
   const [tab, setTab] = useState('requests');
@@ -40,7 +126,6 @@ export default function HRLeaves() {
     try {
       await api.patch(`/leave/requests/${id}/${action}`);
       toast.success(`Leave ${action}d successfully`);
-      // Refresh requests
       api.get('/leave/requests/all', { params: statusFilter ? { status: statusFilter } : {} })
          .then(reqRes => setRequests(reqRes.data.data));
     } catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
@@ -109,12 +194,11 @@ export default function HRLeaves() {
       {tab === 'allocation' && (
         <>
           <div className="flex items-center gap-4">
-            <select value={selectedEmp} onChange={e => setSelectedEmp(e.target.value)} className="input-glass px-3 py-2 text-sm rounded-xl min-w-[250px]">
-              <option value="">Select Employee</option>
-              {employees.map(e => <option key={e.id} value={e.id}>{e.full_name} ({e.email})</option>)}
-            </select>
+            <div className="min-w-[300px]">
+              <EmployeeSearch employees={employees} value={selectedEmp} onChange={setSelectedEmp} />
+            </div>
             <button onClick={() => { setAllocForm({ employee_id: '', leave_type_id: '', allocated_days: '', year: new Date().getFullYear() }); setShowAllocDialog(true); }}
-              className="btn-glow flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg,#4d8eff,#571bc1)' }}>
+              className="btn-glow flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg,#4d8eff,#571bc1)' }}>
               <Plus className="w-4 h-4" /> Allocate Leave
             </button>
           </div>
@@ -149,10 +233,12 @@ export default function HRLeaves() {
             <form onSubmit={handleAllocSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Employee</label>
-                <select value={allocForm.employee_id} onChange={e => setAllocForm(f => ({ ...f, employee_id: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required>
-                  <option value="">Select</option>
-                  {employees.map(e => <option key={e.id} value={e.id}>{e.full_name}</option>)}
-                </select>
+                <EmployeeSearch
+                  employees={employees}
+                  value={allocForm.employee_id}
+                  onChange={(id) => setAllocForm(f => ({ ...f, employee_id: id }))}
+                  placeholder="Search employee..."
+                />
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Leave Type</label>

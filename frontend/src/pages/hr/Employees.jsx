@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import RoleBadge from '../../components/shared/RoleBadge';
+import UserAvatar from '../../components/shared/UserAvatar';
 import { Search, X, Loader2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -44,6 +45,10 @@ export default function Employees() {
 
   const handleAdd = async (e) => {
     e.preventDefault();
+    if (addForm.password !== addForm.confirm_password) {
+      toast.error('Passwords do not match');
+      return;
+    }
     setSubmitting(true);
     try {
       await api.post('/auth/register', { ...addForm, role: 'employee' });
@@ -55,7 +60,7 @@ export default function Employees() {
     setSubmitting(false);
   };
 
-  const getInitials = (name) => name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
+
 
   return (
     <div className="space-y-6">
@@ -79,7 +84,7 @@ export default function Employees() {
             employees.map(u => (
               <tr key={u.id}>
                 <td><div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold" style={{background:'linear-gradient(135deg,#4d8eff,#571bc1)',color:'white'}}>{getInitials(u.full_name)}</div>
+                  <UserAvatar user={u} size="sm" />
                   <span className="font-medium text-on-surface">{u.full_name}</span>
                 </div></td>
                 <td className="text-on-surface-variant">{u.email}</td>
@@ -124,10 +129,10 @@ export default function Employees() {
               <button onClick={() => setShowAdd(false)} className="p-1.5 rounded-lg hover:bg-white/5"><X className="w-4 h-4 text-on-surface-variant" /></button>
             </div>
             <form onSubmit={handleAdd} className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
-              {['full_name', 'email', 'password', 'department', 'designation', 'phone'].map(f => (
+              {['full_name', 'email', 'password', 'confirm_password', 'department', 'designation', 'phone'].map(f => (
                 <div key={f}>
                   <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">{f.replace('_', ' ')}</label>
-                  <input type={f === 'password' ? 'password' : f === 'email' ? 'email' : 'text'} required value={addForm[f] || ''} onChange={e => setAddForm(p => ({ ...p, [f]: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" />
+                  <input type={f.includes('password') ? 'password' : f === 'email' ? 'email' : 'text'} required value={addForm[f] || ''} onChange={e => setAddForm(p => ({ ...p, [f]: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" />
                 </div>
               ))}
               <button type="submit" disabled={submitting} className="btn-glow w-full py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 mt-4" style={{ background: 'linear-gradient(135deg,#4d8eff,#571bc1)' }}>

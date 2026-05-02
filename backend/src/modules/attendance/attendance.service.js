@@ -2,7 +2,7 @@ const { pool } = require('../../config/db');
 
 class AttendanceService {
   async markAttendance(employeeId) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA');
     
     // Check existing record for today
     const existing = await pool.query(
@@ -34,8 +34,13 @@ class AttendanceService {
       return { action: 'checked_out', record: result.rows[0] };
     }
 
-    // Already checked out
-    throw { status: 400, message: 'Already checked out today' };
+    // Already checked out — allow re-check-in (e.g. returned after half day)
+    const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const result = await pool.query(
+      `UPDATE attendance SET check_in = $1, check_out = NULL WHERE id = $2 RETURNING *`,
+      [now, record.id]
+    );
+    return { action: 'checked_in', record: result.rows[0] };
   }
 
   async getMyAttendance(employeeId, filters = {}) {
@@ -106,7 +111,7 @@ class AttendanceService {
   }
 
   async getTodayAttendance() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA');
 
     const result = await pool.query(
       `SELECT u.id, u.full_name, u.email, u.department, u.designation, u.profile_pic,

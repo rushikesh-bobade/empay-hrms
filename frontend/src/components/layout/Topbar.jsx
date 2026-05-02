@@ -1,29 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { Search, Bell, Settings, Sun, Moon, Check } from 'lucide-react';
+import { Bell, Settings, Sun, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import api from '../../api/axios';
+import UserAvatar from '../shared/UserAvatar';
 
 export default function Topbar() {
   const { user } = useAuth();
   const { resolvedTheme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
-  const getInitials = (name) => {
-    if (!name) return '?';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  };
+
 
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [showSearch, setShowSearch] = useState(false);
-  
   const notifRef = useRef(null);
-  const searchRef = useRef(null);
 
   useEffect(() => {
     if (!user) return;
@@ -49,27 +42,11 @@ export default function Topbar() {
       if (notifRef.current && !notifRef.current.contains(event.target)) {
         setShowNotifications(false);
       }
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setShowSearch(false);
-      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearch = async (e) => {
-    const q = e.target.value;
-    setSearchQuery(q);
-    if (q.length > 1) {
-      setShowSearch(true);
-      try {
-        const res = await api.get(`/search?q=${q}`);
-        setSearchResults(res.data.data);
-      } catch (err) { console.error(err); }
-    } else {
-      setShowSearch(false);
-    }
-  };
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
@@ -81,46 +58,8 @@ export default function Topbar() {
   };
 
   return (
-    <header className="h-16 flex items-center justify-between px-6 border-b"
+    <header className="h-16 flex items-center justify-end px-6 border-b"
       style={{ background: 'var(--topbar-bg)', backdropFilter: 'blur(12px)', borderColor: 'var(--sidebar-border)' }}>
-      {/* Search */}
-      <div className="relative w-80" ref={searchRef}>
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-outline" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearch}
-          onFocus={() => searchQuery.length > 1 && setShowSearch(true)}
-          placeholder="Search employees, reports..."
-          className="input-glass w-full pl-10 pr-4 py-2 text-sm rounded-xl"
-        />
-        {showSearch && (
-          <div className="absolute top-full left-0 mt-2 w-full glass-panel border border-surface rounded-xl shadow-lg overflow-hidden z-50">
-            {searchResults.length === 0 ? (
-              <div className="p-4 text-sm text-on-surface-variant text-center">No results found</div>
-            ) : (
-              searchResults.map(result => (
-                <div key={result.id} className="p-3 border-b border-surface hover:bg-[var(--sidebar-hover)] cursor-pointer flex items-center gap-3 transition-colors"
-                     onClick={() => { setShowSearch(false); setSearchQuery(''); }}>
-                  {result.profile_pic ? (
-                    <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${result.profile_pic}`} className="w-8 h-8 rounded-full object-cover" alt="" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">{getInitials(result.full_name)}</div>
-                  )}
-                  <div>
-                    <h4 className="text-sm font-semibold text-on-surface">{result.full_name}</h4>
-                    <p className="text-[10px] text-on-surface-variant">{result.designation || result.department || 'Employee'}</p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Center brand */}
-      <span className="text-primary font-semibold text-sm tracking-wide hidden md:block">EmPay</span>
-
       {/* Right side */}
       <div className="flex items-center gap-2">
         {/* Theme Toggle */}
@@ -195,10 +134,7 @@ export default function Topbar() {
           className="flex items-center gap-2 pl-3 pr-1 py-1 rounded-xl hover:bg-[var(--sidebar-hover)] transition-colors"
         >
           <span className="text-sm text-on-surface font-medium hidden sm:block">{user?.full_name?.split(' ')[0]}</span>
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-            style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
-            {getInitials(user?.full_name)}
-          </div>
+          <UserAvatar user={user} size="sm" />
         </button>
       </div>
     </header>

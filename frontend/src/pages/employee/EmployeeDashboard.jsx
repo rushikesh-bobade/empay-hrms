@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
 import StatCard from '../../components/shared/StatCard';
-import { CalendarCheck, CalendarOff, LogIn, LogOut, Loader2 } from 'lucide-react';
+import { CalendarCheck, CalendarOff, LogIn, LogOut, Loader2, Clock } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
 
@@ -11,11 +11,51 @@ export default function EmployeeDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [marking, setMarking] = useState(false);
+  const [elapsed, setElapsed] = useState('00:00:00');
+  const timerRef = useRef(null);
 
   const fetchData = () => {
     api.get('/dashboard/employee').then(res => { setData(res.data.data); setLoading(false); }).catch(() => setLoading(false));
   };
   useEffect(() => { fetchData(); }, []);
+
+  // Live timer: tick every second while checked in
+  useEffect(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+
+    const todayAtt = data?.today_attendance;
+    const isCheckedIn = todayAtt && todayAtt.check_in && !todayAtt.check_out;
+
+    if (isCheckedIn) {
+      const tick = () => {
+        const [h, m, s] = todayAtt.check_in.split(':').map(Number);
+        const checkInDate = new Date();
+        checkInDate.setHours(h, m, s, 0);
+        const diff = Math.max(0, Math.floor((Date.now() - checkInDate.getTime()) / 1000));
+        const hrs = String(Math.floor(diff / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+        const secs = String(diff % 60).padStart(2, '0');
+        setElapsed(`${hrs}:${mins}:${secs}`);
+      };
+      tick();
+      timerRef.current = setInterval(tick, 1000);
+    } else {
+      // If checked out, show the total worked time
+      if (todayAtt && todayAtt.check_in && todayAtt.check_out) {
+        const [h1, m1, s1] = todayAtt.check_in.split(':').map(Number);
+        const [h2, m2, s2] = todayAtt.check_out.split(':').map(Number);
+        const diff = (h2 * 3600 + m2 * 60 + s2) - (h1 * 3600 + m1 * 60 + s1);
+        const absDiff = Math.max(0, diff);
+        const hrs = String(Math.floor(absDiff / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((absDiff % 3600) / 60)).padStart(2, '0');
+        const secs = String(absDiff % 60).padStart(2, '0');
+        setElapsed(`${hrs}:${mins}:${secs}`);
+      } else {
+        setElapsed('00:00:00');
+      }
+    }
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [data]);
 
   const handleMark = async () => {
     setMarking(true);
@@ -38,10 +78,56 @@ export default function EmployeeDashboard() {
   const isCheckedIn = todayAtt && todayAtt.check_in && !todayAtt.check_out;
   const isCheckedOut = todayAtt && todayAtt.check_out;
 
-  const chartData = (data?.recent_attendance || []).reverse().map(d => ({
-    date: new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' }),
-    hours: d.check_in && d.check_out ? ((new Date(`2024-01-01T${d.check_out}`) - new Date(`2024-01-01T${d.check_in}`)) / 3600000).toFixed(1) : 0,
-  }));
+  // Build chart data including today's live hours
+  const buildChartData = () => {
+    const records = (data?.recent_attendance || []).slice().reverse();
+    const today = new Date().toLocaleDateString('en-CA');
+
+    const mapped = records.map(d => {
+      const dateStr = new Date(d.date).toLocaleDateString('en-CA');
+      const isToday = dateStr === today;
+
+      let hours = 0;
+      if (d.check_in && d.check_out) {
+        hours = parseFloat(((new Date(`2024-01-01T${d.check_out}`) - new Date(`2024-01-01T${d.check_in}`)) / 3600000).toFixed(1));
+      } else if (isToday && d.check_in && !d.check_out) {
+        // Live: calculate elapsed hours from check_in to now
+        const [h, m, s] = d.check_in.split(':').map(Number);
+        const checkInDate = new Date();
+        checkInDate.setHours(h, m, s, 0);
+        hours = parseFloat(((Date.now() - checkInDate.getTime()) / 3600000).toFixed(1));
+      }
+
+      return {
+        date: new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' }),
+        hours,
+        isToday,
+      };
+    });
+
+    // If no today record in recent_attendance, add a placeholder
+    const hasTodayRecord = records.some(d => new Date(d.date).toLocaleDateString('en-CA') === today);
+    if (!hasTodayRecord && todayAtt && todayAtt.check_in) {
+      let hours = 0;
+      if (todayAtt.check_out) {
+        hours = parseFloat(((new Date(`2024-01-01T${todayAtt.check_out}`) - new Date(`2024-01-01T${todayAtt.check_in}`)) / 3600000).toFixed(1));
+      } else {
+        const [h, m, s] = todayAtt.check_in.split(':').map(Number);
+        const checkInDate = new Date();
+        checkInDate.setHours(h, m, s, 0);
+        hours = parseFloat(((Date.now() - checkInDate.getTime()) / 3600000).toFixed(1));
+      }
+      mapped.push({
+        date: new Date().toLocaleDateString('en-US', { weekday: 'short' }),
+        hours,
+        isToday: true,
+      });
+    }
+
+    return mapped;
+  };
+
+  const chartData = buildChartData();
 
   if (loading) return <div className="space-y-6"><div className="skeleton h-10 w-64 rounded-xl" /><div className="grid grid-cols-4 gap-5">{Array.from({length:4}).map((_,i)=><div key={i} className="skeleton h-32 rounded-2xl" />)}</div></div>;
 
@@ -66,9 +152,19 @@ export default function EmployeeDashboard() {
               {isCheckedIn && <p className="text-xs text-success font-semibold mb-1 flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-success pulse-dot" /> CHECKED IN</p>}
               {isCheckedOut && <p className="text-xs text-on-surface-variant font-semibold mb-1">CHECKED OUT</p>}
               {!todayAtt && <p className="text-xs text-warning font-semibold mb-1">NOT CHECKED IN</p>}
-              {todayAtt?.check_in && <p className="text-lg font-bold text-on-surface">{todayAtt.check_in.substring(0, 5)}</p>}
+              {todayAtt?.check_in && (
+                <div>
+                  <p className="text-lg font-bold text-on-surface">{todayAtt.check_in.substring(0, 5)}</p>
+                  <p className="text-xs text-on-surface-variant flex items-center gap-1 mt-0.5">
+                    <Clock className="w-3 h-3" />
+                    {isCheckedIn ? <span className="text-success font-medium">{elapsed}</span> : <span>{elapsed}</span>}
+                    {isCheckedIn && <span className="text-[10px]">elapsed</span>}
+                    {isCheckedOut && <span className="text-[10px]">total</span>}
+                  </p>
+                </div>
+              )}
             </div>
-            <button onClick={handleMark} disabled={marking || isCheckedOut} className={`btn-glow flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40 transition-all`}
+            <button onClick={handleMark} disabled={marking} className={`btn-glow flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40 transition-all`}
               style={{ background: isCheckedIn ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #4d8eff, #571bc1)' }}>
               {marking ? <Loader2 className="w-4 h-4 animate-spin" /> : isCheckedIn ? <><LogOut className="w-4 h-4" /> Check Out</> : <><LogIn className="w-4 h-4" /> Check In</>}
             </button>
@@ -87,8 +183,23 @@ export default function EmployeeDashboard() {
               <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
               <XAxis dataKey="date" stroke="var(--chart-axis)" fontSize={12} />
               <YAxis stroke="var(--chart-axis)" fontSize={12} />
-              <Tooltip contentStyle={{ background: 'var(--chart-tooltip-bg)', border: '1px solid var(--chart-tooltip-border)', borderRadius: '12px', color: 'var(--chart-tooltip-color)' }} />
-              <Bar dataKey="hours" fill="#4d8eff" radius={[4, 4, 0, 0]} />
+              <Tooltip contentStyle={{ background: 'var(--chart-tooltip-bg)', border: '1px solid var(--chart-tooltip-border)', borderRadius: '12px', color: 'var(--chart-tooltip-color)' }}
+                formatter={(value, name, props) => [`${value} hrs${props.payload.isToday && isCheckedIn ? ' (live)' : ''}`, 'Hours']} />
+              <Bar dataKey="hours" radius={[4, 4, 0, 0]}
+                fill="#4d8eff"
+                shape={(props) => {
+                  const { x, y, width, height, payload } = props;
+                  const fill = payload.isToday && isCheckedIn ? 'url(#liveGradient)' : '#4d8eff';
+                  return <rect x={x} y={y} width={width} height={height} rx={4} ry={4} fill={fill} />;
+                }}
+              >
+              </Bar>
+              <defs>
+                <linearGradient id="liveGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="100%" stopColor="#4d8eff" />
+                </linearGradient>
+              </defs>
             </BarChart>
           </ResponsiveContainer>
         </div>
