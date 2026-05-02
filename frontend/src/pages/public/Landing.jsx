@@ -179,7 +179,7 @@ export default function Landing() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
-              { icon: Mail, title: 'Email Us', detail: 'rushikesh.g.bobade@gmail.com', href: 'mailto:rushikesh.g.bobade@gmail.com' },
+              { icon: Mail, title: 'Email Us', detail: 'support@empay.com', href: 'mailto:support@empay.com' },
               { icon: Phone, title: 'Call Us', detail: '+91 98765 43210', href: 'tel:+919876543210' },
               { icon: MapPin, title: 'Visit Us', detail: 'Mumbai, Maharashtra, India', href: '#' },
             ].map((c, i) => {
@@ -205,7 +205,7 @@ export default function Landing() {
             <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#5b4bd4]"><Building2 className="w-4 h-4 text-white" /></div>
             <span className="text-base font-extrabold text-white">EmPay HRMS</span>
           </div>
-          <p className="text-sm text-slate-400">© {new Date().getFullYear()} EmPay HRMS. Created by <span className="text-white font-semibold">Rushikesh Bobade</span>. All rights reserved.</p>
+          <p className="text-sm text-slate-400">© {new Date().getFullYear()} EmPay HRMS. All rights reserved.</p>
           <div className="flex items-center gap-6 text-sm font-semibold text-slate-400">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#about" className="hover:text-white transition-colors">About</a>
