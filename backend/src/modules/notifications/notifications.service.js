@@ -1,5 +1,6 @@
 const { pool } = require('../../config/db');
 const { sendEmail } = require('../../utils/mailer');
+const { alertEmail } = require('../../utils/emailTemplates');
 
 class NotificationsService {
   async getAll(userId) {
@@ -45,11 +46,12 @@ class NotificationsService {
       
       // Email notification (for important alerts)
       if (type === 'warning' || title.includes('Leave')) {
+        const emailHtml = alertEmail(title, message, type);
         sendEmail(
           hr.email, 
           `EmPay Alert: ${title}`, 
-          `Hi ${hr.full_name},\n\nThis is an automated HRMS alert:\n\n${message}\n\nPlease check the dashboard for details.`,
-          `<h2>EmPay Alert 📧</h2><p>Hi ${hr.full_name},</p><p>This is an automated HRMS alert:</p><div style="padding:15px; background:#f4f7f6; border-left:4px solid #4d8eff; margin:20px 0;"><strong>${title}</strong><br/>${message}</div><p>Please check the admin dashboard for details.</p>`
+          `Hi ${hr.full_name},\n\nThis is an automated HRMS alert:\n\n${message}`,
+          emailHtml
         ).catch(err => console.error(`Failed to send HR email to ${hr.email}:`, err.message));
       }
     }
