@@ -86,12 +86,12 @@ export default function Topbar() {
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-3 w-80 md:w-96 rounded-2xl glass-panel shadow-2xl border border-surface overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="p-4 border-b border-surface flex items-center justify-between bg-surface/80 backdrop-blur-md sticky top-0 z-10">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-bold text-on-surface">Notifications</h3>
+            <div className="absolute right-0 mt-2 w-72 md:w-80 rounded-xl glass-panel shadow-2xl border border-surface overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="p-3 border-b border-surface flex items-center justify-between bg-surface/90 backdrop-blur-md sticky top-0 z-10">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold text-on-surface">Notifications</h3>
                   {unreadCount > 0 && (
-                    <span className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">
+                    <span className="bg-primary/10 text-primary text-[9px] px-1.5 py-0.5 rounded-full font-bold">
                       {unreadCount}
                     </span>
                   )}
@@ -99,13 +99,14 @@ export default function Topbar() {
                 {unreadCount > 0 && (
                   <button 
                     onClick={() => api.put('/notifications/read-all').then(() => setNotifications(prev => prev.map(n => ({...n, is_read: true}))))}
-                    className="text-[11px] font-bold text-primary hover:text-primary/80 transition-colors"
+                    className="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors"
                   >
                     Mark all read
                   </button>
                 )}
               </div>
-              <div className="max-h-[400px] overflow-y-auto scrollbar-hide">
+              <div className="max-h-[280px] overflow-y-auto scrollbar-hide">
+
                 {notifications.length === 0 ? (
                   <div className="p-12 text-center flex flex-col items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-surface-variant/20 flex items-center justify-center">
@@ -119,28 +120,27 @@ export default function Topbar() {
                       <div 
                         key={n.id} 
                         onClick={() => !n.is_read && markAsRead(n.id)}
-                        className={`group p-4 cursor-pointer hover:bg-primary/[0.04] transition-all relative ${!n.is_read ? 'bg-primary/[0.02]' : ''}`}
+                        className={`group p-3 cursor-pointer hover:bg-primary/[0.04] transition-all relative ${!n.is_read ? 'bg-primary/[0.02]' : ''}`}
                       >
-                        <div className="flex items-start gap-3">
-                          <div className="flex-shrink-0 mt-1.5 relative">
-                            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${!n.is_read ? 'bg-primary shadow-[0_0_8px_rgba(77,142,255,0.6)] scale-110' : 'bg-outline/20'}`} />
+                        <div className="flex items-start gap-2.5">
+                          <div className="flex-shrink-0 mt-1 relative">
+                            <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${!n.is_read ? 'bg-primary shadow-[0_0_6px_rgba(77,142,255,0.6)]' : 'bg-outline/20'}`} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h4 className={`text-[13px] leading-tight truncate transition-colors ${!n.is_read ? 'font-bold text-on-surface' : 'font-medium text-on-surface-variant group-hover:text-on-surface'}`}>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                              <h4 className={`text-[12px] leading-tight truncate transition-colors ${!n.is_read ? 'font-bold text-on-surface' : 'font-medium text-on-surface-variant group-hover:text-on-surface'}`}>
                                 {n.title}
                               </h4>
-                              {n.type === 'warning' && <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />}
+                              {n.type === 'warning' && <span className="w-1 h-1 rounded-full bg-warning animate-pulse" />}
                             </div>
-                            <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
+                            <p className="text-[11px] text-on-surface-variant line-clamp-1 leading-normal opacity-80 group-hover:opacity-100 transition-opacity">
                               {n.message}
                             </p>
-                            <div className="flex items-center gap-2 mt-2.5">
-                              <span className="text-[10px] font-bold text-outline tracking-tight">
+                            <div className="flex items-center gap-1.5 mt-1.5">
+                              <span className="text-[9px] font-bold text-outline tracking-tight opacity-60">
                                 {new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
-                              <span className="w-1 h-1 rounded-full bg-outline/20" />
-                              <span className="text-[10px] font-bold text-outline uppercase tracking-tighter">
+                              <span className="text-[9px] font-bold text-outline uppercase tracking-tighter opacity-40">
                                 {new Date(n.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                               </span>
                             </div>
