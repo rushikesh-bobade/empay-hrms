@@ -1,4 +1,6 @@
 const { pool } = require('../../config/db');
+const notificationsService = require('../notifications/notifications.service');
+
 
 class AttendanceService {
   async markAttendance(employeeId) {
@@ -124,6 +126,42 @@ class AttendanceService {
     );
     return result.rows;
   }
+
+  /**
+   * Performs smart checks and notifies HR
+   */
+  async checkAndNotifyHR() {
+    const today = new Date().toLocaleDateString('en-CA');
+    
+    // 1. Daily Attendance Summary Ready
+    // We'll notify once per day when the dashboard is accessed.
+    await notificationsService.notifyHR(
+      '📊 Daily Attendance Summary',
+      "Today's attendance summary is available",
+      'info',
+      'DAILY_ATTENDANCE_SUMMARY'
+    );
+
+    // 2. Smart Alerts: Frequent Absentee (absent > 3 times in last 30 days)
+    const frequentAbsentees = await pool.query(`
+      SELECT u.full_name, COUNT(*) as absent_count
+      FROM attendance a
+      JOIN users u ON a.employee_id = u.id
+      WHERE a.status = 'absent' AND a.date >= CURRENT_DATE - INTERVAL '30 days'
+      GROUP BY u.id, u.full_name
+      HAVING COUNT(*) >= 3
+    `);
+
+    for (const row of frequentAbsentees.rows) {
+      await notificationsService.notifyHR(
+        '⚠ Frequent Absentee Detected',
+        `${row.full_name} has irregular attendance (${row.absent_count} absences recently)`,
+        'warning',
+        `ABSENTEE_${row.full_name}_${today}`
+      );
+    }
+  }
+
 }
 
 module.exports = new AttendanceService();

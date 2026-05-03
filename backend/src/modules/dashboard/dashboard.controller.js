@@ -1,4 +1,6 @@
 const { pool } = require('../../config/db');
+const attendanceService = require('../attendance/attendance.service');
+
 
 const getAdminDashboard = async (req, res) => {
   try {
@@ -157,6 +159,10 @@ const getEmployeeDashboard = async (req, res) => {
 const getHRDashboard = async (req, res) => {
   try {
     const today = new Date().toLocaleDateString('en-CA');
+
+    // Smart notifications (Daily Summary & Frequent Absentee)
+    attendanceService.checkAndNotifyHR().catch(err => console.error('Failed HR notifications:', err.message));
+
 
     const empCounts = await pool.query(`
       SELECT

@@ -1,6 +1,9 @@
 const { pool } = require('../../config/db');
 const { sendEmail } = require('../../utils/mailer');
 const { leaveStatusEmail } = require('../../utils/emailTemplates');
+const notificationsService = require('../notifications/notifications.service');
+const usersService = require('../users/users.service');
+
 
 class LeaveService {
   // ----- Leave Types -----
@@ -104,7 +107,22 @@ class LeaveService {
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [employeeId, leave_type_id, start_date, end_date, total_days, reason]
     );
-    return result.rows[0];
+    const request = result.rows[0];
+
+    // Notify HR
+    try {
+      const employee = await usersService.getById(employeeId);
+      await notificationsService.notifyHR(
+        '📩 New Leave Request',
+        `New leave request from ${employee.full_name}`,
+        'info'
+      );
+    } catch (err) {
+      console.error('Failed to send leave notification:', err.message);
+    }
+
+    return request;
+
   }
 
   async getMyRequests(employeeId) {
