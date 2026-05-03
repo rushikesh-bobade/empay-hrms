@@ -11,11 +11,20 @@ const getAll = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    await settingsService.update(req.body);
-    res.json({ success: true, message: 'Settings updated successfully' });
+    const updated = await settingsService.update(req.body);
+    res.json({ success: true, message: 'Settings updated successfully', data: updated });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to update settings' });
   }
 };
 
-module.exports = { getAll, update };
+const getDbStats = async (req, res) => {
+  try {
+    const stats = await settingsService.getDbStats();
+    res.json({ success: true, data: stats });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch database stats' });
+  }
+};
+
+module.exports = { getAll, update, getDbStats };
