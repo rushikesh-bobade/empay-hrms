@@ -37,6 +37,8 @@ export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testingEmail, setTestingEmail] = useState(false);
+  const [leaveTypes, setLeaveTypes] = useState(null);
+  const [editingLeave, setEditingLeave] = useState(null);
 
   useEffect(() => {
     api.get('/settings').then(res => {
@@ -49,7 +51,10 @@ export default function Settings() {
     if (activeTab === 'Database' && !dbStats) {
       api.get('/settings/db-stats').then(res => setDbStats(res.data.data)).catch(console.error);
     }
-  }, [activeTab, dbStats]);
+    if (activeTab === 'Leave Policies' && !leaveTypes) {
+      api.get('/leave/types').then(res => setLeaveTypes(res.data.data)).catch(console.error);
+    }
+  }, [activeTab, dbStats, leaveTypes]);
 
   const updateSetting = (key, value) => {
     setSettings(prev => ({ ...prev, [key]: value }));
@@ -78,9 +83,25 @@ export default function Settings() {
 
   const tabs = [
     { icon: Building2, title: 'General', desc: 'Organization details and work schedule' },
+    { icon: Clock, title: 'Leave Policies', desc: 'Manage leave types and allocations' },
     { icon: Mail, title: 'Email & SMTP', desc: 'Email delivery and notification preferences' },
     { icon: Database, title: 'Database', desc: 'Connection status and record counts' },
   ];
+
+  const handleSaveLeave = async () => {
+    if (!editingLeave) return;
+    try {
+      const res = await api.put(`/leave/types/${editingLeave.id}`, {
+        max_days_per_year: parseInt(editingLeave.max_days_per_year),
+        is_paid: editingLeave.is_paid
+      });
+      setLeaveTypes(prev => prev.map(lt => lt.id === editingLeave.id ? res.data.data : lt));
+      setEditingLeave(null);
+      toast.success('Leave policy updated');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update leave policy');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -111,6 +132,62 @@ export default function Settings() {
           {loading ? (
             <div className="flex justify-center items-center py-32"><Loader2 className="w-6 h-6 animate-spin text-primary opacity-40" /></div>
 
+          ) : activeTab === 'Leave Policies' ? (
+            <div className="animate-in fade-in slide-in-from-bottom-1 duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-lg font-bold text-on-surface">Leave Policies</h2>
+                  <p className="text-xs text-on-surface-variant mt-0.5">Manage employee leave entitlements and types.</p>
+                </div>
+              </div>
+
+              {!leaveTypes ? (
+                <div className="flex justify-center py-12"><Loader2 className="w-5 h-5 animate-spin text-primary opacity-40" /></div>
+              ) : (
+                <div className="space-y-3">
+                  {leaveTypes.map(lt => {
+                    const isEditing = editingLeave?.id === lt.id;
+                    return (
+                      <div key={lt.id} className="p-4 rounded-xl bg-surface-variant/5 border border-surface transition-all">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1 pr-4">
+                            <h4 className="text-sm font-semibold text-on-surface flex items-center gap-2">
+                              {lt.name}
+                              {!lt.is_paid && <span className="text-[10px] uppercase font-bold text-danger bg-danger/10 px-1.5 py-0.5 rounded">Unpaid</span>}
+                            </h4>
+                            <p className="text-xs text-on-surface-variant mt-1">{lt.description}</p>
+                          </div>
+                          <div className="text-right flex-shrink-0">
+                            {isEditing ? (
+                              <div className="flex flex-col items-end gap-2">
+                                <div className="flex items-center gap-2">
+                                  <input 
+                                    type="number" 
+                                    className="input-glass w-20 px-2 py-1 text-sm rounded text-center" 
+                                    value={editingLeave.max_days_per_year} 
+                                    onChange={e => setEditingLeave({...editingLeave, max_days_per_year: e.target.value})}
+                                  />
+                                  <span className="text-xs font-semibold text-on-surface-variant">days/yr</span>
+                                </div>
+                                <div className="flex gap-2 mt-2">
+                                  <button onClick={() => setEditingLeave(null)} className="text-xs text-on-surface-variant hover:text-on-surface">Cancel</button>
+                                  <button onClick={handleSaveLeave} className="btn-glow px-3 py-1 rounded text-xs font-bold text-white bg-primary">Save</button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-end">
+                                <div className="text-lg font-bold text-primary">{lt.max_days_per_year} <span className="text-xs text-on-surface-variant font-medium">days/yr</span></div>
+                                <button onClick={() => setEditingLeave(lt)} className="text-xs text-primary hover:text-primary-light mt-1 font-semibold">Edit Policy</button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           ) : activeTab === 'General' ? (
             <div className="animate-in fade-in slide-in-from-bottom-1 duration-300">
               <div className="flex items-center justify-between mb-6">

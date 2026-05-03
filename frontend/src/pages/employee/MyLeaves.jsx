@@ -13,6 +13,7 @@ export default function MyLeaves() {
   const [showApply, setShowApply] = useState(false);
   const [form, setForm] = useState({ leave_type_id: '', start_date: '', end_date: '', reason: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [viewMode, setViewMode] = useState('yearly');
 
   const fetchData = () => {
     Promise.all([api.get('/leave/allocation/my'), api.get('/leave/requests/my'), api.get('/leave/types')])
@@ -39,7 +40,7 @@ export default function MyLeaves() {
     setSubmitting(false);
   };
 
-  const colors = { 'Casual Leave': '#4d8eff', 'Sick Leave': '#f87171', 'Earned Leave': '#4cd7f6' };
+  const colors = { 'Casual Leave': '#4d8eff', 'Sick/Medical Leave': '#f87171', 'Earned/Privilege Leave': '#4cd7f6' };
 
   return (
     <div className="space-y-6">
@@ -58,18 +59,47 @@ export default function MyLeaves() {
 
       {tab === 'balance' && (
         <div className="space-y-6">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex gap-1 p-1 rounded-lg bg-[var(--glass-bg)] border border-surface">
+              <button onClick={() => setViewMode('yearly')} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${viewMode === 'yearly' ? 'bg-primary text-white shadow-lg' : 'text-on-surface-variant hover:bg-surface'}`}>Yearly View</button>
+              <button onClick={() => setViewMode('monthly')} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${viewMode === 'monthly' ? 'bg-primary text-white shadow-lg' : 'text-on-surface-variant hover:bg-surface'}`}>Monthly View</button>
+            </div>
+            <p className="text-[11px] text-on-surface-variant italic">
+              {viewMode === 'yearly' ? 'Showing total allocations for ' + new Date().getFullYear() : 'Showing monthly breakdown and current month usage'}
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {allocations.map(a => {
-              const pct = a.allocated_days > 0 ? (a.used_days / a.allocated_days * 100) : 0;
+            {allocations.filter(a => a.allocated_days > 0).map(a => {
+              const isMonthly = viewMode === 'monthly';
+              const allocated = isMonthly ? parseFloat((a.allocated_days / 12).toFixed(1)) : a.allocated_days;
+              const used = isMonthly ? (a.used_this_month || 0) : a.used_days;
+              const remaining = isMonthly ? parseFloat((allocated - used).toFixed(1)) : a.remaining;
+              const pct = allocated > 0 ? (used / allocated * 100) : 0;
+              
               return (
-                <div key={a.id} className="glass-panel rounded-2xl p-5 fade-in">
+                <div key={a.id} className="glass-panel rounded-2xl p-5 fade-in relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <div className="w-12 h-12 rounded-full border-4 border-primary" />
+                  </div>
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-xs uppercase tracking-widest font-semibold text-on-surface-variant">{a.name}</p>
-                    <div className="w-3 h-3 rounded-full" style={{ background: colors[a.name] || '#4d8eff' }} />
+                    <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_8px_rgba(77,142,255,0.5)]" style={{ background: colors[a.name] || '#4d8eff' }} />
                   </div>
-                  <p className="text-3xl font-bold text-on-surface mb-1">{a.remaining} <span className="text-lg text-on-surface-variant font-normal">days left</span></p>
-                  <p className="text-xs text-on-surface-variant mb-3">Allocated: {a.allocated_days} · Used: {a.used_days}</p>
-                  <div className="progress-bar"><div className="progress-bar-fill" style={{ width: `${Math.min(pct, 100)}%`, background: colors[a.name] || '#4d8eff' }} /></div>
+                  <p className="text-3xl font-bold text-on-surface mb-1">
+                    {remaining} <span className="text-lg text-on-surface-variant font-normal">days {remaining < 0 ? 'extra' : 'left'}</span>
+                  </p>
+                  <p className="text-xs text-on-surface-variant mb-4">
+                    {isMonthly ? 'Monthly Quota' : 'Annual Allocation'}: {allocated} · Used: {used}
+                  </p>
+                  <div className="progress-bar bg-surface-variant/20 h-1.5">
+                    <div className="progress-bar-fill shadow-[0_0_10px_rgba(77,142,255,0.3)] transition-all duration-500" style={{ width: `${Math.min(Math.max(0, pct), 100)}%`, background: colors[a.name] || '#4d8eff' }} />
+                  </div>
+                  {isMonthly && used > allocated && (
+                    <p className="text-[10px] text-red-400 mt-2 font-medium flex items-center gap-1">
+                      <span className="w-1 h-1 rounded-full bg-red-400" /> Over-limit this month
+                    </p>
+                  )}
                 </div>
               );
             })}
@@ -135,7 +165,7 @@ export default function MyLeaves() {
               <div><label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Leave Type</label>
                 <select value={form.leave_type_id} onChange={e => setForm(f => ({...f, leave_type_id: e.target.value}))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required>
                   <option value="">Select type...</option>
-                  {leaveTypes.map(lt => <option key={lt.id} value={lt.id}>{lt.name}</option>)}
+                  {leaveTypes.filter(lt => allocations.some(a => a.leave_type_id === lt.id && a.allocated_days > 0)).map(lt => <option key={lt.id} value={lt.id}>{lt.name}</option>)}
                 </select></div>
               <div className="grid grid-cols-2 gap-4">
                 <div><label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Start Date</label>

@@ -11,6 +11,7 @@ export default function EmployeeDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [marking, setMarking] = useState(false);
+  const [viewMode, setViewMode] = useState('yearly');
   const [elapsed, setElapsed] = useState('00:00:00');
   const timerRef = useRef(null);
 
@@ -83,51 +84,48 @@ export default function EmployeeDashboard() {
 
   // Build chart data including today's live hours
   const buildChartData = () => {
-    const records = (data?.recent_attendance || []).slice().reverse();
-    const today = new Date().toLocaleDateString('en-CA');
+    const records = data?.recent_attendance || [];
+    const today = new Date();
+    const todayStr = today.toLocaleDateString('en-CA');
+    
+    // Generate the last 7 days ending today
+    const last7Days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      last7Days.push(d);
+    }
 
-    const mapped = records.map(d => {
-      const dateStr = new Date(d.date).toLocaleDateString('en-CA');
-      const isToday = dateStr === today;
+    return last7Days.map(dateObj => {
+      const dateStr = dateObj.toLocaleDateString('en-CA');
+      const isToday = dateStr === todayStr;
+      
+      // Find record for this day
+      let d = records.find(r => new Date(r.date).toLocaleDateString('en-CA') === dateStr);
+      
+      // Fallback to today_attendance if it's today and not in recent_attendance
+      if (isToday && !d && todayAtt && todayAtt.check_in) {
+        d = todayAtt;
+      }
 
       let hours = 0;
-      if (d.check_in && d.check_out) {
-        hours = parseFloat(((new Date(`2024-01-01T${d.check_out}`) - new Date(`2024-01-01T${d.check_in}`)) / 3600000).toFixed(1));
-      } else if (isToday && d.check_in && !d.check_out) {
-        // Live: calculate elapsed hours from check_in to now
-        const [h, m, s] = d.check_in.split(':').map(Number);
-        const checkInDate = new Date();
-        checkInDate.setHours(h, m, s, 0);
-        hours = parseFloat(((Date.now() - checkInDate.getTime()) / 3600000).toFixed(1));
+      if (d) {
+        if (d.check_in && d.check_out) {
+          hours = parseFloat(((new Date(`2024-01-01T${d.check_out}`) - new Date(`2024-01-01T${d.check_in}`)) / 3600000).toFixed(1));
+        } else if (isToday && d.check_in && !d.check_out) {
+          const [h, m, s] = d.check_in.split(':').map(Number);
+          const checkInDate = new Date();
+          checkInDate.setHours(h, m, s, 0);
+          hours = parseFloat(((Date.now() - checkInDate.getTime()) / 3600000).toFixed(1));
+        }
       }
 
       return {
-        date: new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' }),
+        date: dateObj.toLocaleDateString('en-US', { weekday: 'short' }),
         hours,
         isToday,
       };
     });
-
-    // If no today record in recent_attendance, add a placeholder
-    const hasTodayRecord = records.some(d => new Date(d.date).toLocaleDateString('en-CA') === today);
-    if (!hasTodayRecord && todayAtt && todayAtt.check_in) {
-      let hours = 0;
-      if (todayAtt.check_out) {
-        hours = parseFloat(((new Date(`2024-01-01T${todayAtt.check_out}`) - new Date(`2024-01-01T${todayAtt.check_in}`)) / 3600000).toFixed(1));
-      } else {
-        const [h, m, s] = todayAtt.check_in.split(':').map(Number);
-        const checkInDate = new Date();
-        checkInDate.setHours(h, m, s, 0);
-        hours = parseFloat(((Date.now() - checkInDate.getTime()) / 3600000).toFixed(1));
-      }
-      mapped.push({
-        date: new Date().toLocaleDateString('en-US', { weekday: 'short' }),
-        hours,
-        isToday: true,
-      });
-    }
-
-    return mapped;
   };
 
   const chartData = buildChartData();
@@ -167,9 +165,15 @@ export default function EmployeeDashboard() {
                 </div>
               )}
             </div>
-            <button onClick={handleMark} disabled={marking} className={`btn-glow flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40 transition-all`}
-              style={{ background: isCheckedIn ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #4d8eff, #571bc1)' }}>
-              {marking ? <Loader2 className="w-4 h-4 animate-spin" /> : isCheckedIn ? <><LogOut className="w-4 h-4" /> Check Out</> : <><LogIn className="w-4 h-4" /> Check In</>}
+            <button 
+              onClick={handleMark} 
+              disabled={marking || isCheckedOut} 
+              className={`btn-glow flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40 transition-all`}
+              style={{ background: isCheckedOut ? 'linear-gradient(135deg, #6b7280, #4b5563)' : isCheckedIn ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #4d8eff, #571bc1)' }}>
+              {marking ? <Loader2 className="w-4 h-4 animate-spin" /> : 
+               isCheckedOut ? <><CalendarCheck className="w-4 h-4" /> Finished</> :
+               isCheckedIn ? <><LogOut className="w-4 h-4" /> Check Out</> : 
+               <><LogIn className="w-4 h-4" /> Check In</>}
             </button>
           </div>
         </div>
@@ -188,15 +192,7 @@ export default function EmployeeDashboard() {
               <YAxis stroke="var(--chart-axis)" fontSize={12} />
               <Tooltip contentStyle={{ background: 'var(--chart-tooltip-bg)', border: '1px solid var(--chart-tooltip-border)', borderRadius: '12px', color: 'var(--chart-tooltip-color)' }}
                 formatter={(value, name, props) => [`${value} hrs${props.payload.isToday && isCheckedIn ? ' (live)' : ''}`, 'Hours']} />
-              <Bar dataKey="hours" radius={[4, 4, 0, 0]}
-                fill="#4d8eff"
-                shape={(props) => {
-                  const { x, y, width, height, payload } = props;
-                  const fill = payload.isToday && isCheckedIn ? 'url(#liveGradient)' : '#4d8eff';
-                  return <rect x={x} y={y} width={width} height={height} rx={4} ry={4} fill={fill} />;
-                }}
-              >
-              </Bar>
+              <Bar dataKey="hours" radius={[4, 4, 0, 0]} fill="#4d8eff" />
               <defs>
                 <linearGradient id="liveGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#22c55e" />
@@ -207,25 +203,31 @@ export default function EmployeeDashboard() {
           </ResponsiveContainer>
         </div>
 
-        {/* Leave Balance */}
+        {/* Leave Balance (Monthly) */}
         <div className="glass-card p-5 fade-in">
-          <h3 className="text-lg font-semibold text-on-surface mb-4">Leave Balance</h3>
+          <h3 className="text-sm font-bold text-on-surface mb-4 uppercase tracking-wider flex items-center gap-2">
+            <CalendarOff className="w-4 h-4 text-primary" /> Monthly Leave Balance
+          </h3>
           <div className="space-y-4">
-            {(data?.leave_balance || []).map(lb => {
-              const pct = lb.allocated > 0 ? ((lb.used / lb.allocated) * 100) : 0;
-              const colors = { 'Casual Leave': '#4d8eff', 'Sick Leave': '#f87171', 'Earned Leave': '#4cd7f6' };
-              return (
-                <div key={lb.leave_type}>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-sm text-on-surface-variant">{lb.leave_type}</span>
-                    <span className="text-sm font-semibold text-on-surface">{lb.used} <span className="text-on-surface-variant font-normal">/ {lb.allocated} used</span></span>
+            {(data?.leave_balance || [])
+              .filter(lb => lb.allocated > 0)
+              .map(lb => {
+                const allocated = parseFloat((lb.allocated / 12).toFixed(1));
+                const used = lb.used_this_month || 0;
+                const pct = allocated > 0 ? (used / allocated * 100) : 0;
+                const colors = { 'Casual Leave': '#4d8eff', 'Sick/Medical Leave': '#f87171', 'Earned/Privilege Leave': '#4cd7f6' };
+                return (
+                  <div key={lb.leave_type}>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-medium text-on-surface-variant">{lb.leave_type}</span>
+                      <span className="text-xs font-bold text-on-surface">{used} <span className="text-on-surface-variant font-normal">/ {allocated} used</span></span>
+                    </div>
+                    <div className="progress-bar h-1.5 bg-surface-variant/20">
+                      <div className="progress-bar-fill shadow-[0_0_8px_rgba(77,142,255,0.2)] transition-all duration-500" style={{ width: `${Math.min(Math.max(0, pct), 100)}%`, background: colors[lb.leave_type] || '#4d8eff' }} />
+                    </div>
                   </div>
-                  <div className="progress-bar">
-                    <div className="progress-bar-fill" style={{ width: `${Math.min(pct, 100)}%`, background: colors[lb.leave_type] || '#4d8eff' }} />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
       </div>

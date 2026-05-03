@@ -112,16 +112,16 @@ async function seed300() {
 
         if (rand < 0.85) {
           status = 'present';
-          checkIn = `${dateStr}T${randomTime(8, 30, 9, 30)}`;
-          checkOut = `${dateStr}T${randomTime(17, 30, 18, 30)}`;
+          checkIn = randomTime(8, 30, 9, 30);
+          checkOut = randomTime(17, 30, 18, 30);
         } else if (rand < 0.90) {
           status = 'absent';
           checkIn = null;
           checkOut = null;
         } else if (rand < 0.95) {
           status = 'half_day';
-          checkIn = `${dateStr}T${randomTime(8, 30, 9, 30)}`;
-          checkOut = `${dateStr}T${randomTime(13, 0, 14, 0)}`;
+          checkIn = randomTime(8, 30, 9, 30);
+          checkOut = randomTime(13, 0, 14, 0);
         } else {
           status = 'on_leave';
           checkIn = null;
