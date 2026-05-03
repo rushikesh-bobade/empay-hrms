@@ -54,7 +54,7 @@ const uploadAvatar = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No image file provided' });
     }
-    const avatarUrl = `/avatars/${req.file.filename}`;
+    const avatarUrl = req.file.path; // This will be the secure Cloudinary URL
     const user = await usersService.updateProfilePic(req.user.id, avatarUrl);
     res.json({ success: true, message: 'Profile picture updated', data: { profile_pic: user.profile_pic } });
   } catch (error) {

@@ -12,9 +12,13 @@ export default function UserAvatar({ user, size = 'md', gradient, className = ''
   const bg = gradient || 'linear-gradient(135deg, #4d8eff, #571bc1)';
 
   if (user?.profile_pic) {
+    const fullSrc = user.profile_pic.startsWith('http') 
+      ? user.profile_pic 
+      : `${BASE_URL}${user.profile_pic}`;
+
     return (
       <img
-        src={`${BASE_URL}${user.profile_pic}`}
+        src={fullSrc}
         alt={user.full_name || 'Avatar'}
         className={`${sizeClass} rounded-full object-cover ${className}`}
       />
