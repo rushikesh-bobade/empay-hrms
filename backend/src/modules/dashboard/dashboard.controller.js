@@ -119,12 +119,25 @@ const getEmployeeDashboard = async (req, res) => {
 
     // Leave balance
     const leaveBalance = await pool.query(`
-      SELECT lt.name as leave_type, la.allocated_days as allocated,
-             la.used_days as used, (la.allocated_days - la.used_days) as remaining
+      SELECT 
+        lt.id as leave_type_id,
+        lt.name as leave_type, 
+        la.allocated_days as allocated,
+        la.used_days as used, 
+        (la.allocated_days - la.used_days) as remaining,
+        COALESCE((
+          SELECT SUM(total_days)
+          FROM leave_requests
+          WHERE employee_id = $1 
+            AND leave_type_id = lt.id
+            AND status = 'approved'
+            AND EXTRACT(MONTH FROM start_date) = $3
+            AND EXTRACT(YEAR FROM start_date) = $2
+        ), 0)::FLOAT as used_this_month
       FROM leave_allocations la
       JOIN leave_types lt ON la.leave_type_id = lt.id
       WHERE la.employee_id = $1 AND la.year = $2
-    `, [employeeId, currentYear]);
+    `, [employeeId, currentYear, currentMonth]);
 
 
 

@@ -18,6 +18,15 @@ const createLeaveType = async (req, res) => {
   }
 };
 
+const updateLeaveType = async (req, res) => {
+  try {
+    const data = await leaveService.updateLeaveType(req.params.id, req.body);
+    res.json({ success: true, message: 'Leave type updated', data });
+  } catch (error) {
+    res.status(error.status || 500).json({ success: false, message: error.message });
+  }
+};
+
 const getMyAllocations = async (req, res) => {
   try {
     const data = await leaveService.getMyAllocations(req.user.id);
@@ -29,7 +38,8 @@ const getMyAllocations = async (req, res) => {
 
 const getAllocationsByEmployee = async (req, res) => {
   try {
-    const data = await leaveService.getAllocationsByEmployee(req.params.employee_id);
+    const employeeId = req.params.employee_id || req.user.id;
+    const data = await leaveService.getAllocationsByEmployee(employeeId);
     res.json({ success: true, message: 'Allocations fetched', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });
@@ -91,7 +101,7 @@ const rejectRequest = async (req, res) => {
 };
 
 module.exports = {
-  getLeaveTypes, createLeaveType,
+  getLeaveTypes, createLeaveType, updateLeaveType,
   getMyAllocations, getAllocationsByEmployee, upsertAllocation,
   createRequest, getMyRequests, getAllRequests,
   approveRequest, rejectRequest,

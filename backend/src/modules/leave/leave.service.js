@@ -22,9 +22,36 @@ class LeaveService {
     return result.rows[0];
   }
 
-  // ----- Leave Allocations -----
-  /*async getMyAllocations(employeeId) {
+  async updateLeaveType(id, data) {
+    const { max_days_per_year, is_paid } = data;
+    
+    const result = await pool.query(
+      `UPDATE leave_types SET max_days_per_year = $1, is_paid = $2 WHERE id = $3 RETURNING *`,
+      [max_days_per_year, is_paid, id]
+    );
+
+    if (result.rows.length === 0) {
+      throw Object.assign(new Error('Leave type not found'), { status: 404 });
+    }
+
+    // Sync allocations for the current year
     const currentYear = new Date().getFullYear();
+    await pool.query(
+      `UPDATE leave_allocations 
+       SET allocated_days = GREATEST($1, used_days)
+       WHERE leave_type_id = $2 AND year = $3`,
+      [max_days_per_year, id, currentYear]
+    );
+
+    return result.rows[0];
+  }
+
+  // ----- Leave Allocations -----
+  async getMyAllocations(employeeId) {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    
+    // Get yearly allocations
     const result = await pool.query(
       `SELECT la.*, lt.name, lt.max_days_per_year,
               (la.allocated_days - la.used_days) as remaining
@@ -34,21 +61,32 @@ class LeaveService {
        ORDER BY lt.name`,
       [employeeId, currentYear]
     );
-    return result.rows;
-  }*/
+
+    // Get usage for current month
+    const monthUsage = await pool.query(
+      `SELECT leave_type_id, SUM(total_days) as used
+       FROM leave_requests
+       WHERE employee_id = $1 
+         AND status = 'approved'
+         AND EXTRACT(MONTH FROM start_date) = $2
+         AND EXTRACT(YEAR FROM start_date) = $3
+       GROUP BY leave_type_id`,
+      [employeeId, currentMonth, currentYear]
+    );
+
+    const monthUsageMap = {};
+    monthUsage.rows.forEach(r => {
+      monthUsageMap[r.leave_type_id] = parseFloat(r.used);
+    });
+
+    return result.rows.map(row => ({
+      ...row,
+      used_this_month: monthUsageMap[row.leave_type_id] || 0
+    }));
+  }
 
   async getAllocationsByEmployee(employeeId) {
-    const currentYear = new Date().getFullYear();
-    const result = await pool.query(
-      `SELECT la.*, lt.name, lt.max_days_per_year,
-              (la.allocated_days - la.used_days) as remaining
-       FROM leave_allocations la
-       JOIN leave_types lt ON la.leave_type_id = lt.id
-       WHERE la.employee_id = $1 AND la.year = $2
-       ORDER BY lt.name`,
-      [employeeId, currentYear]
-    );
-    return result.rows;
+    return this.getMyAllocations(employeeId);
   }
 
   async upsertAllocation(data) {

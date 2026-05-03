@@ -9,9 +9,10 @@ router.use(authMiddleware);
 // Leave Types
 router.get('/types', leaveController.getLeaveTypes);
 router.post('/types', roleGuard(['admin']), leaveController.createLeaveType);
+router.put('/types/:id', roleGuard(['admin']), leaveController.updateLeaveType);
 
 // Leave Allocations
-router.get('/allocation/my', leaveController.getAllocationsByEmployee);
+router.get('/allocation/my', leaveController.getMyAllocations);
 router.get('/allocation/:employee_id', roleGuard(['admin', 'hr_officer']), leaveController.getAllocationsByEmployee);
 router.post('/allocation', roleGuard(['admin', 'hr_officer']), leaveController.upsertAllocation);
 
