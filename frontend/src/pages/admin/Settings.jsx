@@ -111,9 +111,26 @@ export default function Settings() {
                 </div>
                 <div className="w-11 h-6 bg-primary rounded-full relative cursor-pointer shadow-inner"><div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-md" /></div>
               </div>
-              <div className="pt-4">
-                <button className="btn-glow px-8 py-3 rounded-xl text-sm font-bold text-white flex items-center gap-2" style={{background:'linear-gradient(135deg,#4d8eff,#571bc1)'}}>
+              <div className="pt-4 flex items-center gap-4">
+                <button 
+                  onClick={handleSave}
+                  className="btn-glow px-8 py-3 rounded-xl text-sm font-bold text-white flex items-center gap-2" 
+                  style={{background:'linear-gradient(135deg,#4d8eff,#571bc1)'}}
+                >
                   <Save className="w-4 h-4" /> Save Preferences
+                </button>
+                <button 
+                  onClick={async () => {
+                    try {
+                      await api.post('/auth/test-email');
+                      toast.success('Test email sent! Check your inbox.');
+                    } catch (err) {
+                      toast.error(err.response?.data?.message || 'Failed to send test email');
+                    }
+                  }}
+                  className="px-8 py-3 rounded-xl text-sm font-bold text-on-surface border border-surface hover:bg-surface-variant/20 transition-all"
+                >
+                  Test Connection
                 </button>
               </div>
             </div>
