@@ -37,16 +37,31 @@ export default function UserManagement() {
 
   const openEdit = (user) => {
     setEditUser(user);
-    setForm({ full_name: user.full_name, email: user.email, role: user.role, department: user.department || '', designation: user.designation || '', phone: user.phone || '' });
+    setForm({
+      full_name: user.full_name,
+      email: user.email,
+      password: '', // Clear for security
+      confirm_password: '',
+      role: user.role,
+      department: user.department || '',
+      designation: user.designation || '',
+      phone: user.phone || ''
+    });
     setShowDialog(true);
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!editUser && form.password !== form.confirm_password) {
+    if (form.password && form.password !== form.confirm_password) {
       toast.error('Passwords do not match');
       return;
     }
+    if (!editUser && !form.password) {
+      toast.error('Password is required for new users');
+      return;
+    }
+
     setSubmitting(true);
     try {
       if (editUser) {
@@ -164,18 +179,21 @@ export default function UserManagement() {
                   <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required disabled={!!editUser} />
                 </div>
               </div>
-              {!editUser && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Password</label>
-                    <input type="password" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required />
-                  </div>
-                  <div>
-                    <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Confirm Password</label>
-                    <input type="password" value={form.confirm_password || ''} onChange={e => setForm(f => ({ ...f, confirm_password: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required />
-                  </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">
+                    {editUser ? 'New Password (Optional)' : 'Password'}
+                  </label>
+                  <input type="password" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required={!editUser} />
                 </div>
-              )}
+                <div>
+                  <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">
+                    Confirm {editUser ? 'New ' : ''}Password
+                  </label>
+                  <input type="password" value={form.confirm_password || ''} onChange={e => setForm(f => ({ ...f, confirm_password: e.target.value }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" required={!editUser || !!form.password} />
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Role</label>

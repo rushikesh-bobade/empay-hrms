@@ -75,8 +75,7 @@ export default function AdminDashboard() {
           <h3 className="text-lg font-semibold text-on-surface mb-4">Department Distribution</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
-              <Pie data={deptData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value"
-                label={({ name, value }) => `${value}`}>
+              <Pie data={deptData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value">
                 {deptData.map((_, idx) => (
                   <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
                 ))}

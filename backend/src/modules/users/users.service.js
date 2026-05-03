@@ -1,4 +1,6 @@
 const { pool } = require('../../config/db');
+const bcrypt = require('bcrypt');
+
 
 class UsersService {
   async getAll(filters = {}) {
@@ -24,7 +26,7 @@ class UsersService {
       params.push(filters.is_active === 'true');
     }
 
-    query += ' ORDER BY created_at DESC';
+    query += ' ORDER BY is_active DESC, created_at DESC';
     const result = await pool.query(query, params);
     return result.rows;
   }
@@ -56,21 +58,30 @@ class UsersService {
     }
 
     const fields = ['full_name', 'department', 'designation', 'phone', 'profile_pic'];
-    // Only admin can change role
-    if (currentUser.role === 'admin' && data.role) {
-      fields.push('role');
+    // Only admin can change role and password
+    if (currentUser.role === 'admin') {
+      if (data.role) fields.push('role');
+      if (data.password) fields.push('password');
     }
+
 
     const updates = [];
     const params = [];
     let paramIndex = 1;
 
-    fields.forEach((field) => {
-      if (data[field] !== undefined) {
-        updates.push(`${field} = $${paramIndex++}`);
-        params.push(data[field]);
+    for (const field of fields) {
+      if (data[field] !== undefined && data[field] !== '') {
+        if (field === 'password') {
+          const hash = await bcrypt.hash(data[field], parseInt(process.env.BCRYPT_ROUNDS) || 10);
+          updates.push(`password_hash = $${paramIndex++}`);
+          params.push(hash);
+        } else {
+          updates.push(`${field} = $${paramIndex++}`);
+          params.push(data[field]);
+        }
       }
-    });
+    }
+
 
     if (updates.length === 0) {
       throw { status: 400, message: 'No fields to update' };
