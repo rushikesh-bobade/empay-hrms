@@ -19,42 +19,21 @@ export default function EmployeeDashboard() {
   };
   useEffect(() => { fetchData(); }, []);
 
-  // Live timer: tick every second while checked in
+  // Calculate elapsed time statically for check-out
   useEffect(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-
     const todayAtt = data?.today_attendance;
-    const isCheckedIn = todayAtt && todayAtt.check_in && !todayAtt.check_out;
-
-    if (isCheckedIn) {
-      const tick = () => {
-        const [h, m, s] = todayAtt.check_in.split(':').map(Number);
-        const checkInDate = new Date();
-        checkInDate.setHours(h, m, s, 0);
-        const diff = Math.max(0, Math.floor((Date.now() - checkInDate.getTime()) / 1000));
-        const hrs = String(Math.floor(diff / 3600)).padStart(2, '0');
-        const mins = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
-        const secs = String(diff % 60).padStart(2, '0');
-        setElapsed(`${hrs}:${mins}:${secs}`);
-      };
-      tick();
-      timerRef.current = setInterval(tick, 1000);
+    if (todayAtt && todayAtt.check_in && todayAtt.check_out) {
+      const [h1, m1, s1] = todayAtt.check_in.split(':').map(Number);
+      const [h2, m2, s2] = todayAtt.check_out.split(':').map(Number);
+      const diff = (h2 * 3600 + m2 * 60 + s2) - (h1 * 3600 + m1 * 60 + s1);
+      const absDiff = Math.max(0, diff);
+      const hrs = String(Math.floor(absDiff / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((absDiff % 3600) / 60)).padStart(2, '0');
+      const secs = String(absDiff % 60).padStart(2, '0');
+      setElapsed(`${hrs}:${mins}:${secs}`);
     } else {
-      // If checked out, show the total worked time
-      if (todayAtt && todayAtt.check_in && todayAtt.check_out) {
-        const [h1, m1, s1] = todayAtt.check_in.split(':').map(Number);
-        const [h2, m2, s2] = todayAtt.check_out.split(':').map(Number);
-        const diff = (h2 * 3600 + m2 * 60 + s2) - (h1 * 3600 + m1 * 60 + s1);
-        const absDiff = Math.max(0, diff);
-        const hrs = String(Math.floor(absDiff / 3600)).padStart(2, '0');
-        const mins = String(Math.floor((absDiff % 3600) / 60)).padStart(2, '0');
-        const secs = String(absDiff % 60).padStart(2, '0');
-        setElapsed(`${hrs}:${mins}:${secs}`);
-      } else {
-        setElapsed('00:00:00');
-      }
+      setElapsed('00:00:00');
     }
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [data]);
 
   const handleMark = async () => {
@@ -157,9 +136,7 @@ export default function EmployeeDashboard() {
                   <p className="text-lg font-bold text-on-surface">{todayAtt.check_in.substring(0, 5)}</p>
                   <p className="text-xs text-on-surface-variant flex items-center gap-1 mt-0.5">
                     <Clock className="w-3 h-3" />
-                    {isCheckedIn ? <span className="text-success font-medium">{elapsed}</span> : <span>{elapsed}</span>}
-                    {isCheckedIn && <span className="text-[10px]">elapsed</span>}
-                    {isCheckedOut && <span className="text-[10px]">total</span>}
+                    {isCheckedIn ? <span>Working...</span> : <span>{elapsed} total</span>}
                   </p>
                 </div>
               )}

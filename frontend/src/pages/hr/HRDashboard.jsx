@@ -3,6 +3,7 @@ import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import StatCard from '../../components/shared/StatCard';
 import { Users, CheckCircle, CalendarOff, Clock } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function HRDashboard() {
   const [data, setData] = useState(null);
@@ -14,6 +15,13 @@ export default function HRDashboard() {
 
   if (loading) return <div className="space-y-6"><PageHeader title="HR Dashboard" /><div className="grid grid-cols-4 gap-5">{Array.from({length:4}).map((_,i)=><div key={i} className="skeleton h-32 rounded-2xl"/>)}</div></div>;
 
+  const attendanceTrend = (data?.attendance_trend || []).map(d => ({
+    date: new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' }),
+    Present: parseInt(d.present),
+    Absent: parseInt(d.absent),
+    'On Leave': parseInt(d.on_leave),
+  }));
+
   return (
     <div className="space-y-6">
       <PageHeader title="HR Dashboard" subtitle="Overview of human resources metrics." />
@@ -24,22 +32,22 @@ export default function HRDashboard() {
         <StatCard title="Pending Leaves" value={data?.pending_leave_requests || 0} icon={Clock} color="danger" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* On leave today */}
-        <div className="glass-card p-5 fade-in">
-          <h3 className="text-lg font-semibold text-on-surface mb-4">Employees On Leave Today</h3>
-          {(data?.on_leave_today || []).length === 0 ? (
-            <p className="text-sm text-on-surface-variant py-8 text-center">No employees on leave today</p>
-          ) : (
-            <div className="space-y-3">{data.on_leave_today.map(emp => (
-              <div key={emp.id} className="flex items-center gap-3 p-3 rounded-xl bg-[var(--table-row-hover)]">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold" style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
-                  {emp.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                </div>
-                <div><p className="text-sm font-medium text-on-surface">{emp.full_name}</p><p className="text-xs text-on-surface-variant">{emp.department} · {emp.designation}</p></div>
-              </div>
-            ))}</div>
-          )}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* Attendance Trends */}
+        <div className="lg:col-span-2 glass-card p-5 fade-in">
+          <h3 className="text-lg font-semibold text-on-surface mb-4">Attendance Trends</h3>
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={attendanceTrend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
+              <XAxis dataKey="date" stroke="var(--chart-axis)" fontSize={12} />
+              <YAxis stroke="var(--chart-axis)" fontSize={12} />
+              <Tooltip contentStyle={{ background: 'var(--chart-tooltip-bg)', border: '1px solid var(--chart-tooltip-border)', borderRadius: '12px', color: 'var(--chart-tooltip-color)' }} />
+              <Legend />
+              <Bar dataKey="Present" fill="#4ade80" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Absent" fill="#f87171" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="On Leave" fill="#60a5fa" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
         {/* Recent leave requests */}
