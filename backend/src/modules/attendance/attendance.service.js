@@ -29,9 +29,21 @@ class AttendanceService {
     if (!record.check_out) {
       // Record exists, no check-out — update check-out
       const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      
+      const [h1, m1, s1] = record.check_in.split(':').map(Number);
+      const [h2, m2, s2] = now.split(':').map(Number);
+      const diffHours = (h2 * 3600 + m2 * 60 + s2 - (h1 * 3600 + m1 * 60 + s1)) / 3600;
+
+      let newStatus = 'absent';
+      if (diffHours >= 8) {
+        newStatus = 'present';
+      } else if (diffHours >= 4) {
+        newStatus = 'half_day';
+      }
+
       const result = await pool.query(
-        `UPDATE attendance SET check_out = $1 WHERE id = $2 RETURNING *`,
-        [now, record.id]
+        `UPDATE attendance SET check_out = $1, status = $2 WHERE id = $3 RETURNING *`,
+        [now, newStatus, record.id]
       );
       return { action: 'checked_out', record: result.rows[0] };
     }
@@ -137,9 +149,7 @@ class AttendanceService {
    * Performs smart checks and notifies HR
    */
   async checkAndNotifyHR() {
-    const today = new Date().toLocaleDateString('en-CA');
-    
-    // 1. Daily Attendance Summary Ready
+    // Daily Attendance Summary Ready
     // We'll notify once per day when the dashboard is accessed.
     await notificationsService.notifyHR(
       '📊 Daily Attendance Summary',
@@ -147,25 +157,6 @@ class AttendanceService {
       'info',
       'DAILY_ATTENDANCE_SUMMARY'
     );
-
-    // 2. Smart Alerts: Frequent Absentee (absent > 3 times in last 30 days)
-    const frequentAbsentees = await pool.query(`
-      SELECT u.full_name, COUNT(*) as absent_count
-      FROM attendance a
-      JOIN users u ON a.employee_id = u.id
-      WHERE a.status = 'absent' AND a.date >= CURRENT_DATE - INTERVAL '30 days'
-      GROUP BY u.id, u.full_name
-      HAVING COUNT(*) >= 3
-    `);
-
-    for (const row of frequentAbsentees.rows) {
-      await notificationsService.notifyHR(
-        '⚠ Frequent Absentee Detected',
-        `${row.full_name} has irregular attendance (${row.absent_count} absences recently)`,
-        'warning',
-        `ABSENTEE_${row.full_name}_${today}`
-      );
-    }
   }
 
 }

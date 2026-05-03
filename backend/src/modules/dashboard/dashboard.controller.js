@@ -198,6 +198,20 @@ const getHRDashboard = async (req, res) => {
       ORDER BY lr.created_at DESC LIMIT 10
     `);
 
+    // Attendance trend (last 7 days)
+    const attendanceTrend = await pool.query(`
+      SELECT
+        a.date,
+        COUNT(*) FILTER (WHERE a.status = 'present') as present,
+        COUNT(*) FILTER (WHERE a.status = 'absent') as absent,
+        COUNT(*) FILTER (WHERE a.status = 'on_leave') as on_leave
+      FROM attendance a
+      WHERE a.date >= CURRENT_DATE - INTERVAL '7 days'
+      GROUP BY a.date
+      ORDER BY a.date
+    `);
+
+
     res.json({
       success: true,
       message: 'HR dashboard data fetched',
@@ -208,7 +222,9 @@ const getHRDashboard = async (req, res) => {
         today_summary: todaySummary.rows[0],
         on_leave_today: onLeaveToday.rows,
         recent_leave_requests: recentRequests.rows,
+        attendance_trend: attendanceTrend.rows,
       },
+
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

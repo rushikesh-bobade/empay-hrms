@@ -57,6 +57,25 @@ export default function Topbar() {
     } catch (err) { console.error(err); }
   };
 
+  const handleNotificationClick = async (n) => {
+    if (!n.is_read) markAsRead(n.id);
+    setShowNotifications(false);
+
+    const title = (n.title || '').toLowerCase();
+    const role = user?.role;
+    
+    if (title.includes('leave')) {
+      if (role === 'admin' || role === 'hr_officer') navigate('/hr/leaves');
+      else if (role === 'payroll_officer') navigate('/payroll/leaves');
+      else navigate('/leaves');
+    } else if (title.includes('attendance') || title.includes('absentee')) {
+      if (role === 'admin' || role === 'hr_officer' || role === 'payroll_officer') navigate('/hr/attendance');
+      else navigate('/attendance');
+    } else if (title.includes('payslip')) {
+      navigate('/payslips');
+    }
+  };
+
   return (
     <header className="h-16 flex items-center justify-end px-6 border-b z-50 sticky top-0"
       style={{ background: 'var(--topbar-bg)', backdropFilter: 'blur(12px)', borderColor: 'var(--sidebar-border)' }}>
@@ -119,7 +138,7 @@ export default function Topbar() {
                     {notifications.map(n => (
                       <div 
                         key={n.id} 
-                        onClick={() => !n.is_read && markAsRead(n.id)}
+                        onClick={() => handleNotificationClick(n)}
                         className={`group p-3 cursor-pointer hover:bg-primary/[0.04] transition-all relative ${!n.is_read ? 'bg-primary/[0.02]' : ''}`}
                       >
                         <div className="flex items-start gap-2.5">
