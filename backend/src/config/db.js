@@ -52,10 +52,11 @@ const SCHEMA = `
     date             DATE          NOT NULL,
     check_in         TIMESTAMPTZ,
     check_out        TIMESTAMPTZ,
+    accumulated_minutes INT        NOT NULL DEFAULT 0,
     duration_minutes INT           GENERATED ALWAYS AS (
                                      CASE
                                        WHEN check_in IS NOT NULL AND check_out IS NOT NULL
-                                       THEN (EXTRACT(EPOCH FROM (check_out - check_in))::INT + 86400) % 86400 / 60
+                                       THEN accumulated_minutes + (EXTRACT(EPOCH FROM (check_out - check_in))::INT + 86400) % 86400 / 60
                                        ELSE NULL
                                      END
                                    ) STORED,

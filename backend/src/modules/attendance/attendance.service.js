@@ -51,7 +51,13 @@ class AttendanceService {
     // Already checked out — allow re-check-in (e.g. returned after half day)
     const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const result = await pool.query(
-      `UPDATE attendance SET check_in = $1, check_out = NULL WHERE id = $2 RETURNING *`,
+      `UPDATE attendance 
+       SET 
+         accumulated_minutes = accumulated_minutes + (EXTRACT(EPOCH FROM (check_out - check_in))::INT + 86400) % 86400 / 60,
+         check_in = $1, 
+         check_out = NULL 
+       WHERE id = $2 
+       RETURNING *`,
       [now, record.id]
     );
     return { action: 'checked_in', record: result.rows[0] };
@@ -129,7 +135,7 @@ class AttendanceService {
 
     const result = await pool.query(
       `SELECT u.id, u.full_name, u.email, u.department, u.designation, u.profile_pic,
-              a.check_in, a.check_out, COALESCE(a.status, 'absent') as status
+              a.check_in, a.check_out, a.accumulated_minutes, COALESCE(a.status, 'absent') as status
        FROM users u
        LEFT JOIN attendance a ON u.id = a.employee_id AND a.date = $1
        WHERE u.is_active = true

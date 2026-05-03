@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { pool, createTables } = require('../src/config/db');
+const { pool, initTables } = require('../src/config/db');
 const bcrypt = require('bcrypt');
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 10;
@@ -45,7 +45,7 @@ async function seed() {
     console.log('🌱 Starting seed...');
     
     // Init tables
-    await createTables();
+    await initTables();
     
     // Clear existing data in order
     await client.query('DELETE FROM payslips');
@@ -125,16 +125,16 @@ async function seed() {
 
         if (rand < 0.80) {
           status = 'present';
-          checkIn = randomTime(8, 30, 9, 30);
-          checkOut = randomTime(17, 30, 18, 30);
+          checkIn = `${dateStr}T${randomTime(8, 30, 9, 30)}`;
+          checkOut = `${dateStr}T${randomTime(17, 30, 18, 30)}`;
         } else if (rand < 0.90) {
           status = 'absent';
           checkIn = null;
           checkOut = null;
         } else if (rand < 0.95) {
           status = 'half_day';
-          checkIn = randomTime(8, 30, 9, 30);
-          checkOut = randomTime(13, 0, 14, 0);
+          checkIn = `${dateStr}T${randomTime(8, 30, 9, 30)}`;
+          checkOut = `${dateStr}T${randomTime(13, 0, 14, 0)}`;
         } else {
           status = 'on_leave';
           checkIn = null;
