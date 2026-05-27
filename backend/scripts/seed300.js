@@ -56,7 +56,13 @@ async function seed300() {
     console.log(`✅ Seeded ${insertedUserIds.length} users.`);
 
     if (insertedUserIds.length === 0) {
-      console.log('No new users to insert. (Already seeded?)');
+      console.log('No new users inserted. Fetching existing employee IDs to continue seeding...');
+      const allUsers = await client.query("SELECT id FROM users WHERE role = 'employee'");
+      insertedUserIds.push(...allUsers.rows.map(r => r.id));
+    }
+
+    if (insertedUserIds.length === 0) {
+      console.log('No users found in database. Exiting.');
       return;
     }
 
@@ -112,16 +118,16 @@ async function seed300() {
 
         if (rand < 0.85) {
           status = 'present';
-          checkIn = `${dateStr}T${randomTime(8, 30, 9, 30)}`;
-          checkOut = `${dateStr}T${randomTime(17, 30, 18, 30)}`;
+          checkIn = `${dateStr} ${randomTime(8, 30, 9, 30)}`;
+          checkOut = `${dateStr} ${randomTime(17, 30, 18, 30)}`;
         } else if (rand < 0.90) {
           status = 'absent';
           checkIn = null;
           checkOut = null;
         } else if (rand < 0.95) {
           status = 'half_day';
-          checkIn = `${dateStr}T${randomTime(8, 30, 9, 30)}`;
-          checkOut = `${dateStr}T${randomTime(13, 0, 14, 0)}`;
+          checkIn = `${dateStr} ${randomTime(8, 30, 9, 30)}`;
+          checkOut = `${dateStr} ${randomTime(13, 0, 14, 0)}`;
         } else {
           status = 'on_leave';
           checkIn = null;
