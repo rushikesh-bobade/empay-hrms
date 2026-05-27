@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
-import RoleBadge from '../../components/shared/RoleBadge';
 import UserAvatar from '../../components/shared/UserAvatar';
 import { Search, X, Loader2, Plus } from 'lucide-react';
 import { toast } from 'sonner';

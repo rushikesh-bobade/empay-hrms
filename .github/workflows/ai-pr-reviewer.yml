@@ -1,8 +1,11 @@
 name: "AI PR Reviewer (Groq)"
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   review:
@@ -11,35 +14,30 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get PR Diff
-        id: get_diff
-        run: |
-          git fetch origin ${{ github.event.pull_request.base.ref }}
-          git diff origin/${{ github.event.pull_request.base.ref }} HEAD > pr.diff
-
       - name: Run Groq AI Review
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         with:
           script: |
-            const fs = require('fs');
-            const diff = fs.readFileSync('pr.diff', 'utf8');
-            
-            // If there's no diff or if it's way too large to process, skip it safely
-            if (!diff.trim()) return console.log("No diff found.");
-            if (diff.length > 20000) return console.log("Diff too large for AI review.");
-            
             const apiKey = process.env.GROQ_API_KEY;
             if (!apiKey) {
-              console.log("No GROQ_API_KEY provided. Please add it to repository secrets.");
+              core.setFailed("🚨 No GROQ_API_KEY provided in secrets! The bot cannot run without it.");
               return;
             }
+            
+            console.log("Fetching diff via GitHub API...");
+            const diffResponse = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              mediaType: { format: "diff" }
+            });
+            const diff = diffResponse.data;
+            
+            // If there's no diff or if it's way too large to process, skip it safely
+            if (!diff || typeof diff !== 'string' || !diff.trim()) return console.log("No diff found.");
+            if (diff.length > 20000) return console.log("Diff too large for AI review.");
             
             const prompt = `You are an advanced AI Code Reviewer. Review the following Pull Request diff and provide a comprehensive, beautifully formatted Markdown response EXACTLY matching this structure:
 

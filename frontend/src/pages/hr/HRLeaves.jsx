@@ -122,15 +122,6 @@ export default function HRLeaves() {
     }
   }, [selectedEmp]);
 
-  const handleAction = async (id, action) => {
-    try {
-      await api.patch(`/leave/requests/${id}/${action}`);
-      toast.success(`Leave ${action}d successfully`);
-      api.get('/leave/requests/all', { params: statusFilter ? { status: statusFilter } : {} })
-         .then(reqRes => setRequests(reqRes.data.data));
-    } catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
-  };
-
   const handleAllocSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);

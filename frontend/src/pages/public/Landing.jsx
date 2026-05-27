@@ -1,6 +1,6 @@
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { CheckCircle2, FileText, Banknote, Building2, Shield, BarChart3, Clock, Users, CalendarCheck, Zap, Mail, Phone, MapPin, ArrowRight, Star } from 'lucide-react';
+import { CheckCircle2, FileText, Banknote, Building2, Shield, BarChart3, Clock, Users, CalendarCheck, Zap, Mail, Phone, MapPin, ArrowRight} from 'lucide-react';
 
 export default function Landing() {
   const { isAuthenticated, isLoading } = useAuth();

@@ -1,0 +1,31 @@
+name: "Congratulate on Merge"
+
+on:
+  pull_request_target:
+    types: [closed]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  congratulate:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Congratulate Contributor
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const creator = context.payload.pull_request.user.login;
+            
+            const commentBody = `🎉 **Merged!** Congratulations on getting your Pull Request merged into the \`main\` branch, @${creator}! Thank you for your amazing contribution to **EmPay HRMS**.`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: commentBody
+            });

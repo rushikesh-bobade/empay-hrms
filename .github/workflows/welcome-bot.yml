@@ -6,6 +6,9 @@ on:
   pull_request_target:
     types: [opened]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   welcome:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Welcome New Contributor
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const creator = context.payload.sender.login;
