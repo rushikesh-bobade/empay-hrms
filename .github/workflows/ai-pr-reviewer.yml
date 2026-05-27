@@ -1,0 +1,83 @@
+name: "AI PR Reviewer (Groq)"
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR Diff
+        id: get_diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git diff origin/${{ github.event.pull_request.base.ref }} HEAD > pr.diff
+
+      - name: Run Groq AI Review
+        uses: actions/github-script@v7
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        with:
+          script: |
+            const fs = require('fs');
+            const diff = fs.readFileSync('pr.diff', 'utf8');
+            
+            // If there's no diff or if it's way too large to process, skip it safely
+            if (!diff.trim()) return console.log("No diff found.");
+            if (diff.length > 20000) return console.log("Diff too large for AI review.");
+            
+            const apiKey = process.env.GROQ_API_KEY;
+            if (!apiKey) {
+              console.log("No GROQ_API_KEY provided. Please add it to repository secrets.");
+              return;
+            }
+            
+            const prompt = `You are a Senior Software Engineer reviewing a Pull Request for a Node.js/React HRMS application. Review the following code diff and provide a concise, professional code review.
+            1. Point out any actual bugs, logic errors, or security vulnerabilities.
+            2. Suggest performance improvements if obvious.
+            3. Do NOT nitpick minor stylistic formatting (let Prettier handle that).
+            4. If the code looks great and has no issues, simply leave a praising LGTM (Looks Good To Me) comment.
+            
+            Here is the Git Diff:
+            \n\n${diff}`;
+            
+            console.log("Sending diff to Groq API...");
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                model: "llama3-70b-8192", // Using Llama 3 70B for high-quality logic reasoning
+                messages: [{ role: "user", content: prompt }],
+                temperature: 0.1
+              })
+            });
+            
+            const data = await response.json();
+            
+            if (data.error) {
+              console.error("Groq API Error:", data.error);
+              return;
+            }
+            
+            const reviewComment = data.choices[0].message.content;
+            const finalBody = `🤖 **Groq AI Code Review**\n\n${reviewComment}\n\n*Note: I am an AI reviewer. My suggestions should be taken as advice, not strict demands!*`;
+            
+            // Post the review as a comment on the PR
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: finalBody
+            });
