@@ -87,22 +87,28 @@ class PayrollService {
       const working_days = this._getWorkingDaysInMonth(month, year);
       let payslipsCount = 0;
 
-      for (const emp of employees.rows) {
-        // Get attendance for this month
-        const attendance = await client.query(
-          `SELECT
-             COUNT(*) FILTER (WHERE status = 'present') as present_count,
-             COUNT(*) FILTER (WHERE status = 'half_day') as half_day_count,
-             COUNT(*) FILTER (WHERE status = 'on_leave') as on_leave_count,
-             COUNT(*) FILTER (WHERE status = 'unpaid_leave') as unpaid_leave_count
-           FROM attendance
-           WHERE employee_id = $1
-             AND EXTRACT(MONTH FROM date) = $2
-             AND EXTRACT(YEAR FROM date) = $3`,
-          [emp.employee_id, month, year]
-        );
+      // Optimize: Fetch attendance summary for ALL employees in a single query (fixes N+1 inefficient queries)
+      const attendanceSummary = await client.query(
+        `SELECT employee_id,
+           COUNT(*) FILTER (WHERE status = 'present') as present_count,
+           COUNT(*) FILTER (WHERE status = 'half_day') as half_day_count,
+           COUNT(*) FILTER (WHERE status = 'on_leave') as on_leave_count,
+           COUNT(*) FILTER (WHERE status = 'unpaid_leave') as unpaid_leave_count
+         FROM attendance
+         WHERE EXTRACT(MONTH FROM date) = $1
+           AND EXTRACT(YEAR FROM date) = $2
+         GROUP BY employee_id`,
+        [month, year]
+      );
 
-        const att = attendance.rows[0];
+      const attendanceMap = {};
+      for (const row of attendanceSummary.rows) {
+        attendanceMap[row.employee_id] = row;
+      }
+
+      for (const emp of employees.rows) {
+        // Use pre-fetched attendance
+        const att = attendanceMap[emp.employee_id] || { present_count: 0, half_day_count: 0, on_leave_count: 0, unpaid_leave_count: 0 };
         const present_days = parseFloat(att.present_count) + (parseFloat(att.half_day_count) * 0.5) + parseFloat(att.on_leave_count);
         const leaves_approved = parseInt(att.on_leave_count) + parseInt(att.unpaid_leave_count);
         const unpaid_leave_days = parseInt(att.unpaid_leave_count);

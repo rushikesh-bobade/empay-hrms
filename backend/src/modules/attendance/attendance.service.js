@@ -94,26 +94,24 @@ class AttendanceService {
     const month = filters.month || now.getMonth() + 1;
     const year = filters.year || now.getFullYear();
 
-    let query = `
+    const query = `
       SELECT a.*, u.full_name, u.email, u.department, u.designation
       FROM attendance a
       JOIN users u ON a.employee_id = u.id
       WHERE EXTRACT(MONTH FROM a.date) = $1
         AND EXTRACT(YEAR FROM a.date) = $2
+        AND ($3::text IS NULL OR u.department ILIKE $3)
+        AND ($4::int IS NULL OR a.employee_id = $4)
+      ORDER BY a.date DESC, u.full_name ASC
     `;
-    const params = [month, year];
-    let paramIndex = 3;
-
-    if (filters.department) {
-      query += ` AND u.department ILIKE $${paramIndex++}`;
-      params.push(`%${filters.department}%`);
-    }
-    if (filters.employee_id) {
-      query += ` AND a.employee_id = $${paramIndex++}`;
-      params.push(filters.employee_id);
-    }
-
-    query += ' ORDER BY a.date DESC, u.full_name ASC';
+    
+    const params = [
+      month, 
+      year, 
+      filters.department ? `%${filters.department}%` : null,
+      filters.employee_id || null
+    ];
+    
     const result = await pool.query(query, params);
     return result.rows;
   }

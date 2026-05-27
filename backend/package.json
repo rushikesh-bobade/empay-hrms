@@ -10,6 +10,7 @@
     "migrate": "node src/config/migrate.js"
   },
   "dependencies": {
+    "argon2": "^0.44.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",

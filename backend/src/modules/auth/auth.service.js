@@ -1,5 +1,5 @@
 const { pool } = require('../../config/db');
-const bcrypt = require('bcrypt');
+const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { sendEmail } = require('../../utils/mailer');
@@ -15,7 +15,7 @@ class AuthService {
       throw { status: 409, message: 'User with this email already exists' };
     }
 
-    const password_hash = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS) || 10);
+    const password_hash = await argon2.hash(password);
     
     const result = await pool.query(
       `INSERT INTO users (full_name, email, password_hash, role, department, designation, phone)
@@ -50,7 +50,7 @@ class AuthService {
       throw { status: 403, message: 'Account is deactivated. Contact your administrator.' };
     }
 
-    const isMatch = await bcrypt.compare(password, user.password_hash);
+    const isMatch = await argon2.verify(user.password_hash, password);
     if (!isMatch) {
       throw { status: 401, message: 'Invalid email or password' };
     }
@@ -140,7 +140,7 @@ class AuthService {
     }
 
     const userId = result.rows[0].id;
-    const passwordHash = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_ROUNDS) || 10);
+    const passwordHash = await argon2.hash(newPassword);
 
     await pool.query(
       'UPDATE users SET password_hash = $1, reset_token = NULL, reset_token_expiry = NULL WHERE id = $2',
