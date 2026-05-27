@@ -21,7 +21,7 @@ jobs:
             const emojis = ['🎉', '🚀', '🥳', '🙌', '⭐'];
             const emoji = emojis[Math.floor(Math.random() * emojis.length)];
             
-            const commentBody = `${emoji} **Merged!** Thanks for the great contribution, @${creator}! Your PR is now part of the \`main\` branch. We'd love to see you tackle another issue soon!`;
+            const commentBody = `${emoji} **Merged!** Congratulations, @${creator}! Your Pull Request has been successfully merged into the \`main\` branch. Thank you for your time and contribution to the project!`;
             
             await github.rest.issues.createComment({
               owner: context.repo.owner,
