@@ -95,10 +95,10 @@ async function seed() {
           `INSERT INTO attendance (employee_id, date, check_in, check_out, status)
            VALUES ($1, $2, $3, $4, $5)
            ON CONFLICT (employee_id, date) DO NOTHING`,
-          [emp.id, fmt(date), checkIn.toISOString(), checkOut.toISOString(), status]
+          [emp.id, fmt(date), checkIn ? checkIn.toTimeString().split(' ')[0] : null, checkOut ? checkOut.toTimeString().split(' ')[0] : null, status]
         );
       } catch (e) {
-        // ignore constraint errors
+        console.error('Insert error:', e.message);
       }
     }
     process.stdout.write(`   ✅ ${emp.full_name}\n`);
