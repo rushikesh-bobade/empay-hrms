@@ -15,7 +15,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Run Groq AI Review
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         with:
