@@ -18,10 +18,10 @@ jobs:
           script: |
             const creator = context.payload.pull_request.user.login;
             
-            const emojis = ['🎉', '🚀', '🥳', '🙌', '⭐', '🏆', '🔥'];
+            const emojis = ['🎉', '🚀', '🥳', '🙌', '⭐'];
             const emoji = emojis[Math.floor(Math.random() * emojis.length)];
             
-            const commentBody = `${emoji} **Congratulations @${creator}!** \n\nYour Pull Request has been successfully reviewed and **merged** into the \`main\` branch! \n\nThank you so much for your hard work, time, and dedication to improving **EmPay HRMS**. We deeply appreciate your contribution to this open-source project and hope you'll stick around to tackle more issues!\n\nHappy coding! 💻✨`;
+            const commentBody = `${emoji} **Merged!** Thanks for the great contribution, @${creator}! Your PR is now part of the \`main\` branch. We'd love to see you tackle another issue soon!`;
             
             await github.rest.issues.createComment({
               owner: context.repo.owner,
