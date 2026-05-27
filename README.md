@@ -4,6 +4,11 @@
 
 ### Smart Human Resource Management System
 
+![GSSoC 2026](https://img.shields.io/badge/GSSoC-2026-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)
+![Node](https://img.shields.io/badge/node-18+-green?style=for-the-badge)
+
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org/)
@@ -120,6 +125,42 @@ empay-hrms/
 | **Email** | Nodemailer | SMTP email delivery |
 | **File Upload** | Multer | Avatar image handling |
 | **PDF** | PDFKit | Server-side payslip generation |
+
+---
+
+## 🤝 Contributing
+
+This project is part of **GSSoC '26 (GirlScript Summer of Code 2026)**. We welcome contributions from developers of all skill levels!
+
+Please read our [Contributing Guide](.github/CONTRIBUTING.md) before getting started. Check our [Roadmap](ROADMAP.md) for what needs to be built.
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/rushikesh-bobade/empay-hrms/pulls)
+
+---
+
+## 🏷️ Good First Issues
+
+New to open source? Start here: **[View Good First Issues](https://github.com/rushikesh-bobade/empay-hrms/issues?q=label%3A%22good+first+issue%22)**
+
+We label beginner-friendly issues so you can find tasks that match your skill level. Each good first issue includes:
+- Clear task description
+- Files to modify
+- Acceptance criteria
+- Hints to get started
+
+---
+
+## 📋 GSSoC '26
+
+<div align="center">
+
+![GSSoC 2026](https://img.shields.io/badge/GSSoC-2026-orange?style=for-the-badge)
+
+</div>
+
+This project is officially part of **GirlScript Summer of Code 2026**. Contributors who get PRs merged will earn leaderboard points.
+
+See [gssoc.girlscript.org](https://gssoc.girlscript.org) for details.
 
 ---
 
@@ -254,12 +295,30 @@ Without SMTP config, emails go to Ethereal (test mode) with preview URLs in the 
 
 ## 👥 Team
 
-Built for the **Odoo x Hackathon** 🏆
+Built for the **Odoo x Hackathon** 🏆 — now open source under **GSSoC '26**.
+
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 📖 Additional Resources
+
+- [Contributing Guide](.github/CONTRIBUTING.md)
+- [Code of Conduct](.github/CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Project Roadmap](ROADMAP.md)
+- [Setup Guide](SETUP.md)
 
 ---
 
 <div align="center">
 
 **⭐ Star this repo if you found it useful!**
+
+Made with ❤️ for the open-source community
 
 </div>

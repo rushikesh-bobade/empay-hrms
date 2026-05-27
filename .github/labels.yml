@@ -1,0 +1,54 @@
+# GitHub Labels Configuration for EmPay HRMS
+# Apply using: https://github.com/EndBug/label-sync or manually
+
+- name: "good first issue"
+  color: "7057ff"
+  description: "Perfect for newcomers to open source"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Community contributions welcome"
+
+- name: "bug"
+  color: "d73a4a"
+  description: "Something isn't working"
+
+- name: "enhancement"
+  color: "a2eeef"
+  description: "New feature or improvement request"
+
+- name: "documentation"
+  color: "0075ca"
+  description: "Documentation improvements needed"
+
+- name: "frontend"
+  color: "e4e669"
+  description: "Related to React/UI code"
+
+- name: "backend"
+  color: "f9d0c4"
+  description: "Related to Express/API code"
+
+- name: "database"
+  color: "c5def5"
+  description: "Related to PostgreSQL schema or queries"
+
+- name: "breaking change"
+  color: "b60205"
+  description: "Introduces a breaking change"
+
+- name: "wontfix"
+  color: "ffffff"
+  description: "This will not be worked on"
+
+- name: "duplicate"
+  color: "cfd3d7"
+  description: "This issue or PR already exists"
+
+- name: "question"
+  color: "d876e3"
+  description: "Further information is requested"
+
+- name: "GSSoC"
+  color: "FF6B35"
+  description: "GirlScript Summer of Code 2026"
