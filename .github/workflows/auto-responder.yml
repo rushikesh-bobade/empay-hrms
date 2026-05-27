@@ -1,0 +1,52 @@
+name: "Auto Responder"
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  auto-reply:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Acknowledge assignment requests
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Ignore bot comments to prevent infinite loops
+            if (context.payload.sender.type === 'Bot') return;
+            
+            // Ignore comments made by the repository owner/maintainer
+            if (context.payload.sender.login === context.repo.owner) return;
+            
+            const commentBody = context.payload.comment.body.toLowerCase();
+            const textRequiresResponse = commentBody.includes('assign') || 
+                                         commentBody.includes('work on this') || 
+                                         commentBody.includes('can i take') || 
+                                         commentBody.includes('gssoc');
+            
+            if (textRequiresResponse) {
+              // We want to avoid spamming if the bot has already replied to this issue.
+              const comments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number
+              });
+              
+              const botAlreadyReplied = comments.data.some(c => 
+                c.user.type === 'Bot' && c.body.includes('Automated Response')
+              );
+              
+              if (!botAlreadyReplied) {
+                const reply = `🤖 **Automated Response:**\n\nHi @${context.payload.sender.login}! Thanks for expressing your interest in contributing to this issue.\n\nA project maintainer will review your request shortly. Please make sure to **wait until you are officially assigned** to this issue before you start working on it or submit a Pull Request. This ensures we don't have multiple people working on the same thing.\n\nThanks for your patience and happy coding! 🚀`;
+                
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: reply
+                });
+              }
+            }
