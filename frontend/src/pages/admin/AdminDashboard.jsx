@@ -7,6 +7,99 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 
 const PIE_COLORS = ['#4d8eff', '#a78bfa', '#4cd7f6', '#4ade80', '#fbbf24', '#f87171'];
 
+function StatCardSkeleton() {
+  return (
+    <div className="glass-card p-5 flex items-start justify-between fade-in" aria-hidden="true">
+      <div className="flex-1">
+        <div className="skeleton h-3 w-28 rounded mb-4" />
+        <div className="skeleton h-8 w-20 rounded-lg mb-3" />
+        <div className="skeleton h-3 w-16 rounded" />
+      </div>
+      <div className="skeleton h-12 w-12 rounded-xl" />
+    </div>
+  );
+}
+
+function BarChartSkeleton() {
+  return (
+    <div className="glass-card p-5 fade-in" aria-hidden="true">
+      <div className="skeleton h-6 w-44 rounded mb-6" />
+      <div className="flex h-[280px] items-end gap-3 border-l border-b border-[var(--chart-grid)] px-4 pb-4">
+        {[62, 82, 48, 76, 55, 88, 66].map((height, idx) => (
+          <div key={idx} className="flex flex-1 items-end justify-center gap-1.5">
+            <div className="skeleton w-full max-w-4 rounded-t-md" style={{ height: `${height}%` }} />
+            <div className="skeleton w-full max-w-4 rounded-t-md" style={{ height: `${Math.max(height - 24, 22)}%` }} />
+            <div className="skeleton w-full max-w-4 rounded-t-md" style={{ height: `${Math.max(height - 36, 16)}%` }} />
+          </div>
+        ))}
+      </div>
+      <div className="mt-4 flex flex-wrap justify-center gap-4">
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <div key={idx} className="flex items-center gap-2">
+            <div className="skeleton h-3 w-3 rounded-full" />
+            <div className="skeleton h-3 w-16 rounded" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DepartmentChartSkeleton() {
+  return (
+    <div className="glass-card p-5 fade-in" aria-hidden="true">
+      <div className="skeleton h-6 w-52 rounded mb-6" />
+      <div className="flex h-[200px] items-center justify-center">
+        <div className="skeleton h-36 w-36 rounded-full" />
+      </div>
+      <div className="mt-3 flex flex-wrap justify-center gap-3">
+        {Array.from({ length: 6 }).map((_, idx) => (
+          <div key={idx} className="flex items-center gap-1.5">
+            <div className="skeleton h-2.5 w-2.5 rounded-full" />
+            <div className="skeleton h-3 w-16 rounded" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PayrollCostSkeleton() {
+  return (
+    <div className="glass-card p-5 fade-in" aria-hidden="true">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="skeleton h-6 w-48 rounded" />
+      </div>
+      <div className="skeleton h-9 w-44 rounded-lg" />
+      <div className="skeleton h-3 w-36 rounded mt-3" />
+    </div>
+  );
+}
+
+function AdminDashboardSkeleton() {
+  return (
+    <div className="space-y-6" aria-busy="true" aria-live="polite">
+      <PageHeader title="Overview" subtitle="Welcome back, here's the latest HR data." />
+      <span className="sr-only">Loading admin dashboard data</span>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {Array.from({ length: 4 }).map((_, idx) => (
+          <StatCardSkeleton key={idx} />
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2">
+          <BarChartSkeleton />
+        </div>
+        <DepartmentChartSkeleton />
+      </div>
+
+      <PayrollCostSkeleton />
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,14 +112,7 @@ export default function AdminDashboard() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="space-y-6">
-        <PageHeader title="Overview" subtitle="Welcome back, here's the latest HR data." />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton h-32 rounded-2xl" />)}
-        </div>
-      </div>
-    );
+    return <AdminDashboardSkeleton />;
   }
 
   const attendanceTrend = (data?.attendance_trend || []).map(d => ({
