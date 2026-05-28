@@ -7,7 +7,7 @@ This roadmap outlines the current state and future plans for EmPay HRMS. Contrib
 ## ✅ Completed Features
 
 - ✅ Multi-role authentication (Admin, HR Officer, Payroll Officer, Employee)
-- ✅ JWT-based auth with bcrypt password hashing
+- ✅ JWT-based auth with argon2 password hashing
 - ✅ Real-time attendance tracking with live timer and Socket.IO
 - ✅ Re-check-in support with accumulated time tracking
 - ✅ Leave request and approval workflow

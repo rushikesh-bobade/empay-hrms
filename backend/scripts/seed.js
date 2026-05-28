@@ -1,8 +1,6 @@
 require('dotenv').config();
 const { pool, initTables } = require('../src/config/db');
-const bcrypt = require('bcrypt');
-
-const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 10;
+const argon2 = require('argon2');
 
 const users = [
   { full_name: "Arjun Mehta", email: "admin@empay.com", password: "Password@123", role: "admin", department: "Management", designation: "System Administrator", phone: "9876543210", date_joined: "2023-01-15" },
@@ -61,7 +59,7 @@ async function seed() {
     // 1. Create users
     const userMap = {};
     for (const u of users) {
-      const hash = await bcrypt.hash(u.password, BCRYPT_ROUNDS);
+      const hash = await argon2.hash(u.password);
       const result = await client.query(
         `INSERT INTO users (full_name, email, password_hash, role, department, designation, phone, date_joined)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, email, role`,

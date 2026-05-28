@@ -25,7 +25,7 @@
 
 ### 🔐 Multi-Role Access Control
 - **4 distinct roles** — Admin, HR Officer, Payroll Officer, Employee
-- JWT-based authentication with bcrypt password hashing
+- JWT-based authentication with argon2 password hashing
 - Role-specific dashboards, navigation, and permissions
 - Automated welcome emails with credentials on account creation
 
@@ -120,7 +120,7 @@ empay-hrms/
 | **Routing** | React Router 7 | Client-side navigation |
 | **Backend** | Express.js 4 | REST API server |
 | **Database** | PostgreSQL 14+ | Relational data store |
-| **Auth** | JWT + bcrypt | Stateless authentication |
+| **Auth** | JWT + argon2 | Stateless authentication |
 | **Real-time** | Socket.IO | Live notifications |
 | **Email** | Nodemailer | SMTP email delivery |
 | **File Upload** | Multer | Avatar image handling |
@@ -196,9 +196,9 @@ Create `backend/.env`:
 ```env
 PORT=5000
 DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/empay_db
-JWT_SECRET=empay_super_secret_jwt_key_2024
+JWT_SECRET=your_super_secret_jwt_key_here
 JWT_EXPIRES_IN=7d
-BCRYPT_ROUNDS=10
+# (BCRYPT_ROUNDS is deprecated, using default argon2 config)
 FRONTEND_URL=http://localhost:5173
 NODE_ENV=development
 ```

@@ -10,7 +10,6 @@
  */
 
 const { Pool } = require('pg');
-const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });

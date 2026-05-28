@@ -372,8 +372,7 @@ const initTables = async () => {
  * Uses ON CONFLICT to avoid duplicates on re-runs.
  */
 const seedDemoData = async () => {
-  const bcrypt = require('bcrypt');
-  const ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 10;
+  const argon2 = require('argon2');
 
   const demoUsers = [
     { full_name: 'Admin User',     email: 'admin@empay.com',   role: 'admin',           department: 'Management',  designation: 'System Admin' },
@@ -391,7 +390,7 @@ const seedDemoData = async () => {
   for (const u of demoUsers) {
     const exists = await pool.query('SELECT id FROM users WHERE email = $1', [u.email]);
     if (exists.rows.length === 0) {
-      const hash = await bcrypt.hash(defaultPassword, ROUNDS);
+      const hash = await argon2.hash(defaultPassword);
       await pool.query(
         `INSERT INTO users (full_name, email, password_hash, role, department, designation)
          VALUES ($1, $2, $3, $4, $5, $6)`,

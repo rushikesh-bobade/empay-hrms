@@ -49,7 +49,7 @@ Instead, report it privately via email:
 - Always use parameterized queries (never string concatenation for SQL)
 - Validate and sanitize all user inputs
 - Keep dependencies up to date
-- Use `bcrypt` for password hashing (already configured)
+- Use `argon2` for password hashing (already configured)
 - JWT tokens expire after the configured duration
 
 ---

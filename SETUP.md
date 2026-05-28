@@ -43,7 +43,7 @@ PORT=5000
 DATABASE_URL=postgresql://postgres:YOUR_PG_PASSWORD@localhost:5432/empay_db
 JWT_SECRET=empay_super_secret_jwt_key_2024
 JWT_EXPIRES_IN=7d
-BCRYPT_ROUNDS=10
+# (BCRYPT_ROUNDS is deprecated, using default argon2 config)
 FRONTEND_URL=http://localhost:5173
 NODE_ENV=development
 ```

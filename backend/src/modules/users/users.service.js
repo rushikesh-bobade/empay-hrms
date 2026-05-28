@@ -1,5 +1,5 @@
 const { pool } = require('../../config/db');
-const bcrypt = require('bcrypt');
+const argon2 = require('argon2');
 
 
 class UsersService {
@@ -72,7 +72,7 @@ class UsersService {
     for (const field of fields) {
       if (data[field] !== undefined && data[field] !== '') {
         if (field === 'password') {
-          const hash = await bcrypt.hash(data[field], parseInt(process.env.BCRYPT_ROUNDS) || 10);
+          const hash = await argon2.hash(data[field]);
           updates.push(`password_hash = $${paramIndex++}`);
           params.push(hash);
         } else {

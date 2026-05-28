@@ -1,9 +1,8 @@
 require('dotenv').config();
 const { pool, initTables } = require('../src/config/db');
-const bcrypt = require('bcrypt');
+const argon2 = require('argon2');
 const { faker } = require('@faker-js/faker');
 
-const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 10;
 const USER_COUNT = 300;
 
 function randomTime(startH, startM, endH, endM) {
@@ -22,7 +21,7 @@ async function seed300() {
     // Generate 300 users
     console.log('Generating users...');
     const defaultPassword = 'Password@123';
-    const hash = await bcrypt.hash(defaultPassword, BCRYPT_ROUNDS);
+    const hash = await argon2.hash(defaultPassword);
     
     const users = [];
     const departments = ['Engineering', 'Human Resources', 'Finance', 'Design', 'Marketing', 'Sales', 'Product', 'Support'];
