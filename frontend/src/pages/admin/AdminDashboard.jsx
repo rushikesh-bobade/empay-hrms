@@ -7,6 +7,63 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 
 const PIE_COLORS = ['#4d8eff', '#a78bfa', '#4cd7f6', '#4ade80', '#fbbf24', '#f87171'];
 
+function AdminDashboardSkeleton() {
+  return (
+    <div className="space-y-6" aria-busy="true" aria-live="polite">
+      <PageHeader title="Overview" subtitle="Welcome back, here's the latest HR data." />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="glass-card p-5 space-y-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 space-y-3">
+                <div className="skeleton h-3 w-28 rounded" />
+                <div className="skeleton h-9 w-20 rounded-lg" />
+                <div className="skeleton h-3 w-24 rounded" />
+              </div>
+              <div className="skeleton h-12 w-12 rounded-xl" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 glass-card p-5 space-y-5">
+          <div className="skeleton h-6 w-44 rounded-lg" />
+          <div className="h-[280px] flex items-end gap-3 px-2">
+            {[56, 78, 48, 88, 64, 72, 58].map((height, i) => (
+              <div key={i} className="flex-1 flex items-end">
+                <div className="skeleton w-full rounded-t-xl" style={{ height: `${height}%` }} />
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="skeleton h-3 w-20 rounded" />
+            ))}
+          </div>
+        </div>
+
+        <div className="glass-card p-5 space-y-5">
+          <div className="skeleton h-6 w-48 rounded-lg" />
+          <div className="mx-auto skeleton h-44 w-44 rounded-full" />
+          <div className="flex flex-wrap gap-3 justify-center">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="skeleton h-3 w-20 rounded" />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="glass-card p-5 space-y-3">
+        <div className="skeleton h-6 w-48 rounded-lg" />
+        <div className="skeleton h-10 w-36 rounded-xl" />
+        <div className="skeleton h-3 w-40 rounded" />
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,16 +75,7 @@ export default function AdminDashboard() {
     }).catch(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <PageHeader title="Overview" subtitle="Welcome back, here's the latest HR data." />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton h-32 rounded-2xl" />)}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <AdminDashboardSkeleton />;
 
   const attendanceTrend = (data?.attendance_trend || []).map(d => ({
     date: new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' }),
