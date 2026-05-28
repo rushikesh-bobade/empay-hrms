@@ -39,11 +39,11 @@ jobs:
               });
               
               const botAlreadyReplied = comments.data.some(c => 
-                c.user.type === 'Bot' && c.body.includes('Automated Response')
+                c.user.type === 'Bot' && c.body.includes('Thanks for expressing your interest in contributing')
               );
               
               if (!botAlreadyReplied) {
-                const reply = `🤖 **Automated Response:**\n\nHi @${context.payload.sender.login}! Thanks for expressing your interest in contributing to this issue.\n\nA project maintainer will review your request shortly. Please make sure to **wait until you are officially assigned** to this issue before you start working on it or submit a Pull Request. This ensures we don't have multiple people working on the same thing.\n\nThanks for your patience and happy coding! 🚀`;
+                const reply = `Hi @${context.payload.sender.login}! Thanks for expressing your interest in contributing to this issue.\n\nA project maintainer will review your request shortly. Please make sure to **wait until you are officially assigned** to this issue before you start working on it or submit a Pull Request. This ensures we don't have multiple people working on the same thing.\n\nThanks for your patience and happy coding! 🚀`;
                 
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,

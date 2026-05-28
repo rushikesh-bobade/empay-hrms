@@ -98,7 +98,7 @@ jobs:
                 "Content-Type": "application/json"
               },
               body: JSON.stringify({
-                model: "llama3-70b-8192", // Using Llama 3 70B for high-quality logic reasoning
+                model: "llama-3.3-70b-versatile", // Using latest Llama 3.3 70B for high-quality logic reasoning
                 messages: [{ role: "user", content: prompt }],
                 temperature: 0.1
               })
@@ -107,7 +107,7 @@ jobs:
             const data = await response.json();
             
             if (data.error) {
-              console.error("Groq API Error:", data.error);
+              core.setFailed(`Groq API Error: ${JSON.stringify(data.error)}`);
               return;
             }
             
