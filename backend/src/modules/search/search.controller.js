@@ -2,8 +2,10 @@ const searchService = require('./search.service');
 
 const search = async (req, res) => {
   try {
-    const query = req.query.q || '';
-    if (query.length < 2) {
+    const rawQuery = req.query.q;
+    const query = (Array.isArray(rawQuery) ? rawQuery[0] : rawQuery) || '';
+    
+    if (typeof query !== 'string' || query.length < 2) {
       return res.json({ success: true, data: [] });
     }
     const results = await searchService.search(query);
