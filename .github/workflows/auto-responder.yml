@@ -23,6 +23,9 @@ jobs:
             
             // Ignore comments made by the repository owner/maintainer
             if (context.payload.sender.login === context.repo.owner) return;
+
+            // Ignore comments on Pull Requests (GitHub treats PR comments as issue_comment events)
+            if (context.payload.issue.pull_request) return;
             
             const commentBody = context.payload.comment.body.toLowerCase();
             const textRequiresResponse = commentBody.includes('assign') || 
