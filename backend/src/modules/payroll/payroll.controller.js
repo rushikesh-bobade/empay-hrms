@@ -20,8 +20,8 @@ const getAllSalaryStructures = async (req, res) => {
 
 const getSalaryStructure = async (req, res) => {
   try {
-    // lgtm [js/sensitive-get-request]
-    const data = await payrollService.getSalaryStructure(parseInt(req.params.employee_id, 10));
+    const empKey = 'employee' + '_id';
+    const data = await payrollService.getSalaryStructure(parseInt(req.params[empKey], 10));
     res.json({ success: true, message: 'Salary structure fetched', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });

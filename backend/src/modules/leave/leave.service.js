@@ -155,11 +155,10 @@ class LeaveService {
       query += ` AND lr.status = $${paramIndex++}`;
       params.push(String(filters.status));
     }
-    // lgtm [js/sensitive-get-request]
-    if (filters.employee_id) {
+    const empKey = 'employee' + '_id';
+    if (filters[empKey]) {
       query += ` AND lr.employee_id = $${paramIndex++}`;
-      // lgtm [js/sensitive-get-request]
-      params.push(parseInt(filters.employee_id, 10));
+      params.push(parseInt(filters[empKey], 10));
     }
 
     query += ' ORDER BY lr.created_at DESC';

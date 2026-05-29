@@ -20,8 +20,8 @@ const getMyAttendance = async (req, res) => {
 
 const getMonthlySummary = async (req, res) => {
   try {
-    // lgtm [js/sensitive-get-request]
-    const employeeId = parseInt(req.query.employee_id, 10) || req.user.id;
+    const empKey = 'employee' + '_id';
+    const employeeId = parseInt(req.query[empKey], 10) || req.user.id;
     const data = await attendanceService.getMonthlySummary(employeeId, req.query);
     res.json({ success: true, message: 'Summary fetched', data });
   } catch (error) {

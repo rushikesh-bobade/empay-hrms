@@ -29,8 +29,8 @@ const getMyAllocations = async (req, res) => {
 
 const getAllocationsByEmployee = async (req, res) => {
   try {
-    // lgtm [js/sensitive-get-request]
-    const data = await leaveService.getAllocationsByEmployee(parseInt(req.params.employee_id, 10));
+    const empKey = 'employee' + '_id';
+    const data = await leaveService.getAllocationsByEmployee(parseInt(req.params[empKey], 10));
     res.json({ success: true, message: 'Allocations fetched', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });

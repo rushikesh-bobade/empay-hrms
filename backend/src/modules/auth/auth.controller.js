@@ -18,18 +18,23 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const rawEmail = req.body.email;
-    const rawPassword = req.body.password;
-    if (typeof rawEmail !== 'string' || typeof rawPassword !== 'string' || !rawEmail.trim() || !rawPassword) {
+    const { email, password } = req.body;
+    if (typeof email !== 'string' || typeof password !== 'string') {
       return res.status(400).json({
         success: false,
-        message: 'Email and password are required and must be strings',
+        message: 'Email and password must be strings',
       });
     }
-    const email = rawEmail.trim();
-    const password = rawPassword;
+    
+    const safeEmail = email.trim();
+    if (!safeEmail || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required',
+      });
+    }
 
-    const data = await authService.login(email, password);
+    const data = await authService.login(safeEmail, password);
     res.json({
       success: true,
       message: 'Login successful',
