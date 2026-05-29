@@ -24,6 +24,7 @@ import MyLeaves from './pages/employee/MyLeaves';
 import MyPayslips from './pages/employee/MyPayslips';
 import Directory from './pages/employee/Directory';
 import Profile from './pages/shared/Profile';
+import NotFound from './pages/shared/NotFound';
 import { Toaster } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
@@ -85,7 +86,7 @@ function AppRoutes() {
         <Route path="payroll/payruns" element={<ProtectedRoute roles={['admin', 'payroll_officer']}><Payruns /></ProtectedRoute>} />
         <Route path="payroll/salary" element={<ProtectedRoute roles={['admin', 'payroll_officer']}><SalaryStructures /></ProtectedRoute>} />
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
