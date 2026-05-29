@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PageHeader from '../../components/shared/PageHeader';
-import { Settings as SettingsIcon, Building2, Clock, Globe, Database, Server, HardDrive, Loader2, Save, CheckCircle2, Mail, Send } from 'lucide-react';
+import { Settings as SettingsIcon, Building2, Clock, Globe, Database, Server, HardDrive, Loader2, Save, Mail } from 'lucide-react';
 import api from '../../api/axios';
 import { toast } from 'sonner';
 

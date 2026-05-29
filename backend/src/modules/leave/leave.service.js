@@ -153,11 +153,11 @@ class LeaveService {
 
     if (filters.status) {
       query += ` AND lr.status = $${paramIndex++}`;
-      params.push(filters.status);
+      params.push(String(filters.status));
     }
     if (filters.employee_id) {
       query += ` AND lr.employee_id = $${paramIndex++}`;
-      params.push(filters.employee_id);
+      params.push(parseInt(filters.employee_id, 10));
     }
 
     query += ' ORDER BY lr.created_at DESC';

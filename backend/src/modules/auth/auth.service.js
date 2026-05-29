@@ -27,10 +27,11 @@ class AuthService {
     // Send welcome email with credentials (fire-and-forget — don't block registration)
     const loginUrl = (process.env.FRONTEND_URL || 'http://localhost:5173') + '/login';
     const html = welcomeEmail(full_name, email, password, role || 'employee', loginUrl);
-    const plainText = ['Hi ', full_name, ', your EmPay HRMS account is ready. Email: ', email, ', Password: ', password, '. Login at ', loginUrl].join('');
+    const safeEmail = String(email).replace(/[\r\n\t%]/g, '');
+    const plainText = 'Hi ' + String(full_name) + ', your EmPay HRMS account is ready. Email: ' + safeEmail + '. Login at ' + loginUrl;
     sendEmail(email, 'Welcome to EmPay HRMS – Your Login Credentials', plainText, html)
-      .then(() => console.log(`📧 Welcome email sent to ${email}`))
-      .catch(err => console.error(`⚠️ Failed to send welcome email to ${email}:`, err.message));
+      .then(() => console.log('Welcome email sent to', safeEmail))
+      .catch(err => console.error('Failed to send welcome email to', safeEmail, err.message));
 
     return result.rows[0];
   }

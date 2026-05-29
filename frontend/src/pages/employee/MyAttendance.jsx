@@ -6,13 +6,12 @@ import { CalendarCheck, UserX, Clock, CalendarOff } from 'lucide-react';
 
 export default function MyAttendance() {
   const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Removed unused loading state
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [summary, setSummary] = useState({});
 
   useEffect(() => {
-    setLoading(true);
     Promise.all([
       api.get('/attendance/my', { params: { month, year } }),
       api.get('/attendance/monthly-summary', { params: { month, year } }),

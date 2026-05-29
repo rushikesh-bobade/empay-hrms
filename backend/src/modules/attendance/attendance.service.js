@@ -109,7 +109,7 @@ class AttendanceService {
       month, 
       year, 
       filters.department ? `%${filters.department}%` : null,
-      filters.employee_id || null
+      filters.employee_id ? parseInt(filters.employee_id, 10) : null
     ];
     
     const result = await pool.query(query, params);

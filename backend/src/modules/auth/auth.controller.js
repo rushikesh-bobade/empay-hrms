@@ -18,13 +18,14 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+    if (!req.body.email || !req.body.password || typeof req.body.email !== 'string' || typeof req.body.password !== 'string') {
       return res.status(400).json({
         success: false,
         message: 'Email and password are required and must be strings',
       });
     }
+    const email = String(req.body.email).trim();
+    const password = String(req.body.password);
 
     const data = await authService.login(email, password);
     res.json({

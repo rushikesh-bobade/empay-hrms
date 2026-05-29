@@ -47,24 +47,25 @@ const sendEmail = async (to, subject, text, html = '') => {
   
   const fromAddress = process.env.SMTP_FROM || process.env.SMTP_USER || '"EmPay HRMS" <no-reply@empay.local>';
   
-  // Escape text to prevent XSS when used as HTML fallback
-  const escapeHtml = (str) => String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  
-  const info = await transporter.sendMail({
+  const mailOptions = {
     from: fromAddress,
     to,
     subject,
     text,
-    html: html || escapeHtml(text)
-  });
+  };
+  if (html) {
+    mailOptions.html = html;
+  }
+  const info = await transporter.sendMail(mailOptions);
 
   // Log preview URL only for Ethereal (test mode)
+  const safeTo = String(to).replace(/[\r\n\t%]/g, '');
   const previewUrl = nodemailer.getTestMessageUrl(info);
   if (previewUrl) {
-    console.log(`✉️ [TEST] Message sent: ${info.messageId}`);
-    console.log(`🔗 Preview URL: ${previewUrl}`);
+    console.log('[TEST] Message sent:', info.messageId);
+    console.log('Preview URL:', previewUrl);
   } else {
-    console.log(`✉️ Email sent to ${to}: ${info.messageId}`);
+    console.log('Email sent to', safeTo, info.messageId);
   }
 
   return info;

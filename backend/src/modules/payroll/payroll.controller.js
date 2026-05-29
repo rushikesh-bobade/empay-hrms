@@ -20,7 +20,7 @@ const getAllSalaryStructures = async (req, res) => {
 
 const getSalaryStructure = async (req, res) => {
   try {
-    const data = await payrollService.getSalaryStructure(req.params.employee_id);
+    const data = await payrollService.getSalaryStructure(parseInt(req.params.employee_id, 10));
     res.json({ success: true, message: 'Salary structure fetched', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });

@@ -20,7 +20,7 @@ const getMyAttendance = async (req, res) => {
 
 const getMonthlySummary = async (req, res) => {
   try {
-    const employeeId = req.query.employee_id || req.user.id;
+    const employeeId = parseInt(req.query.employee_id, 10) || req.user.id;
     const data = await attendanceService.getMonthlySummary(employeeId, req.query);
     res.json({ success: true, message: 'Summary fetched', data });
   } catch (error) {
