@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import { Check, X as XIcon } from 'lucide-react';
@@ -9,13 +9,15 @@ export default function LeaveApprovals() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
 
-  const fetchRequests = () => {
+  const fetchRequests = useCallback(() => {
     setLoading(true);
     const params = statusFilter ? { status: statusFilter } : {};
-    api.get('/leave/requests/all', { params }).then(res => { setRequests(res.data.data); setLoading(false); }).catch(() => setLoading(false));
-  };
+    api.get('/leave/requests/all', { params })
+      .then(res => { setRequests(res.data.data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [statusFilter]);
 
-  useEffect(() => { fetchRequests(); }, [statusFilter]);
+  useEffect(() => { fetchRequests(); }, [fetchRequests]);
 
   const handleAction = async (id, action) => {
     try {
@@ -28,7 +30,6 @@ export default function LeaveApprovals() {
   return (
     <div className="space-y-6">
       <PageHeader title="Leave Approvals" subtitle="Review and process leave requests." />
-
       <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: 'var(--glass-bg)' }}>
         {[{ key: '', label: 'All' }, { key: 'pending', label: 'Pending' }, { key: 'approved', label: 'Approved' }, { key: 'rejected', label: 'Rejected' }].map(t => (
           <button key={t.key} onClick={() => setStatusFilter(t.key)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${statusFilter === t.key ? 'bg-primary/15 text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}>
@@ -36,7 +37,6 @@ export default function LeaveApprovals() {
           </button>
         ))}
       </div>
-
       <div className="glass-card overflow-hidden fade-in">
         <table className="w-full glass-table">
           <thead><tr><th>Employee</th><th>Department</th><th>Leave Type</th><th>Start</th><th>End</th><th>Days</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>

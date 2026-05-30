@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import UserAvatar from '../../components/shared/UserAvatar';
@@ -15,15 +15,15 @@ export default function Employees() {
   const [addForm, setAddForm] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchEmployees = async () => {
+  const fetchEmployees = useCallback(async () => {
     try {
       const res = await api.get('/users', { params: { search } });
       setEmployees(res.data.data);
     } catch { /* empty */ }
     setLoading(false);
-  };
+  }, [search]);
 
-  useEffect(() => { fetchEmployees(); }, [search]);
+  useEffect(() => { fetchEmployees(); }, [fetchEmployees]);
 
   const openEdit = (user) => {
     setEditUser(user);
@@ -58,8 +58,6 @@ export default function Employees() {
     } catch (err) { toast.error(err.response?.data?.message || 'Failed to create employee'); }
     setSubmitting(false);
   };
-
-
 
   return (
     <div className="space-y-6">
