@@ -7,6 +7,34 @@
 
 ---
 
+## Docker Quick Start
+
+If you have Docker installed, you can run the full stack without installing Node.js or PostgreSQL locally:
+
+```bash
+cp .env.example .env
+```
+
+```bash
+docker compose up --build
+```
+
+Open **http://localhost:5173** in your browser.
+
+The backend health check is available at **http://localhost:5000/api/health**.
+
+PostgreSQL data persists in a Docker volume. The backend automatically creates tables and seeds demo users on first startup.
+
+To seed attendance, leave, and payroll demo data:
+
+```bash
+docker compose exec backend node seed-demo-data.js
+```
+
+See [DOCKER.md](DOCKER.md) for Docker environment values and useful commands.
+
+---
+
 ## Step 1: Clone & Install
 
 ```bash

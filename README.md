@@ -166,6 +166,34 @@ See [gssoc.girlscript.org](https://gssoc.girlscript.org) for details.
 
 ## 🚀 Quick Start
 
+### Docker
+
+Optional environment setup:
+
+```bash
+cp .env.example .env
+```
+
+Start the full stack:
+
+```bash
+docker compose up --build
+```
+
+Open **http://localhost:5173**. The backend API runs on **http://localhost:5000**.
+
+PostgreSQL data persists in a Docker volume, and the backend automatically creates tables and seeds demo users on first startup.
+
+To seed full demo dashboard data:
+
+```bash
+docker compose exec backend node seed-demo-data.js
+```
+
+For Docker details, see [DOCKER.md](DOCKER.md).
+
+### Local Development
+
 ### Prerequisites
 - **Node.js** 22+ → [nodejs.org](https://nodejs.org/)
 - **PostgreSQL** 14+ → [postgresql.org](https://www.postgresql.org/download/)
