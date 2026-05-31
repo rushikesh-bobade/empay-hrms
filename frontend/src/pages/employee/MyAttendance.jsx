@@ -12,7 +12,6 @@ export default function MyAttendance() {
   const [summary, setSummary] = useState({});
 
   useEffect(() => {
-    setLoading(true);
     Promise.all([
       api.get('/attendance/my', { params: { month, year } }),
       api.get('/attendance/monthly-summary', { params: { month, year } }),
