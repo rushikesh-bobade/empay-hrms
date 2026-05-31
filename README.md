@@ -158,7 +158,11 @@ We label beginner-friendly issues so you can find tasks that match your skill le
 
 </div>
 
-This project is officially part of **GirlScript Summer of Code 2026**. Contributors who get PRs merged will earn leaderboard points.
+> [!IMPORTANT]  
+> **Registration Status:** EmPay HRMS is currently **pending official registration** for GSSoC '26.  
+> The automated bot will not track your points immediately. However, once our application is approved, the tracker will **retroactively scan all merged PRs** that have the correct tracking labels. 
+> 
+> Continue contributing as normal! We (maintainers) will ensure your PRs are properly labeled (`GSSoC`, `level X`, etc.) so you get full points when the repo goes live.
 
 See [gssoc.girlscript.org](https://gssoc.girlscript.org) for details.
 
