@@ -327,7 +327,7 @@ Without SMTP config, emails go to Ethereal (test mode) with preview URLs in the 
 
 ## 👥 Team
 
-Built for the **Odoo x Hackathon** 🏆 — now open source under **GSSoC '26**.
+Built for the **Odoo x VIT Hackathon** 🏆 — now open source under **GSSoC '26**.
 
 ---
 
