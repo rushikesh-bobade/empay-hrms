@@ -6,6 +6,57 @@ const { sendEmail } = require('../../utils/mailer');
 const { resetPasswordEmail, welcomeEmail } = require('../../utils/emailTemplates');
 
 class AuthService {
+  async registerCompany(data) {
+    const { company_name, full_name, email, password } = data;
+    
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+
+      // 1. Check if user exists
+      const existing = await client.query('SELECT id FROM users WHERE LOWER(TRIM(email)) = LOWER(TRIM($1))', [email]);
+      if (existing.rows.length > 0) {
+        throw { status: 409, message: 'User with this email already exists' };
+      }
+
+      // 2. Check if company email already exists
+      const companyExisting = await client.query('SELECT id FROM companies WHERE LOWER(TRIM(email)) = LOWER(TRIM($1))', [email]);
+      if (companyExisting.rows.length > 0) {
+        throw { status: 409, message: 'Company with this email already exists' };
+      }
+
+      // 3. Create company
+      const companyResult = await client.query(
+        'INSERT INTO companies (name, email) VALUES ($1, $2) RETURNING id',
+        [company_name, email]
+      );
+      const companyId = companyResult.rows[0].id;
+
+      // 4. Create admin user
+      const password_hash = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS) || 10);
+      const userResult = await client.query(
+        `INSERT INTO users (company_id, full_name, email, password_hash, role, designation, department)
+         VALUES ($1, $2, $3, $4, \'admin\', \'System Admin\', \'Management\')
+         RETURNING id, full_name, email, role, company_id`,
+        [companyId, full_name, email, password_hash]
+      );
+
+      await client.query('COMMIT');
+      
+      const user = userResult.rows[0];
+      
+      // 5. Seed default leave types for the new company (optional but recommended)
+      // For now, we skip this to keep it simple, or we can add it later.
+
+      return { company_id: companyId, user };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async register(userData) {
     const { full_name, email, password, role, department, designation, phone } = userData;
     
@@ -60,6 +111,7 @@ class AuthService {
       email: user.email,
       full_name: user.full_name,
       role: user.role,
+      company_id: user.company_id,
       department: user.department,
       designation: user.designation,
       profile_pic: user.profile_pic,
@@ -76,6 +128,7 @@ class AuthService {
         full_name: user.full_name,
         email: user.email,
         role: user.role,
+        company_id: user.company_id,
         department: user.department,
         designation: user.designation,
         phone: user.phone,

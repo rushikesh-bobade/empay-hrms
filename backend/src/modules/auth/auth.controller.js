@@ -1,5 +1,21 @@
 const authService = require('./auth.service');
 
+const registerCompany = async (req, res) => {
+  try {
+    const data = await authService.registerCompany(req.body);
+    res.status(201).json({
+      success: true,
+      message: 'Company and admin user registered successfully',
+      data,
+    });
+  } catch (error) {
+    res.status(error.status || 500).json({
+      success: false,
+      message: error.message || 'Internal server error',
+    });
+  }
+};
+
 const register = async (req, res) => {
   try {
     const user = await authService.register(req.body);
@@ -100,4 +116,4 @@ const testEmail = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getMe, forgotPassword, resetPassword, testEmail };
+module.exports = { registerCompany, register, login, getMe, forgotPassword, resetPassword, testEmail };

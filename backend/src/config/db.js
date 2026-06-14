@@ -24,9 +24,18 @@ pool.on('error', (err) => {
 
 const SCHEMA = `
 
+  -- ── Companies ─────────────────────────────────────────────────────────────
+  CREATE TABLE IF NOT EXISTS companies (
+    id               SERIAL        PRIMARY KEY,
+    name             VARCHAR(100)  NOT NULL,
+    email            VARCHAR(150)  UNIQUE,
+    created_at       TIMESTAMPTZ   NOT NULL DEFAULT NOW()
+  );
+
   -- ── Users ──────────────────────────────────────────────────────────────────
   CREATE TABLE IF NOT EXISTS users (
     id               SERIAL        PRIMARY KEY,
+    company_id       INT           REFERENCES companies(id) ON DELETE SET NULL,
     full_name        VARCHAR(100)  NOT NULL
                                    CHECK (LENGTH(TRIM(full_name)) >= 2),
     email            VARCHAR(150)  NOT NULL UNIQUE
@@ -346,6 +355,13 @@ const initTables = async () => {
   try {
     await client.query('BEGIN');
     await client.query(SCHEMA);
+    await client.query(`
+      DO $$ BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='company_id') THEN
+          ALTER TABLE users ADD COLUMN company_id INT REFERENCES companies(id) ON DELETE SET NULL;
+        END IF;
+      END $$;
+    `);
     // Drop restrictive profile_pic CHECK constraint if it exists (allows local paths like /avatars/...)
     await client.query(`
       DO $$ BEGIN
@@ -388,16 +404,29 @@ const seedDemoData = async () => {
 
   const defaultPassword = 'Password@123';
 
+  // Ensure a default company exists
+  let defaultCompanyId;
+  const companyExists = await pool.query('SELECT id FROM companies LIMIT 1');
+  if (companyExists.rows.length === 0) {
+    const res = await pool.query('INSERT INTO companies (name, email) VALUES ($1, $2) RETURNING id', ['Default Company', 'info@empay.com']);
+    defaultCompanyId = res.rows[0].id;
+    console.log('   🏢 Seeded default company');
+  } else {
+    defaultCompanyId = companyExists.rows[0].id;
+  }
+
   for (const u of demoUsers) {
     const exists = await pool.query('SELECT id FROM users WHERE email = $1', [u.email]);
     if (exists.rows.length === 0) {
       const hash = await bcrypt.hash(defaultPassword, ROUNDS);
       await pool.query(
-        `INSERT INTO users (full_name, email, password_hash, role, department, designation)
-         VALUES ($1, $2, $3, $4, $5, $6)`,
-        [u.full_name, u.email, hash, u.role, u.department, u.designation]
+        `INSERT INTO users (company_id, full_name, email, password_hash, role, department, designation)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [defaultCompanyId, u.full_name, u.email, hash, u.role, u.department, u.designation]
       );
       console.log(`   👤 Seeded user: ${u.email} (${u.role})`);
+    } else if (!exists.rows[0].company_id) {
+      await pool.query('UPDATE users SET company_id = $1 WHERE id = $2', [defaultCompanyId, exists.rows[0].id]);
     }
   }
 

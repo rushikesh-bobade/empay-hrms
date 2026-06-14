@@ -149,6 +149,10 @@ export default function Login() {
           </p>
         </div>
 
+        <p className="text-center text-xs mt-6 text-muted-foreground">
+          New company? <Link to="/register-company" className="text-primary font-semibold hover:underline">Register your Company</Link>
+        </p>
+
         <p className="text-center text-[0.6rem] mt-4 text-outline-variant">© 2026 EmPay HRMS · Simplifying HR & Payroll</p>
       </div>
     </div>

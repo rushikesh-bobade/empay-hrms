@@ -5,6 +5,7 @@ import { SidebarProvider } from './context/SidebarContext';
 import AppLayout from './components/layout/AppLayout';
 import Landing from './pages/public/Landing';
 import Login from './pages/auth/Login';
+import RegisterCompany from './pages/auth/RegisterCompany';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -60,6 +61,7 @@ function AppRoutes() {
       <Route path="/" element={<Landing />} />
       <Route path="/redirect" element={<RoleRedirect />} />
       <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+      <Route path="/register-company" element={<RegisterCompany />} />
       <Route path="/forgot-password" element={!user ? <ForgotPassword /> : <Navigate to="/" />} />
       <Route path="/reset-password" element={!user ? <ResetPassword /> : <Navigate to="/" />} />
       <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
