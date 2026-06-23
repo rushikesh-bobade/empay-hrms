@@ -4,7 +4,7 @@ import PageHeader from '../../components/shared/PageHeader';
 import RoleBadge from '../../components/shared/RoleBadge';
 import UserAvatar from '../../components/shared/UserAvatar';
 import { Search, Mail, Phone } from 'lucide-react';
-import { toast } from 'sonner';
+import { copyEmail } from '../../lib/clipboard';
 export default function Directory() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,15 +14,6 @@ export default function Directory() {
       .then(res => { setEmployees(res.data.data.filter(u => u.is_active)); setLoading(false); })
       .catch(() => setLoading(false));
   }, [search]);
-  const copyEmail = async (email) => {
-    if (!email) return;
-    try {
-      await navigator.clipboard.writeText(email);
-      toast.success('Email copied to clipboard');
-    } catch {
-      toast.error('Failed to copy email');
-    }
-  };
   return (
     <div className="space-y-6">
       <PageHeader title="Employee Directory" subtitle="Find and connect with your colleagues." />
