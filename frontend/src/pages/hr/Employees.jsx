@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import UserAvatar from '../../components/shared/UserAvatar';
-import { Search, X, Loader2, Plus } from 'lucide-react';
+import { Search, X, Loader2, Plus, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Employees() {
@@ -24,6 +24,15 @@ export default function Employees() {
   }, [search]);
 
   useEffect(() => { fetchEmployees(); }, [fetchEmployees]);
+
+  const copyEmail = async (email) => {
+    try {
+      await navigator.clipboard.writeText(email);
+      toast.success('Email copied to clipboard');
+    } catch {
+      toast.error('Failed to copy email');
+    }
+  };
 
   const openEdit = (user) => {
     setEditUser(user);
@@ -84,7 +93,9 @@ export default function Employees() {
                   <UserAvatar user={u} size="sm" />
                   <span className="font-medium text-on-surface">{u.full_name}</span>
                 </div></td>
-                <td className="text-on-surface-variant">{u.email}</td>
+                <td className="text-on-surface-variant cursor-pointer hover:text-primary transition-colors" onClick={() => copyEmail(u.email)} title="Click to copy email">
+                  <span className="inline-flex items-center gap-1.5">{u.email}<Copy className="w-3 h-3" /></span>
+                </td>
                 <td>{u.department||'—'}</td>
                 <td>{u.designation||'—'}</td>
                 <td>{u.date_joined ? new Date(u.date_joined).toLocaleDateString() : '—'}</td>
