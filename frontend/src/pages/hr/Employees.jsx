@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import UserAvatar from '../../components/shared/UserAvatar';
-import { Search, X, Loader2, Plus, Users } from 'lucide-react';
+import { Search, X, Loader2, Plus, Copy, Users } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyEmail } from '../../lib/clipboard';
 import EmptyState from '../../components/shared/EmptyState';
-
 export default function Employees() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,7 +73,7 @@ export default function Employees() {
         </button>
       </div>
 
-      <div className="glass-card overflow-hidden fade-in">
+     <div className="glass-card overflow-hidden fade-in">
         {!loading && employees.length === 0 ? (
           <EmptyState
             icon={Users}
@@ -91,7 +91,9 @@ export default function Employees() {
                     <UserAvatar user={u} size="sm" />
                     <span className="font-medium text-on-surface">{u.full_name}</span>
                   </div></td>
-                  <td className="text-on-surface-variant">{u.email}</td>
+                  <td className="text-on-surface-variant cursor-pointer hover:text-primary transition-colors" onClick={() => copyEmail(u.email)} title="Click to copy email">
+                    <span className="inline-flex items-center gap-1.5">{u.email}<Copy className="w-3 h-3" /></span>
+                  </td>
                   <td>{u.department||'—'}</td>
                   <td>{u.designation||'—'}</td>
                   <td>{u.date_joined ? new Date(u.date_joined).toLocaleDateString() : '—'}</td>
