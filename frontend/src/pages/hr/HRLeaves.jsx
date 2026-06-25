@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
-import { X, Loader2, Plus, Search, ChevronDown } from 'lucide-react';
+import { X, Loader2, Plus, Search, ChevronDown, FileX, CalendarX } from 'lucide-react';
 import { toast } from 'sonner';
+import EmptyState from '../../components/shared/EmptyState';
 
 // Reusable searchable employee picker
 function EmployeeSearch({ employees, value, onChange, placeholder = 'Search employee by name...' }) {
@@ -15,7 +16,6 @@ function EmployeeSearch({ employees, value, onChange, placeholder = 'Search empl
     ? employees.filter(e => e.full_name.toLowerCase().includes(query.toLowerCase()) || e.email.toLowerCase().includes(query.toLowerCase()))
     : employees;
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e) => { if (wrapperRef.current && !wrapperRef.current.contains(e.target)) setOpen(false); };
     document.addEventListener('mousedown', handler);
@@ -160,24 +160,32 @@ export default function HRLeaves() {
             ))}
           </div>
           <div className="glass-card overflow-hidden fade-in">
-            <table className="w-full glass-table">
-              <thead><tr><th>Employee</th><th>Leave Type</th><th>Start</th><th>End</th><th>Days</th><th>Reason</th><th>Status</th><th>Applied On</th></tr></thead>
-              <tbody>
-                {loading ? Array.from({length:5}).map((_,i)=><tr key={i}>{Array.from({length:8}).map((_,j)=><td key={j}><div className="skeleton h-4 w-16 rounded"/></td>)}</tr>) :
-                requests.map(r => (
-                  <tr key={r.id}>
-                    <td className="font-medium text-on-surface">{r.full_name}</td>
-                    <td>{r.leave_type_name}</td>
-                    <td>{new Date(r.start_date).toLocaleDateString()}</td>
-                    <td>{new Date(r.end_date).toLocaleDateString()}</td>
-                    <td>{r.total_days}</td>
-                    <td className="text-on-surface-variant max-w-[150px] truncate">{r.reason || '—'}</td>
-                    <td><span className={`chip-${r.status} inline-flex px-2 py-0.5 rounded-full text-xs font-semibold capitalize`}>{r.status}</span></td>
-                    <td className="text-on-surface-variant">{new Date(r.created_at).toLocaleDateString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {!loading && requests.length === 0 ? (
+              <EmptyState
+                icon={FileX}
+                title="No leave requests found"
+                message="There are no leave requests matching the selected filter."
+              />
+            ) : (
+              <table className="w-full glass-table">
+                <thead><tr><th>Employee</th><th>Leave Type</th><th>Start</th><th>End</th><th>Days</th><th>Reason</th><th>Status</th><th>Applied On</th></tr></thead>
+                <tbody>
+                  {loading ? Array.from({length:5}).map((_,i)=><tr key={i}>{Array.from({length:8}).map((_,j)=><td key={j}><div className="skeleton h-4 w-16 rounded"/></td>)}</tr>) :
+                  requests.map(r => (
+                    <tr key={r.id}>
+                      <td className="font-medium text-on-surface">{r.full_name}</td>
+                      <td>{r.leave_type_name}</td>
+                      <td>{new Date(r.start_date).toLocaleDateString()}</td>
+                      <td>{new Date(r.end_date).toLocaleDateString()}</td>
+                      <td>{r.total_days}</td>
+                      <td className="text-on-surface-variant max-w-[150px] truncate">{r.reason || '—'}</td>
+                      <td><span className={`chip-${r.status} inline-flex px-2 py-0.5 rounded-full text-xs font-semibold capitalize`}>{r.status}</span></td>
+                      <td className="text-on-surface-variant">{new Date(r.created_at).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </>
       )}
@@ -196,19 +204,27 @@ export default function HRLeaves() {
 
           {selectedEmp && (
             <div className="glass-card overflow-hidden fade-in">
-              <table className="w-full glass-table">
-                <thead><tr><th>Leave Type</th><th>Allocated</th><th>Used</th><th>Remaining</th></tr></thead>
-                <tbody>
-                  {allocations.map(a => (
-                    <tr key={a.id}>
-                      <td className="font-medium text-on-surface">{a.name}</td>
-                      <td>{a.allocated_days}</td>
-                      <td>{a.used_days}</td>
-                      <td className="font-semibold text-primary">{a.remaining}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {allocations.length === 0 ? (
+                <EmptyState
+                  icon={CalendarX}
+                  title="No allocations found"
+                  message="This employee has no leave allocations yet."
+                />
+              ) : (
+                <table className="w-full glass-table">
+                  <thead><tr><th>Leave Type</th><th>Allocated</th><th>Used</th><th>Remaining</th></tr></thead>
+                  <tbody>
+                    {allocations.map(a => (
+                      <tr key={a.id}>
+                        <td className="font-medium text-on-surface">{a.name}</td>
+                        <td>{a.allocated_days}</td>
+                        <td>{a.used_days}</td>
+                        <td className="font-semibold text-primary">{a.remaining}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           )}
         </>

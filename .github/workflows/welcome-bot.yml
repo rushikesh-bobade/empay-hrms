@@ -26,7 +26,7 @@ jobs:
             if (creator === context.repo.owner) return;
             
             if (context.eventName === 'issues') {
-              const issueComment = `👋 Hi @${creator}! Welcome to **EmPay HRMS**!\n\nThank you for opening this issue. If you are participating in GSSoC '26, please make sure you wait to be assigned before you start working on it. A maintainer will review this shortly.`;
+              const issueComment = `👋 Hi @${creator}! Welcome to **EmPay HRMS**!\n\nThank you for opening this issue. If you are participating in GSSoC '26, please make sure you wait to be officially assigned by a maintainer before you start working on it.\n\nAlso, if you haven't already, please **⭐ Star this repository** to show your support! A maintainer will review your issue shortly.`;
               await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
@@ -34,7 +34,7 @@ jobs:
                 body: issueComment
               });
             } else if (context.eventName === 'pull_request_target') {
-              const prComment = `🎉 Hey @${creator}! Thank you so much for submitting this Pull Request to **EmPay HRMS**!\n\nOur automated CI checks are running now. Please ensure your code follows the contribution guidelines and doesn't break any existing functionality. We will review your PR as soon as possible.`;
+              const prComment = `🎉 Hey @${creator}! Thank you so much for submitting this Pull Request to **EmPay HRMS**!\n\nOur automated CI checks are running now. A reviewer will review your code as soon as possible. Please wait for their review before making further changes.\n\nIf you love this project, please don't forget to **⭐ Star the repository**!`;
               await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
