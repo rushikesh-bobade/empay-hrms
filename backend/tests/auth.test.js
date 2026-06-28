@@ -184,8 +184,6 @@ describe('POST /api/auth/forgot-password', () => {
   });
 
   it('should return success for valid email', async () => {
-    const crypto = require('crypto');
-
     pool.query
       .mockResolvedValueOnce({ rows: [{ id: 1, full_name: 'Admin' }] })
       .mockResolvedValueOnce({ rows: [{ id: 1 }] });
