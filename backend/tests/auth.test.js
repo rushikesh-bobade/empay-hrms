@@ -26,7 +26,6 @@ jest.mock('../src/utils/mailer', () => ({
 
 const { pool } = require('../src/config/db');
 const authRoutes = require('../src/modules/auth/auth.routes');
-const authMiddleware = require('../src/middleware/auth');
 
 const app = express();
 app.use(express.json());
@@ -186,8 +185,6 @@ describe('POST /api/auth/forgot-password', () => {
 
   it('should return success for valid email', async () => {
     const crypto = require('crypto');
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
 
     pool.query
       .mockResolvedValueOnce({ rows: [{ id: 1, full_name: 'Admin' }] })

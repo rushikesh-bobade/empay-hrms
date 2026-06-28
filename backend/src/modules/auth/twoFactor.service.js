@@ -8,7 +8,7 @@ class TwoFactorService {
 
   generateTOTP(secret, timestamp = Date.now()) {
     const timeStep = 30 * 1000;
-    const counter = Math.floor(timestamp / timeStep);
+    let counter = Math.floor(timestamp / timeStep);
     const counterBuffer = Buffer.alloc(8);
     for (let i = 7; i >= 0; i--) {
       counterBuffer[i] = counter & 0xff;
