@@ -41,6 +41,8 @@ const SCHEMA = `
     profile_pic      TEXT,
     date_joined      DATE          NOT NULL DEFAULT CURRENT_DATE CHECK (date_joined <= CURRENT_DATE),
     is_active        BOOLEAN       NOT NULL DEFAULT TRUE,
+    two_factor_secret TEXT,
+    two_factor_enabled BOOLEAN     NOT NULL DEFAULT FALSE,
     created_at       TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
     updated_at       TIMESTAMPTZ   NOT NULL DEFAULT NOW()
   );
