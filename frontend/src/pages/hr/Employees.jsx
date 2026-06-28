@@ -5,10 +5,20 @@ import UserAvatar from '../../components/shared/UserAvatar';
 import { Search, X, Loader2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debouncedValue;
+}
+
 export default function Employees() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [editUser, setEditUser] = useState(null);
   const [form, setForm] = useState({});
   const [showAdd, setShowAdd] = useState(false);
@@ -17,13 +27,13 @@ export default function Employees() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await api.get('/users', { params: { search } });
+      const res = await api.get('/users', { params: { search: debouncedSearch } });
       setEmployees(res.data.data);
     } catch { /* empty */ }
     setLoading(false);
   };
 
-  useEffect(() => { fetchEmployees(); }, [search]);
+  useEffect(() => { fetchEmployees(); }, [debouncedSearch]);
 
   const openEdit = (user) => {
     setEditUser(user);

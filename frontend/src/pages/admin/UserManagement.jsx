@@ -3,8 +3,9 @@ import api from '../../api/axios';
 import PageHeader from '../../components/shared/PageHeader';
 import RoleBadge from '../../components/shared/RoleBadge';
 import UserAvatar from '../../components/shared/UserAvatar';
-import { UserPlus, Search, X, Loader2 } from 'lucide-react';
+import { UserPlus, Search, X, Loader2, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import * as Dialog from '@radix-ui/react-dialog';
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -15,6 +16,7 @@ export default function UserManagement() {
   const [editUser, setEditUser] = useState(null);
   const [form, setForm] = useState({ full_name: '', email: '', password: '', role: 'employee', department: '', designation: '', phone: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [deleteConfirmUser, setDeleteConfirmUser] = useState(null);
 
   const fetchUsers = async () => {
     try {
@@ -87,6 +89,18 @@ export default function UserManagement() {
     } catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
   };
 
+  const handleDelete = async () => {
+    if (!deleteConfirmUser) return;
+    try {
+      await api.delete(`/users/${deleteConfirmUser.id}`);
+      toast.success(`${deleteConfirmUser.full_name} deleted successfully`);
+      setDeleteConfirmUser(null);
+      fetchUsers();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete user');
+    }
+  };
+
 
 
   const filtered = users;
@@ -151,6 +165,9 @@ export default function UserManagement() {
                       <button onClick={() => toggleActive(u.id)} className="px-2.5 py-1 rounded-lg text-xs font-medium text-warning hover:bg-warning/10 transition-colors">
                         {u.is_active ? 'Deactivate' : 'Activate'}
                       </button>
+                      <button onClick={() => setDeleteConfirmUser(u)} className="px-2.5 py-1 rounded-lg text-xs font-medium text-danger hover:bg-danger/10 transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -159,6 +176,33 @@ export default function UserManagement() {
           </table>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog.Root open={!!deleteConfirmUser} onOpenChange={(open) => { if (!open) setDeleteConfirmUser(null); }}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out" />
+          <Dialog.Content className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm glass-card-strong p-6 fade-in">
+            <Dialog.Title className="text-lg font-bold text-on-surface">Delete Employee</Dialog.Title>
+            <Dialog.Description className="mt-3 text-sm text-on-surface-variant">
+              Are you sure you want to delete <span className="font-semibold text-on-surface">{deleteConfirmUser?.full_name}</span>? This action cannot be undone.
+            </Dialog.Description>
+            <div className="mt-6 flex items-center justify-end gap-3">
+              <Dialog.Close asChild>
+                <button className="px-4 py-2 rounded-xl text-sm font-medium text-on-surface-variant hover:bg-[var(--sidebar-hover)] transition-colors">
+                  Cancel
+                </button>
+              </Dialog.Close>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 rounded-xl text-sm font-semibold text-white"
+                style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626)' }}
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
       {/* Dialog */}
       {showDialog && (
