@@ -70,7 +70,7 @@ class PayrollService {
       } else {
         const newPayrun = await client.query(
           `INSERT INTO payruns (month, year, status, generated_by)
-           VALUES ($1, $2, 'finalized', $3) RETURNING *`,
+           VALUES ($1, $2, 'draft', $3) RETURNING *`,
           [month, year, generatedBy]
         );
         payrunId = newPayrun.rows[0].id;
