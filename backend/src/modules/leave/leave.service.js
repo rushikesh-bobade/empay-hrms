@@ -88,11 +88,11 @@ class LeaveService {
     }
 
     // Check remaining balance
-    const currentYear = new Date().getFullYear();
+    const leaveYear = new Date(start_date).getFullYear();
     const allocation = await pool.query(
       `SELECT * FROM leave_allocations
        WHERE employee_id = $1 AND leave_type_id = $2 AND year = $3`,
-      [employeeId, leave_type_id, currentYear]
+      [employeeId, leave_type_id, leaveYear]
     );
 
     if (allocation.rows.length > 0) {
