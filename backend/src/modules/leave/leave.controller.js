@@ -31,7 +31,8 @@ const getMyAllocations = async (req, res) => {
 const getAllocationsByEmployee = async (req, res) => {
   try {
     const empKey = 'employee' + '_id';
-    const data = await leaveService.getAllocationsByEmployee(parseInt(req.params[empKey], 10));
+    const employeeId = parseInt(req.params[empKey], 10) || req.user.id;
+    const data = await leaveService.getAllocationsByEmployee(employeeId);
     res.json({ success: true, message: 'Allocations fetched', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });

@@ -248,7 +248,7 @@ class PayrollService {
     doc.rect(50, 120, 495, 80).lineWidth(1).stroke('#CCCCCC');
     doc.fontSize(10);
     doc.text(`Employee Name: ${payslip.full_name}`, 70, 135);
-    doc.text(`Employee ID: ${payslip.user_id.substring(0, 8).toUpperCase()}`, 320, 135);
+    doc.text(`Employee ID: ${String(payslip.user_id).substring(0, 8).toUpperCase()}`, 320, 135);
     doc.text(`Department: ${payslip.department || 'N/A'}`, 70, 155);
     doc.text(`Designation: ${payslip.designation || 'N/A'}`, 320, 155);
     doc.text(`Date of Joining: ${payslip.date_joined ? new Date(payslip.date_joined).toLocaleDateString() : 'N/A'}`, 70, 175);
