@@ -30,8 +30,8 @@ class NotificationsService {
       const today = new Date().toLocaleDateString('en-CA');
       const existing = await pool.query(
         `SELECT id FROM notifications 
-         WHERE title = $1 AND message = $2 AND created_at::date = $3 LIMIT 1`,
-        [title, message, today]
+         WHERE message LIKE $1 AND created_at::date = $2 LIMIT 1`,
+        [`%${uniqueKey}%`, today]
       );
       if (existing.rows.length > 0) return;
     }
