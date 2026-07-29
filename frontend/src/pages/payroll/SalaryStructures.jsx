@@ -14,7 +14,7 @@ export default function SalaryStructures() {
 
   const fetch = () => {
     Promise.all([api.get('/payroll/salary-structure'), api.get('/users')])
-      .then(([ssRes, uRes]) => { setStructures(ssRes.data.data); setEmployees(uRes.data.data); setLoading(false); })
+      .then(([ssRes, uRes]).catch(err => console.error(err))=> { setStructures(ssRes.data.data); setEmployees(uRes.data.data); setLoading(false); })
       .catch(() => setLoading(false));
   };
   useEffect(() => { fetch(); }, []);
