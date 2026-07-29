@@ -233,7 +233,7 @@ async function seed() {
 
       const a = att.rows[0];
       const presentDays = parseFloat(a.present_count) + (parseFloat(a.half_day_count) * 0.5) + parseFloat(a.on_leave_count);
-      const leavesApproved = parseInt(a.on_leave_count);
+      const leavesApproved = parseInt(a.on_leave_count, 10);
 
       const perDay = s.basic / workingDays;
       const effectiveBasic = perDay * (presentDays || workingDays * 0.8);
