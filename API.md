@@ -50,7 +50,7 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|API is running|[HealthResponse](#schemahealthresponse)|
+|200|OK|API is running|[HealthResponse](#schemahealthresponse)|
 
 <aside class="success">
 This operation does not require authentication
@@ -141,11 +141,11 @@ Requires the `admin` or `hr_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|User registered|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Email already exists|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|201|Created|User registered|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|409|Conflict|Email already exists|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="register-a-user-responseschema">Response Schema</h3>
 
@@ -229,11 +229,11 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Login successful|Inline|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Login successful|Inline|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="log-in-responseschema">Response Schema</h3>
 
@@ -295,10 +295,10 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Profile fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Profile fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-the-authenticated-user's-profile-responseschema">Response Schema</h3>
 
@@ -363,9 +363,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Generic success response, whether or not the account exists|[MessageResponse](#schemamessageresponse)|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Generic success response, whether or not the account exists|[MessageResponse](#schemamessageresponse)|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <aside class="success">
 This operation does not require authentication
@@ -419,9 +419,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Password reset|[MessageResponse](#schemamessageresponse)|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Password reset|[MessageResponse](#schemamessageresponse)|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <aside class="success">
 This operation does not require authentication
@@ -475,10 +475,10 @@ Requires the `admin` role. If `email` is omitted, the authenticated user's email
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Test email sent|[MessageResponse](#schemamessageresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Test email sent|[MessageResponse](#schemamessageresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <aside class="warning">
 To perform this operation, you must be authenticated by means of one of the following methods:
@@ -553,10 +553,10 @@ Available to all authenticated roles.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Users fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Users fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-users-responseschema">Response Schema</h3>
 
@@ -623,10 +623,10 @@ avatar: string
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Profile picture updated|Inline|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Profile picture updated|Inline|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="upload-the-authenticated-user's-avatar-responseschema">Response Schema</h3>
 
@@ -693,11 +693,11 @@ Employees may only view their own profile.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|User fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|User fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-a-user-responseschema">Response Schema</h3>
 
@@ -800,12 +800,12 @@ Employees and payroll officers may update only themselves; HR officers may updat
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|User updated|Inline|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|User updated|Inline|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="update-a-user-responseschema">Response Schema</h3>
 
@@ -876,11 +876,11 @@ Requires the `admin` role. This is a soft delete that sets `is_active` to false.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|User deactivated|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|User deactivated|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="deactivate-a-user-responseschema">Response Schema</h3>
 
@@ -951,11 +951,11 @@ Requires the `admin` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|User status toggled|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|User status toggled|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="toggle-a-user's-active-status-responseschema">Response Schema</h3>
 
@@ -1027,9 +1027,9 @@ Marks attendance for the authenticated user. Repeated calls alternate between ch
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Attendance marked|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Attendance marked|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="check-in-or-check-out-responseschema">Response Schema</h3>
 
@@ -1106,9 +1106,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Attendance fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Attendance fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-the-authenticated-user's-monthly-attendance-responseschema">Response Schema</h3>
 
@@ -1175,9 +1175,9 @@ Defaults to the authenticated user when `employee_id` is omitted.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Summary fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Summary fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-a-monthly-attendance-summary-responseschema">Response Schema</h3>
 
@@ -1251,10 +1251,10 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Attendance fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Attendance fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-monthly-attendance-for-all-employees-responseschema">Response Schema</h3>
 
@@ -1324,10 +1324,10 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Today's attendance fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Today's attendance fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-today's-attendance-responseschema">Response Schema</h3>
 
@@ -1388,9 +1388,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Leave types fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Leave types fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-leave-types-responseschema">Response Schema</h3>
 
@@ -1464,10 +1464,10 @@ Requires the `admin` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|Leave type created|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|201|Created|Leave type created|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="create-a-leave-type-responseschema">Response Schema</h3>
 
@@ -1527,9 +1527,9 @@ The route is intended to use the authenticated user but currently passes a missi
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Allocations fetched when the route implementation is corrected|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Allocations fetched when the route implementation is corrected|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-the-authenticated-user's-leave-allocations-responseschema">Response Schema</h3>
 
@@ -1595,10 +1595,10 @@ Requires the `admin` or `hr_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Allocations fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Allocations fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-an-employee's-leave-allocations-responseschema">Response Schema</h3>
 
@@ -1678,10 +1678,10 @@ Requires the `admin` or `hr_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Allocation saved|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Allocation saved|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="create-or-update-a-leave-allocation-responseschema">Response Schema</h3>
 
@@ -1767,10 +1767,10 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|Leave request submitted|Inline|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|201|Created|Leave request submitted|Inline|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="submit-a-leave-request-responseschema">Response Schema</h3>
 
@@ -1839,9 +1839,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Requests fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Requests fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-the-authenticated-user's-leave-requests-responseschema">Response Schema</h3>
 
@@ -1927,10 +1927,10 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Requests fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Requests fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-all-leave-requests-responseschema">Response Schema</h3>
 
@@ -2005,12 +2005,12 @@ Requires the `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Leave approved|Inline|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Leave approved|Inline|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="approve-a-leave-request-responseschema">Response Schema</h3>
 
@@ -2085,12 +2085,12 @@ Requires the `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Leave rejected|Inline|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Leave rejected|Inline|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="reject-a-leave-request-responseschema">Response Schema</h3>
 
@@ -2179,10 +2179,10 @@ Requires the `admin` or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Salary structure saved|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Salary structure saved|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="create-or-update-a-salary-structure-responseschema">Response Schema</h3>
 
@@ -2244,10 +2244,10 @@ Requires the `admin` or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Salary structures fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Salary structures fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-salary-structures-responseschema">Response Schema</h3>
 
@@ -2313,11 +2313,11 @@ Requires the `admin` or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Salary structure fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Salary structure fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-an-employee's-salary-structure-responseschema">Response Schema</h3>
 
@@ -2386,11 +2386,11 @@ Requires the `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Pay run generated|Inline|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid request|[ErrorResponse](#schemaerrorresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Pay run generated|Inline|
+|400|Bad Request|Invalid request|[ErrorResponse](#schemaerrorresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="generate-or-regenerate-a-pay-run-responseschema">Response Schema</h3>
 
@@ -2450,10 +2450,10 @@ Requires the `admin` or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Pay runs fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Pay runs fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-pay-runs-responseschema">Response Schema</h3>
 
@@ -2539,10 +2539,10 @@ Requires the `admin` or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Payslips fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Payslips fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-payslips-in-a-pay-run-responseschema">Response Schema</h3>
 
@@ -2618,9 +2618,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Payslips fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Payslips fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-the-authenticated-user's-payslips-responseschema">Response Schema</h3>
 
@@ -2702,11 +2702,11 @@ Employees may only access their own payslips.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Payslip fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Payslip fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-a-payslip-responseschema">Response Schema</h3>
 
@@ -2763,11 +2763,11 @@ Employees may only download their own payslips.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Payslip PDF|string|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Payslip PDF|string|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 ### Response Headers
 
@@ -2815,10 +2815,10 @@ Requires the `admin` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Dashboard data fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Dashboard data fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-the-admin-dashboard-responseschema">Response Schema</h3>
 
@@ -2864,9 +2864,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Dashboard data fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Dashboard data fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-the-authenticated-employee-dashboard-responseschema">Response Schema</h3>
 
@@ -2914,10 +2914,10 @@ Requires the `admin` or `hr_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Dashboard data fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Dashboard data fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-the-hr-dashboard-responseschema">Response Schema</h3>
 
@@ -2965,10 +2965,10 @@ Requires the `admin` or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Dashboard data fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Dashboard data fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-the-payroll-dashboard-responseschema">Response Schema</h3>
 
@@ -3026,9 +3026,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Notifications fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Notifications fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-the-authenticated-user's-notifications-responseschema">Response Schema</h3>
 
@@ -3088,10 +3088,10 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Notification marked as read|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Resource not found|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Notification marked as read|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|404|Not Found|Resource not found|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="mark-a-notification-as-read-responseschema">Response Schema</h3>
 
@@ -3136,9 +3136,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|All notifications marked as read|[MessageResponse](#schemamessageresponse)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|All notifications marked as read|[MessageResponse](#schemamessageresponse)|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <aside class="warning">
 To perform this operation, you must be authenticated by means of one of the following methods:
@@ -3184,9 +3184,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Settings fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Settings fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-application-settings-responseschema">Response Schema</h3>
 
@@ -3259,10 +3259,10 @@ Requires the `admin` role. Each supplied key is stored as a setting.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Settings updated|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Settings updated|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="update-application-settings-responseschema">Response Schema</h3>
 
@@ -3310,10 +3310,10 @@ Requires the `admin` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Database statistics fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Database statistics fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="get-database-statistics-responseschema">Response Schema</h3>
 
@@ -3385,9 +3385,9 @@ Queries shorter than two characters return an empty array.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Search results|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Search results|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="search-users-responseschema">Response Schema</h3>
 
@@ -3470,10 +3470,10 @@ Requires the `admin` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Audit logs fetched|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error|[ErrorResponse](#schemaerrorresponse)|
+|200|OK|Audit logs fetched|Inline|
+|401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
+|403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
+|500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
 
 <h3 id="list-audit-logs-responseschema">Response Schema</h3>
 
