@@ -2,8 +2,6 @@
 
 <h1 id="empay-hrms-api">EmPay HRMS API v1.0.0</h1>
 
-> Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
-
 REST API contract derived from the Express routes, controllers, services, and
 database schema. Protected operations require the `Authorization: Bearer <JWT>`
 request header. Individual operation descriptions identify additional role
@@ -4280,4 +4278,3 @@ Dynamic key/value application settings.
 |created_at|string(date-time)|false|none|Time at which the record was created.|
 |full_name|string¦null|false|none|Full name of the user.|
 |email|string(email)¦null|false|none|Email address of the user.|
-
