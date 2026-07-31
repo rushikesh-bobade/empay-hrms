@@ -20,7 +20,7 @@ export default function HRDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
         <StatCard title="Total Employees" value={data?.total_employees || 0} icon={Users} color="primary" />
         <StatCard title="Active Employees" value={data?.active_employees || 0} icon={CheckCircle} color="success" />
-        <StatCard title="On Leave Today" value={parseInt(data?.today_summary?.on_leave) || 0} icon={CalendarOff} color="warning" />
+        <StatCard title="On Leave Today" value={parseInt(data?.today_summary?.on_leave,10) || 0} icon={CalendarOff} color="warning" />
         <StatCard title="Pending Leaves" value={data?.pending_leave_requests || 0} icon={Clock} color="danger" />
       </div>
 
