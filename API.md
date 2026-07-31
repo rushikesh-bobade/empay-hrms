@@ -13,9 +13,11 @@ Base URLs:
 
 * <a href="http://localhost:5000">http://localhost:5000</a>
 
+Email: <a href="mailto:support@empay.com">EmPay Support</a>
+
 # Authentication
 
-- HTTP Authentication, scheme: bearer 
+- HTTP Authentication, scheme: bearer
 
 <h1 id="empay-hrms-api-health">Health</h1>
 
@@ -41,7 +43,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "EmPay API is running",
   "timestamp": "2019-08-24T14:15:22Z"
 }
 ```
@@ -80,13 +82,13 @@ Requires the `admin` or `hr_officer` role.
 
 ```json
 {
-  "full_name": "string",
-  "email": "user@example.com",
-  "password": "pa$$word",
+  "full_name": "Ada Okafor",
+  "email": "ada@example.com",
+  "password": "Password@123",
   "role": "admin",
-  "department": "string",
-  "designation": "string",
-  "phone": "string"
+  "department": "Engineering",
+  "designation": "Software Engineer",
+  "phone": "+234 800 000 0000"
 }
 ```
 
@@ -94,14 +96,14 @@ Requires the `admin` or `hr_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[RegisterRequest](#schemaregisterrequest)|true|none|
-|» full_name|body|string|true|none|
-|» email|body|string(email)|true|none|
-|» password|body|string(password)|true|none|
-|» role|body|[UserRole](#schemauserrole)|true|none|
-|» department|body|string¦null|false|none|
-|» designation|body|string¦null|false|none|
-|» phone|body|string¦null|false|none|
+|body|body|[RegisterRequest](#schemaregisterrequest)|true|Payload supplied to this operation.|
+|» full_name|body|string|true|Full name of the user.|
+|» email|body|string(email)|true|Email address of the user.|
+|» password|body|string(password)|true|Plain-text password submitted for authentication or account setup.|
+|» role|body|[UserRole](#schemauserrole)|true|Access role assigned to a user.|
+|» department|body|string¦null|false|Organizational department.|
+|» designation|body|string¦null|false|Employee job title.|
+|» phone|body|string¦null|false|Contact telephone number.|
 
 #### Enumerated Values
 
@@ -119,17 +121,17 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
-    "full_name": "string",
-    "email": "user@example.com",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
     "role": "admin",
-    "department": "string",
-    "designation": "string",
-    "phone": "string",
-    "profile_pic": "string",
-    "date_joined": "2019-08-24",
+    "department": "Engineering",
+    "designation": "Software Engineer",
+    "phone": "+234 800 000 0000",
+    "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+    "date_joined": "2026-01-15",
     "is_active": true,
     "created_at": "2019-08-24T14:15:22Z",
     "updated_at": "2019-08-24T14:15:22Z"
@@ -184,8 +186,8 @@ Accept: application/json
 
 ```json
 {
-  "email": "user@example.com",
-  "password": "pa$$word"
+  "email": "ada@example.com",
+  "password": "Password@123"
 }
 ```
 
@@ -193,9 +195,9 @@ Accept: application/json
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[LoginRequest](#schemaloginrequest)|true|none|
-|» email|body|string(email)|true|none|
-|» password|body|string(password)|true|none|
+|body|body|[LoginRequest](#schemaloginrequest)|true|Payload supplied to this operation.|
+|» email|body|string(email)|true|Email address of the user.|
+|» password|body|string(password)|true|Plain-text password submitted for authentication or account setup.|
 
 > Example responses
 
@@ -204,19 +206,19 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "token": "string",
     "user": {
       "id": 0,
-      "full_name": "string",
-      "email": "user@example.com",
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
       "role": "admin",
-      "department": "string",
-      "designation": "string",
-      "phone": "string",
-      "profile_pic": "string",
-      "date_joined": "2019-08-24",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "phone": "+234 800 000 0000",
+      "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+      "date_joined": "2026-01-15",
       "is_active": true,
       "created_at": "2019-08-24T14:15:22Z",
       "updated_at": "2019-08-24T14:15:22Z"
@@ -273,17 +275,17 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
-    "full_name": "string",
-    "email": "user@example.com",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
     "role": "admin",
-    "department": "string",
-    "designation": "string",
-    "phone": "string",
-    "profile_pic": "string",
-    "date_joined": "2019-08-24",
+    "department": "Engineering",
+    "designation": "Software Engineer",
+    "phone": "+234 800 000 0000",
+    "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+    "date_joined": "2026-01-15",
     "is_active": true,
     "created_at": "2019-08-24T14:15:22Z",
     "updated_at": "2019-08-24T14:15:22Z"
@@ -337,7 +339,7 @@ Accept: application/json
 
 ```json
 {
-  "email": "user@example.com"
+  "email": "ada@example.com"
 }
 ```
 
@@ -345,8 +347,8 @@ Accept: application/json
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object|true|none|
-|» email|body|string(email)|true|none|
+|body|body|object|true|Payload supplied to this operation.|
+|» email|body|string(email)|true|Email address of the user.|
 
 > Example responses
 
@@ -355,7 +357,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "Operation completed successfully"
 }
 ```
 
@@ -391,8 +393,8 @@ Accept: application/json
 
 ```json
 {
-  "token": "string",
-  "newPassword": "pa$$word"
+  "token": "reset-token-from-email",
+  "newPassword": "NewPassword@123"
 }
 ```
 
@@ -400,9 +402,9 @@ Accept: application/json
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object|true|none|
-|» token|body|string|true|none|
-|» newPassword|body|string(password)|true|none|
+|body|body|object|true|Payload supplied to this operation.|
+|» token|body|string|true|Password-reset token received by email.|
+|» newPassword|body|string(password)|true|New password to assign to the account.|
 
 > Example responses
 
@@ -411,7 +413,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "Operation completed successfully"
 }
 ```
 
@@ -449,7 +451,7 @@ Requires the `admin` role. If `email` is omitted, the authenticated user's email
 
 ```json
 {
-  "email": "user@example.com"
+  "email": "ada@example.com"
 }
 ```
 
@@ -457,8 +459,8 @@ Requires the `admin` role. If `email` is omitted, the authenticated user's email
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object|false|none|
-|» email|body|string(email)|false|none|
+|body|body|object|false|Payload supplied to this operation.|
+|» email|body|string(email)|false|Email address of the user.|
 
 > Example responses
 
@@ -467,7 +469,7 @@ Requires the `admin` role. If `email` is omitted, the authenticated user's email
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "Operation completed successfully"
 }
 ```
 
@@ -508,9 +510,9 @@ Available to all authenticated roles.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|role|query|[UserRole](#schemauserrole)|false|none|
-|department|query|string|false|none|
-|search|query|string|false|none|
+|role|query|[UserRole](#schemauserrole)|false|Filter users by their assigned access role.|
+|department|query|string|false|Filter results by a partial department-name match.|
+|search|query|string|false|Search users by partial full-name or email match.|
 |is_active|query|boolean|false|Filter by active status.|
 
 #### Enumerated Values
@@ -529,18 +531,18 @@ Available to all authenticated roles.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
-      "full_name": "string",
-      "email": "user@example.com",
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
       "role": "admin",
-      "department": "string",
-      "designation": "string",
-      "phone": "string",
-      "profile_pic": "string",
-      "date_joined": "2019-08-24",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "phone": "+234 800 000 0000",
+      "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+      "date_joined": "2026-01-15",
       "is_active": true,
       "created_at": "2019-08-24T14:15:22Z",
       "updated_at": "2019-08-24T14:15:22Z"
@@ -602,7 +604,7 @@ avatar: string
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object|true|none|
+|body|body|object|true|Payload supplied to this operation.|
 |» avatar|body|string(binary)|true|JPG, JPEG, PNG, or WebP image, maximum 5 MB.|
 
 > Example responses
@@ -612,9 +614,9 @@ avatar: string
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
-    "profile_pic": "http://example.com"
+    "profile_pic": "https://cdn.example.com/avatars/ada.jpg"
   }
 }
 ```
@@ -662,7 +664,7 @@ Employees may only view their own profile.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique integer identifier of the user.|
 
 > Example responses
 
@@ -671,17 +673,17 @@ Employees may only view their own profile.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
-    "full_name": "string",
-    "email": "user@example.com",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
     "role": "admin",
-    "department": "string",
-    "designation": "string",
-    "phone": "string",
-    "profile_pic": "string",
-    "date_joined": "2019-08-24",
+    "department": "Engineering",
+    "designation": "Software Engineer",
+    "phone": "+234 800 000 0000",
+    "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+    "date_joined": "2026-01-15",
     "is_active": true,
     "created_at": "2019-08-24T14:15:22Z",
     "updated_at": "2019-08-24T14:15:22Z"
@@ -738,13 +740,13 @@ Employees and payroll officers may update only themselves; HR officers may updat
 
 ```json
 {
-  "full_name": "string",
-  "department": "string",
-  "designation": "string",
-  "phone": "string",
-  "profile_pic": "string",
+  "full_name": "Ada Okafor",
+  "department": "Engineering",
+  "designation": "Software Engineer",
+  "phone": "+234 800 000 0000",
+  "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
   "role": "admin",
-  "password": "pa$$word"
+  "password": "Password@123"
 }
 ```
 
@@ -752,15 +754,15 @@ Employees and payroll officers may update only themselves; HR officers may updat
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[UpdateUserRequest](#schemaupdateuserrequest)|true|none|
-|» full_name|body|string|false|none|
-|» department|body|string|false|none|
-|» designation|body|string|false|none|
-|» phone|body|string|false|none|
-|» profile_pic|body|string|false|none|
-|» role|body|[UserRole](#schemauserrole)|false|none|
-|» password|body|string(password)|false|none|
-|id|path|integer|true|none|
+|body|body|[UpdateUserRequest](#schemaupdateuserrequest)|true|Payload supplied to this operation.|
+|» full_name|body|string|false|Full name of the user.|
+|» department|body|string|false|Organizational department.|
+|» designation|body|string|false|Employee job title.|
+|» phone|body|string|false|Contact telephone number.|
+|» profile_pic|body|string|false|Profile-picture URL.|
+|» role|body|[UserRole](#schemauserrole)|false|Access role assigned to a user.|
+|» password|body|string(password)|false|Plain-text password submitted for authentication or account setup.|
+|id|path|integer|true|Unique integer identifier of the user.|
 
 #### Enumerated Values
 
@@ -778,17 +780,17 @@ Employees and payroll officers may update only themselves; HR officers may updat
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
-    "full_name": "string",
-    "email": "user@example.com",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
     "role": "admin",
-    "department": "string",
-    "designation": "string",
-    "phone": "string",
-    "profile_pic": "string",
-    "date_joined": "2019-08-24",
+    "department": "Engineering",
+    "designation": "Software Engineer",
+    "phone": "+234 800 000 0000",
+    "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+    "date_joined": "2026-01-15",
     "is_active": true,
     "created_at": "2019-08-24T14:15:22Z",
     "updated_at": "2019-08-24T14:15:22Z"
@@ -845,7 +847,7 @@ Requires the `admin` role. This is a soft delete that sets `is_active` to false.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique integer identifier of the user.|
 
 > Example responses
 
@@ -854,17 +856,17 @@ Requires the `admin` role. This is a soft delete that sets `is_active` to false.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
-    "full_name": "string",
-    "email": "user@example.com",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
     "role": "admin",
-    "department": "string",
-    "designation": "string",
-    "phone": "string",
-    "profile_pic": "string",
-    "date_joined": "2019-08-24",
+    "department": "Engineering",
+    "designation": "Software Engineer",
+    "phone": "+234 800 000 0000",
+    "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+    "date_joined": "2026-01-15",
     "is_active": true,
     "created_at": "2019-08-24T14:15:22Z",
     "updated_at": "2019-08-24T14:15:22Z"
@@ -920,7 +922,7 @@ Requires the `admin` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique integer identifier of the user.|
 
 > Example responses
 
@@ -929,17 +931,17 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
-    "full_name": "string",
-    "email": "user@example.com",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
     "role": "admin",
-    "department": "string",
-    "designation": "string",
-    "phone": "string",
-    "profile_pic": "string",
-    "date_joined": "2019-08-24",
+    "department": "Engineering",
+    "designation": "Software Engineer",
+    "phone": "+234 800 000 0000",
+    "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+    "date_joined": "2026-01-15",
     "is_active": true,
     "created_at": "2019-08-24T14:15:22Z",
     "updated_at": "2019-08-24T14:15:22Z"
@@ -1000,24 +1002,24 @@ Marks attendance for the authenticated user. Repeated calls alternate between ch
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "action": "checked_in",
     "record": {
       "id": 0,
       "employee_id": 0,
-      "date": "2019-08-24",
-      "check_in": "string",
-      "check_out": "string",
+      "date": "2026-07-31",
+      "check_in": "09:00:00",
+      "check_out": "17:00:00",
       "accumulated_minutes": 0,
       "duration_minutes": 0,
       "status": "present",
       "created_at": "2019-08-24T14:15:22Z",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string",
-      "profile_pic": "string"
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "profile_pic": "https://cdn.example.com/avatars/ada.jpg"
     }
   }
 }
@@ -1080,23 +1082,23 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
       "employee_id": 0,
-      "date": "2019-08-24",
-      "check_in": "string",
-      "check_out": "string",
+      "date": "2026-07-31",
+      "check_in": "09:00:00",
+      "check_out": "17:00:00",
       "accumulated_minutes": 0,
       "duration_minutes": 0,
       "status": "present",
       "created_at": "2019-08-24T14:15:22Z",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string",
-      "profile_pic": "string"
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "profile_pic": "https://cdn.example.com/avatars/ada.jpg"
     }
   ]
 }
@@ -1149,7 +1151,7 @@ Defaults to the authenticated user when `employee_id` is omitted.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|employee_id|query|integer|false|none|
+|employee_id|query|integer|false|Filter results to the specified employee.|
 |month|query|integer|false|Defaults to the current month.|
 |year|query|integer|false|Defaults to the current year.|
 
@@ -1160,7 +1162,7 @@ Defaults to the authenticated user when `employee_id` is omitted.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "present": "string",
     "absent": "string",
@@ -1215,8 +1217,8 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 |---|---|---|---|---|
 |month|query|integer|false|Defaults to the current month.|
 |year|query|integer|false|Defaults to the current year.|
-|department|query|string|false|none|
-|employee_id|query|integer|false|none|
+|department|query|string|false|Filter results by a partial department-name match.|
+|employee_id|query|integer|false|Filter results to the specified employee.|
 
 > Example responses
 
@@ -1225,23 +1227,23 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
       "employee_id": 0,
-      "date": "2019-08-24",
-      "check_in": "string",
-      "check_out": "string",
+      "date": "2026-07-31",
+      "check_in": "09:00:00",
+      "check_out": "17:00:00",
       "accumulated_minutes": 0,
       "duration_minutes": 0,
       "status": "present",
       "created_at": "2019-08-24T14:15:22Z",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string",
-      "profile_pic": "string"
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "profile_pic": "https://cdn.example.com/avatars/ada.jpg"
     }
   ]
 }
@@ -1298,23 +1300,23 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
       "employee_id": 0,
-      "date": "2019-08-24",
-      "check_in": "string",
-      "check_out": "string",
+      "date": "2026-07-31",
+      "check_in": "09:00:00",
+      "check_out": "17:00:00",
       "accumulated_minutes": 0,
       "duration_minutes": 0,
       "status": "present",
       "created_at": "2019-08-24T14:15:22Z",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string",
-      "profile_pic": "string"
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "profile_pic": "https://cdn.example.com/avatars/ada.jpg"
     }
   ]
 }
@@ -1371,12 +1373,12 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
-      "name": "string",
-      "description": "string",
+      "name": "Annual Leave",
+      "description": "Paid annual leave",
       "max_days_per_year": 0,
       "is_paid": true
     }
@@ -1427,8 +1429,8 @@ Requires the `admin` role.
 
 ```json
 {
-  "name": "string",
-  "description": "string",
+  "name": "Annual Leave",
+  "description": "Paid annual leave",
   "max_days_per_year": 365
 }
 ```
@@ -1437,10 +1439,10 @@ Requires the `admin` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object|true|none|
-|» name|body|string|true|none|
-|» description|body|string¦null|false|none|
-|» max_days_per_year|body|integer|true|none|
+|body|body|object|true|Payload supplied to this operation.|
+|» name|body|string|true|Display name.|
+|» description|body|string¦null|false|Additional explanatory text.|
+|» max_days_per_year|body|integer|true|Maximum leave days allowed per year.|
 
 > Example responses
 
@@ -1449,11 +1451,11 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
-    "name": "string",
-    "description": "string",
+    "name": "Annual Leave",
+    "description": "Paid annual leave",
     "max_days_per_year": 0,
     "is_paid": true
   }
@@ -1506,7 +1508,7 @@ The route is intended to use the authenticated user but currently passes a missi
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
@@ -1514,8 +1516,8 @@ The route is intended to use the authenticated user but currently passes a missi
       "leave_type_id": 0,
       "allocated_days": 0,
       "used_days": 0,
-      "year": 0,
-      "name": "string",
+      "year": 2026,
+      "name": "Annual Leave",
       "max_days_per_year": 0,
       "remaining": 0
     }
@@ -1565,7 +1567,7 @@ Requires the `admin` or `hr_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|employee_id|path|integer|true|none|
+|employee_id|path|integer|true|Unique integer identifier of the employee.|
 
 > Example responses
 
@@ -1574,7 +1576,7 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
@@ -1582,8 +1584,8 @@ Requires the `admin` or `hr_officer` role.
       "leave_type_id": 0,
       "allocated_days": 0,
       "used_days": 0,
-      "year": 0,
-      "name": "string",
+      "year": 2026,
+      "name": "Annual Leave",
       "max_days_per_year": 0,
       "remaining": 0
     }
@@ -1638,7 +1640,7 @@ Requires the `admin` or `hr_officer` role.
   "employee_id": 0,
   "leave_type_id": 0,
   "allocated_days": 0,
-  "year": 2000
+  "year": 2026
 }
 ```
 
@@ -1646,11 +1648,11 @@ Requires the `admin` or `hr_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object|true|none|
-|» employee_id|body|integer|true|none|
-|» leave_type_id|body|integer|true|none|
-|» allocated_days|body|integer|true|none|
-|» year|body|integer|false|none|
+|body|body|object|true|Payload supplied to this operation.|
+|» employee_id|body|integer|true|Identifier of the employee.|
+|» leave_type_id|body|integer|true|Identifier of the leave type.|
+|» allocated_days|body|integer|true|Number of leave days allocated.|
+|» year|body|integer|false|Calendar year.|
 
 > Example responses
 
@@ -1659,15 +1661,15 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
     "employee_id": 0,
     "leave_type_id": 0,
     "allocated_days": 0,
     "used_days": 0,
-    "year": 0,
-    "name": "string",
+    "year": 2026,
+    "name": "Annual Leave",
     "max_days_per_year": 0,
     "remaining": 0
   }
@@ -1717,9 +1719,9 @@ Accept: application/json
 ```json
 {
   "leave_type_id": 0,
-  "start_date": "2019-08-24",
-  "end_date": "2019-08-24",
-  "reason": "string"
+  "start_date": "2026-08-10",
+  "end_date": "2026-08-14",
+  "reason": "Family event"
 }
 ```
 
@@ -1727,11 +1729,11 @@ Accept: application/json
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object|true|none|
-|» leave_type_id|body|integer|true|none|
-|» start_date|body|string(date)|true|none|
-|» end_date|body|string(date)|true|none|
-|» reason|body|string¦null|false|none|
+|body|body|object|true|Payload supplied to this operation.|
+|» leave_type_id|body|integer|true|Identifier of the leave type.|
+|» start_date|body|string(date)|true|First date of the leave period.|
+|» end_date|body|string(date)|true|Last date of the leave period.|
+|» reason|body|string¦null|false|Reason supplied for the leave request.|
 
 > Example responses
 
@@ -1740,24 +1742,24 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
     "employee_id": 0,
     "leave_type_id": 0,
-    "start_date": "2019-08-24",
-    "end_date": "2019-08-24",
+    "start_date": "2026-08-10",
+    "end_date": "2026-08-14",
     "total_days": 0,
-    "reason": "string",
+    "reason": "Family event",
     "status": "pending",
     "reviewed_by": 0,
     "reviewed_at": "2019-08-24T14:15:22Z",
     "created_at": "2019-08-24T14:15:22Z",
     "leave_type_name": "string",
-    "full_name": "string",
-    "email": "user@example.com",
-    "department": "string",
-    "designation": "string",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
+    "department": "Engineering",
+    "designation": "Software Engineer",
     "reviewer_name": "string"
   }
 }
@@ -1810,25 +1812,25 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
       "employee_id": 0,
       "leave_type_id": 0,
-      "start_date": "2019-08-24",
-      "end_date": "2019-08-24",
+      "start_date": "2026-08-10",
+      "end_date": "2026-08-14",
       "total_days": 0,
-      "reason": "string",
+      "reason": "Family event",
       "status": "pending",
       "reviewed_by": 0,
       "reviewed_at": "2019-08-24T14:15:22Z",
       "created_at": "2019-08-24T14:15:22Z",
       "leave_type_name": "string",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string",
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer",
       "reviewer_name": "string"
     }
   ]
@@ -1880,8 +1882,8 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|status|query|string|false|none|
-|employee_id|query|integer|false|none|
+|status|query|string|false|Filter requests by their review status.|
+|employee_id|query|integer|false|Filter results to the specified employee.|
 
 #### Enumerated Values
 
@@ -1898,25 +1900,25 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
       "employee_id": 0,
       "leave_type_id": 0,
-      "start_date": "2019-08-24",
-      "end_date": "2019-08-24",
+      "start_date": "2026-08-10",
+      "end_date": "2026-08-14",
       "total_days": 0,
-      "reason": "string",
+      "reason": "Family event",
       "status": "pending",
       "reviewed_by": 0,
       "reviewed_at": "2019-08-24T14:15:22Z",
       "created_at": "2019-08-24T14:15:22Z",
       "leave_type_name": "string",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string",
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer",
       "reviewer_name": "string"
     }
   ]
@@ -1969,7 +1971,7 @@ Requires the `payroll_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique identifier of the requested resource.|
 
 > Example responses
 
@@ -1978,24 +1980,24 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
     "employee_id": 0,
     "leave_type_id": 0,
-    "start_date": "2019-08-24",
-    "end_date": "2019-08-24",
+    "start_date": "2026-08-10",
+    "end_date": "2026-08-14",
     "total_days": 0,
-    "reason": "string",
+    "reason": "Family event",
     "status": "pending",
     "reviewed_by": 0,
     "reviewed_at": "2019-08-24T14:15:22Z",
     "created_at": "2019-08-24T14:15:22Z",
     "leave_type_name": "string",
-    "full_name": "string",
-    "email": "user@example.com",
-    "department": "string",
-    "designation": "string",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
+    "department": "Engineering",
+    "designation": "Software Engineer",
     "reviewer_name": "string"
   }
 }
@@ -2049,7 +2051,7 @@ Requires the `payroll_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique identifier of the requested resource.|
 
 > Example responses
 
@@ -2058,24 +2060,24 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
     "employee_id": 0,
     "leave_type_id": 0,
-    "start_date": "2019-08-24",
-    "end_date": "2019-08-24",
+    "start_date": "2026-08-10",
+    "end_date": "2026-08-14",
     "total_days": 0,
-    "reason": "string",
+    "reason": "Family event",
     "status": "pending",
     "reviewed_by": 0,
     "reviewed_at": "2019-08-24T14:15:22Z",
     "created_at": "2019-08-24T14:15:22Z",
     "leave_type_name": "string",
-    "full_name": "string",
-    "email": "user@example.com",
-    "department": "string",
-    "designation": "string",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
+    "department": "Engineering",
+    "designation": "Software Engineer",
     "reviewer_name": "string"
   }
 }
@@ -2133,10 +2135,10 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "employee_id": 0,
-  "basic_salary": 0.1,
+  "basic_salary": 250000,
   "hra_percent": 40,
   "special_allowance": 0,
-  "effective_from": "2019-08-24"
+  "effective_from": "2026-08-01"
 }
 ```
 
@@ -2144,12 +2146,12 @@ Requires the `admin` or `payroll_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[SalaryStructureRequest](#schemasalarystructurerequest)|true|none|
-|» employee_id|body|integer|true|none|
-|» basic_salary|body|number(double)|true|none|
-|» hra_percent|body|number(double)|false|none|
-|» special_allowance|body|number(double)|false|none|
-|» effective_from|body|string(date)|false|none|
+|body|body|[SalaryStructureRequest](#schemasalarystructurerequest)|true|Payload supplied to this operation.|
+|» employee_id|body|integer|true|Identifier of the employee.|
+|» basic_salary|body|number(double)|true|Employee base salary before additions and deductions.|
+|» hra_percent|body|number(double)|false|Housing allowance percentage.|
+|» special_allowance|body|number(double)|false|Fixed special-allowance amount.|
+|» effective_from|body|string(date)|false|Date from which the salary structure applies.|
 
 > Example responses
 
@@ -2158,19 +2160,19 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "employee_id": 0,
-    "basic_salary": 0.1,
+    "basic_salary": 250000,
     "hra_percent": 40,
     "special_allowance": 0,
-    "effective_from": "2019-08-24",
+    "effective_from": "2026-08-01",
     "id": 0,
     "created_at": "2019-08-24T14:15:22Z",
-    "full_name": "string",
-    "email": "user@example.com",
-    "department": "string",
-    "designation": "string"
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
+    "department": "Engineering",
+    "designation": "Software Engineer"
   }
 }
 ```
@@ -2221,20 +2223,20 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "employee_id": 0,
-      "basic_salary": 0.1,
+      "basic_salary": 250000,
       "hra_percent": 40,
       "special_allowance": 0,
-      "effective_from": "2019-08-24",
+      "effective_from": "2026-08-01",
       "id": 0,
       "created_at": "2019-08-24T14:15:22Z",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string"
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer"
     }
   ]
 }
@@ -2283,7 +2285,7 @@ Requires the `admin` or `payroll_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|employee_id|path|integer|true|none|
+|employee_id|path|integer|true|Unique integer identifier of the employee.|
 
 > Example responses
 
@@ -2292,19 +2294,19 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "employee_id": 0,
-    "basic_salary": 0.1,
+    "basic_salary": 250000,
     "hra_percent": 40,
     "special_allowance": 0,
-    "effective_from": "2019-08-24",
+    "effective_from": "2026-08-01",
     "id": 0,
     "created_at": "2019-08-24T14:15:22Z",
-    "full_name": "string",
-    "email": "user@example.com",
-    "department": "string",
-    "designation": "string"
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
+    "department": "Engineering",
+    "designation": "Software Engineer"
   }
 }
 ```
@@ -2354,8 +2356,8 @@ Requires the `payroll_officer` role.
 
 ```json
 {
-  "month": 1,
-  "year": 2000
+  "month": 7,
+  "year": 2026
 }
 ```
 
@@ -2363,9 +2365,9 @@ Requires the `payroll_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object|true|none|
-|» month|body|integer|true|none|
-|» year|body|integer|true|none|
+|body|body|object|true|Payload supplied to this operation.|
+|» month|body|integer|true|Calendar month number from 1 to 12.|
+|» year|body|integer|true|Calendar year.|
 
 > Example responses
 
@@ -2374,7 +2376,7 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "payrun_id": 0,
     "payslips_generated_count": 0
@@ -2429,12 +2431,12 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
-      "month": 1,
-      "year": 0,
+      "month": 7,
+      "year": 2026,
       "status": "draft",
       "generated_by": 0,
       "generated_at": "2019-08-24T14:15:22Z",
@@ -2491,7 +2493,7 @@ Requires the `admin` or `payroll_officer` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique identifier of the requested resource.|
 
 > Example responses
 
@@ -2500,7 +2502,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
@@ -2521,14 +2523,14 @@ Requires the `admin` or `payroll_officer` role.
       "total_deductions": "string",
       "net_pay": "string",
       "created_at": "2019-08-24T14:15:22Z",
-      "month": 0,
-      "year": 0,
+      "month": 7,
+      "year": 2026,
       "payrun_status": "string",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string",
-      "date_joined": "2019-08-24",
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "date_joined": "2026-01-15",
       "user_id": 0
     }
   ]
@@ -2579,7 +2581,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
@@ -2600,14 +2602,14 @@ Accept: application/json
       "total_deductions": "string",
       "net_pay": "string",
       "created_at": "2019-08-24T14:15:22Z",
-      "month": 0,
-      "year": 0,
+      "month": 7,
+      "year": 2026,
       "payrun_status": "string",
-      "full_name": "string",
-      "email": "user@example.com",
-      "department": "string",
-      "designation": "string",
-      "date_joined": "2019-08-24",
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "date_joined": "2026-01-15",
       "user_id": 0
     }
   ]
@@ -2656,7 +2658,7 @@ Employees may only access their own payslips.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique identifier of the requested resource.|
 
 > Example responses
 
@@ -2665,7 +2667,7 @@ Employees may only access their own payslips.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
     "payrun_id": 0,
@@ -2685,14 +2687,14 @@ Employees may only access their own payslips.
     "total_deductions": "string",
     "net_pay": "string",
     "created_at": "2019-08-24T14:15:22Z",
-    "month": 0,
-    "year": 0,
+    "month": 7,
+    "year": 2026,
     "payrun_status": "string",
-    "full_name": "string",
-    "email": "user@example.com",
-    "department": "string",
-    "designation": "string",
-    "date_joined": "2019-08-24",
+    "full_name": "Ada Okafor",
+    "email": "ada@example.com",
+    "department": "Engineering",
+    "designation": "Software Engineer",
+    "date_joined": "2026-01-15",
     "user_id": 0
   }
 }
@@ -2742,7 +2744,7 @@ Employees may only download their own payslips.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique identifier of the requested resource.|
 
 > Example responses
 
@@ -2753,7 +2755,7 @@ Employees may only download their own payslips.
 ```json
 {
   "success": false,
-  "message": "string",
+  "message": "Invalid request",
   "error": "string",
   "hint": "string"
 }
@@ -2806,7 +2808,7 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {}
 }
 ```
@@ -2855,7 +2857,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {}
 }
 ```
@@ -2905,7 +2907,7 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {}
 }
 ```
@@ -2956,7 +2958,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {}
 }
 ```
@@ -3007,13 +3009,13 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
       "user_id": 0,
-      "title": "string",
-      "message": "string",
+      "title": "Leave request approved",
+      "message": "Operation completed successfully",
       "type": "string",
       "is_read": true,
       "created_at": "2019-08-24T14:15:22Z"
@@ -3062,7 +3064,7 @@ Accept: application/json
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|id|path|integer|true|none|
+|id|path|integer|true|Unique identifier of the requested resource.|
 
 > Example responses
 
@@ -3071,12 +3073,12 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "id": 0,
     "user_id": 0,
-    "title": "string",
-    "message": "string",
+    "title": "Leave request approved",
+    "message": "Operation completed successfully",
     "type": "string",
     "is_read": true,
     "created_at": "2019-08-24T14:15:22Z"
@@ -3128,7 +3130,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "Operation completed successfully"
 }
 ```
 
@@ -3169,7 +3171,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "company_name": "EmPay Ltd",
     "company_email": "hr@example.com",
@@ -3235,7 +3237,7 @@ Requires the `admin` role. Each supplied key is stored as a setting.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[Settings](#schemasettings)|true|none|
+|body|body|[Settings](#schemasettings)|true|Payload supplied to this operation.|
 
 > Example responses
 
@@ -3244,7 +3246,7 @@ Requires the `admin` role. Each supplied key is stored as a setting.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {
     "company_name": "EmPay Ltd",
     "company_email": "hr@example.com",
@@ -3301,7 +3303,7 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": {}
 }
 ```
@@ -3360,18 +3362,18 @@ Queries shorter than two characters return an empty array.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
-      "full_name": "string",
-      "email": "user@example.com",
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com",
       "role": "admin",
-      "department": "string",
-      "designation": "string",
-      "phone": "string",
-      "profile_pic": "string",
-      "date_joined": "2019-08-24",
+      "department": "Engineering",
+      "designation": "Software Engineer",
+      "phone": "+234 800 000 0000",
+      "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+      "date_joined": "2026-01-15",
       "is_active": true,
       "created_at": "2019-08-24T14:15:22Z",
       "updated_at": "2019-08-24T14:15:22Z",
@@ -3430,13 +3432,13 @@ Requires the `admin` role.
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|user_id|query|integer|false|none|
-|action|query|string|false|none|
-|target_type|query|string|false|none|
-|start_date|query|string(date)|false|none|
-|end_date|query|string(date)|false|none|
-|page|query|integer|false|none|
-|limit|query|integer|false|none|
+|user_id|query|integer|false|Filter audit records by the acting user's identifier.|
+|action|query|string|false|Filter by an exact audited action name.|
+|target_type|query|string|false|Filter by the affected resource type.|
+|start_date|query|string(date)|false|Include records created on or after this date.|
+|end_date|query|string(date)|false|Include records created on or before this date.|
+|page|query|integer|false|One-based results page number.|
+|limit|query|integer|false|Maximum number of records returned per page.|
 
 > Example responses
 
@@ -3445,19 +3447,19 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Operation completed successfully",
   "data": [
     {
       "id": 0,
       "user_id": 0,
-      "action": "string",
+      "action": "LEAVE_APPROVED",
       "target_id": 0,
-      "target_type": "string",
+      "target_type": "LEAVE_REQUEST",
       "metadata": {},
-      "ip_address": "string",
+      "ip_address": "203.0.113.10",
       "created_at": "2019-08-24T14:15:22Z",
-      "full_name": "string",
-      "email": "user@example.com"
+      "full_name": "Ada Okafor",
+      "email": "ada@example.com"
     }
   ],
   "total": 0,
@@ -3481,22 +3483,22 @@ Status Code **200**
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|» success|boolean|true|none|none|
-|» message|string|true|none|none|
-|» data|[[AuditLog](#schemaauditlog)]|true|none|none|
-|»» id|integer(int64)|false|none|none|
-|»» user_id|integer|false|none|none|
-|»» action|string|false|none|none|
-|»» target_id|integer(int64)|false|none|none|
-|»» target_type|string|false|none|none|
-|»» metadata|object¦null|false|none|none|
-|»» ip_address|string|false|none|none|
-|»» created_at|string(date-time)|false|none|none|
-|»» full_name|string¦null|false|none|none|
-|»» email|string(email)¦null|false|none|none|
-|» total|integer|true|none|none|
-|» page|integer|true|none|none|
-|» totalPages|integer|true|none|none|
+|» success|boolean|true|none|Indicates whether the request completed successfully.|
+|» message|string|true|none|Human-readable result or error message.|
+|» data|[[AuditLog](#schemaauditlog)]|true|none|Audit records for the current page.|
+|»» id|integer(int64)|false|none|Unique record identifier.|
+|»» user_id|integer|false|none|Identifier of the associated user.|
+|»» action|string|false|none|Action performed by the operation or recorded audit event.|
+|»» target_id|integer(int64)|false|none|Identifier of the affected resource.|
+|»» target_type|string|false|none|Type of resource affected by the action.|
+|»» metadata|object¦null|false|none|Additional structured details about the audited action.|
+|»» ip_address|string|false|none|Client IP address recorded for the action.|
+|»» created_at|string(date-time)|false|none|Time at which the record was created.|
+|»» full_name|string¦null|false|none|Full name of the user.|
+|»» email|string(email)¦null|false|none|Email address of the user.|
+|» total|integer|true|none|Total number of matching records.|
+|» page|integer|true|none|Current results page.|
+|» totalPages|integer|true|none|Total number of available pages.|
 
 #### Enumerated Values
 
@@ -3523,11 +3525,13 @@ bearerAuth
 
 ```
 
+Access role assigned to a user.
+
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|*anonymous*|string|false|none|none|
+|*anonymous*|string|false|none|Access role assigned to a user.|
 
 #### Enumerated Values
 
@@ -3548,7 +3552,7 @@ bearerAuth
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "Operation completed successfully"
 }
 
 ```
@@ -3557,8 +3561,8 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|success|boolean|true|none|none|
-|message|string|false|none|none|
+|success|boolean|true|none|Indicates whether the request completed successfully.|
+|message|string|false|none|Human-readable success message.|
 
 #### Enumerated Values
 
@@ -3576,7 +3580,7 @@ bearerAuth
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "Operation completed successfully"
 }
 
 ```
@@ -3585,8 +3589,8 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|success|boolean|true|none|none|
-|message|string|true|none|none|
+|success|boolean|true|none|Indicates whether the request completed successfully.|
+|message|string|true|none|Human-readable success message.|
 
 #### Enumerated Values
 
@@ -3604,7 +3608,7 @@ bearerAuth
 ```json
 {
   "success": false,
-  "message": "string",
+  "message": "Invalid request",
   "error": "string",
   "hint": "string"
 }
@@ -3615,10 +3619,10 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|success|boolean|true|none|none|
-|message|string|true|none|none|
-|error|string|false|none|none|
-|hint|string|false|none|none|
+|success|boolean|true|none|Indicates whether the request completed successfully.|
+|message|string|true|none|Human-readable error message.|
+|error|string|false|none|Underlying error detail when available.|
+|hint|string|false|none|Suggested corrective action when available.|
 
 #### Enumerated Values
 
@@ -3636,7 +3640,7 @@ bearerAuth
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "EmPay API is running",
   "timestamp": "2019-08-24T14:15:22Z"
 }
 
@@ -3646,9 +3650,9 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|success|boolean|true|none|none|
-|message|string|true|none|none|
-|timestamp|string(date-time)|true|none|none|
+|success|boolean|true|none|Indicates whether the request completed successfully.|
+|message|string|true|none|Human-readable health status.|
+|timestamp|string(date-time)|true|none|Time at which the response was generated.|
 
 #### Enumerated Values
 
@@ -3666,14 +3670,14 @@ bearerAuth
 ```json
 {
   "id": 0,
-  "full_name": "string",
-  "email": "user@example.com",
+  "full_name": "Ada Okafor",
+  "email": "ada@example.com",
   "role": "admin",
-  "department": "string",
-  "designation": "string",
-  "phone": "string",
-  "profile_pic": "string",
-  "date_joined": "2019-08-24",
+  "department": "Engineering",
+  "designation": "Software Engineer",
+  "phone": "+234 800 000 0000",
+  "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
+  "date_joined": "2026-01-15",
   "is_active": true,
   "created_at": "2019-08-24T14:15:22Z",
   "updated_at": "2019-08-24T14:15:22Z"
@@ -3685,18 +3689,18 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer|false|none|none|
-|full_name|string|false|none|none|
-|email|string(email)|false|none|none|
-|role|[UserRole](#schemauserrole)|false|none|none|
-|department|string¦null|false|none|none|
-|designation|string¦null|false|none|none|
-|phone|string¦null|false|none|none|
-|profile_pic|string¦null|false|none|none|
-|date_joined|string(date)|false|none|none|
-|is_active|boolean|false|none|none|
-|created_at|string(date-time)|false|none|none|
-|updated_at|string(date-time)|false|none|none|
+|id|integer|false|none|Unique record identifier.|
+|full_name|string|false|none|Full name of the user.|
+|email|string(email)|false|none|Email address of the user.|
+|role|[UserRole](#schemauserrole)|false|none|Access role assigned to a user.|
+|department|string¦null|false|none|Organizational department.|
+|designation|string¦null|false|none|Employee job title.|
+|phone|string¦null|false|none|Contact telephone number.|
+|profile_pic|string¦null|false|none|Profile-picture URL.|
+|date_joined|string(date)|false|none|Date the employee joined the organization.|
+|is_active|boolean|false|none|Whether the user account is active.|
+|created_at|string(date-time)|false|none|Time at which the record was created.|
+|updated_at|string(date-time)|false|none|Time at which the record was last updated.|
 
 <h2 id="tocS_RegisterRequest">RegisterRequest</h2>
 <!-- backwards compatibility -->
@@ -3707,13 +3711,13 @@ bearerAuth
 
 ```json
 {
-  "full_name": "string",
-  "email": "user@example.com",
-  "password": "pa$$word",
+  "full_name": "Ada Okafor",
+  "email": "ada@example.com",
+  "password": "Password@123",
   "role": "admin",
-  "department": "string",
-  "designation": "string",
-  "phone": "string"
+  "department": "Engineering",
+  "designation": "Software Engineer",
+  "phone": "+234 800 000 0000"
 }
 
 ```
@@ -3722,13 +3726,13 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|full_name|string|true|none|none|
-|email|string(email)|true|none|none|
-|password|string(password)|true|none|none|
-|role|[UserRole](#schemauserrole)|true|none|none|
-|department|string¦null|false|none|none|
-|designation|string¦null|false|none|none|
-|phone|string¦null|false|none|none|
+|full_name|string|true|none|Full name of the user.|
+|email|string(email)|true|none|Email address of the user.|
+|password|string(password)|true|none|Plain-text password submitted for authentication or account setup.|
+|role|[UserRole](#schemauserrole)|true|none|Access role assigned to a user.|
+|department|string¦null|false|none|Organizational department.|
+|designation|string¦null|false|none|Employee job title.|
+|phone|string¦null|false|none|Contact telephone number.|
 
 <h2 id="tocS_LoginRequest">LoginRequest</h2>
 <!-- backwards compatibility -->
@@ -3739,8 +3743,8 @@ bearerAuth
 
 ```json
 {
-  "email": "user@example.com",
-  "password": "pa$$word"
+  "email": "ada@example.com",
+  "password": "Password@123"
 }
 
 ```
@@ -3749,8 +3753,8 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|email|string(email)|true|none|none|
-|password|string(password)|true|none|none|
+|email|string(email)|true|none|Email address of the user.|
+|password|string(password)|true|none|Plain-text password submitted for authentication or account setup.|
 
 <h2 id="tocS_UpdateUserRequest">UpdateUserRequest</h2>
 <!-- backwards compatibility -->
@@ -3761,13 +3765,13 @@ bearerAuth
 
 ```json
 {
-  "full_name": "string",
-  "department": "string",
-  "designation": "string",
-  "phone": "string",
-  "profile_pic": "string",
+  "full_name": "Ada Okafor",
+  "department": "Engineering",
+  "designation": "Software Engineer",
+  "phone": "+234 800 000 0000",
+  "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
   "role": "admin",
-  "password": "pa$$word"
+  "password": "Password@123"
 }
 
 ```
@@ -3776,13 +3780,13 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|full_name|string|false|none|none|
-|department|string|false|none|none|
-|designation|string|false|none|none|
-|phone|string|false|none|none|
-|profile_pic|string|false|none|none|
-|role|[UserRole](#schemauserrole)|false|none|none|
-|password|string(password)|false|none|none|
+|full_name|string|false|none|Full name of the user.|
+|department|string|false|none|Organizational department.|
+|designation|string|false|none|Employee job title.|
+|phone|string|false|none|Contact telephone number.|
+|profile_pic|string|false|none|Profile-picture URL.|
+|role|[UserRole](#schemauserrole)|false|none|Access role assigned to a user.|
+|password|string(password)|false|none|Plain-text password submitted for authentication or account setup.|
 
 <h2 id="tocS_AttendanceRecord">AttendanceRecord</h2>
 <!-- backwards compatibility -->
@@ -3795,18 +3799,18 @@ bearerAuth
 {
   "id": 0,
   "employee_id": 0,
-  "date": "2019-08-24",
-  "check_in": "string",
-  "check_out": "string",
+  "date": "2026-07-31",
+  "check_in": "09:00:00",
+  "check_out": "17:00:00",
   "accumulated_minutes": 0,
   "duration_minutes": 0,
   "status": "present",
   "created_at": "2019-08-24T14:15:22Z",
-  "full_name": "string",
-  "email": "user@example.com",
-  "department": "string",
-  "designation": "string",
-  "profile_pic": "string"
+  "full_name": "Ada Okafor",
+  "email": "ada@example.com",
+  "department": "Engineering",
+  "designation": "Software Engineer",
+  "profile_pic": "https://cdn.example.com/avatars/ada.jpg"
 }
 
 ```
@@ -3815,20 +3819,20 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer|false|none|none|
-|employee_id|integer|false|none|none|
-|date|string(date)|false|none|none|
-|check_in|string¦null|false|none|none|
-|check_out|string¦null|false|none|none|
-|accumulated_minutes|integer|false|none|none|
-|duration_minutes|integer¦null|false|none|none|
-|status|string|false|none|none|
-|created_at|string(date-time)|false|none|none|
-|full_name|string|false|none|none|
-|email|string(email)|false|none|none|
-|department|string¦null|false|none|none|
-|designation|string¦null|false|none|none|
-|profile_pic|string¦null|false|none|none|
+|id|integer|false|none|Unique record identifier.|
+|employee_id|integer|false|none|Identifier of the employee.|
+|date|string(date)|false|none|Calendar date of the attendance record.|
+|check_in|string¦null|false|none|Most recent check-in time.|
+|check_out|string¦null|false|none|Most recent check-out time.|
+|accumulated_minutes|integer|false|none|Minutes accumulated during earlier attendance sessions that day.|
+|duration_minutes|integer¦null|false|none|Total calculated attendance duration in minutes.|
+|status|string|false|none|Current status of the record.|
+|created_at|string(date-time)|false|none|Time at which the record was created.|
+|full_name|string|false|none|Full name of the user.|
+|email|string(email)|false|none|Email address of the user.|
+|department|string¦null|false|none|Organizational department.|
+|designation|string¦null|false|none|Employee job title.|
+|profile_pic|string¦null|false|none|Profile-picture URL.|
 
 #### Enumerated Values
 
@@ -3878,8 +3882,8 @@ bearerAuth
 ```json
 {
   "id": 0,
-  "name": "string",
-  "description": "string",
+  "name": "Annual Leave",
+  "description": "Paid annual leave",
   "max_days_per_year": 0,
   "is_paid": true
 }
@@ -3890,11 +3894,11 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer|false|none|none|
-|name|string|false|none|none|
-|description|string¦null|false|none|none|
-|max_days_per_year|integer|false|none|none|
-|is_paid|boolean|false|none|none|
+|id|integer|false|none|Unique record identifier.|
+|name|string|false|none|Display name.|
+|description|string¦null|false|none|Additional explanatory text.|
+|max_days_per_year|integer|false|none|Maximum leave days allowed per year.|
+|is_paid|boolean|false|none|Whether the leave type is paid.|
 
 <h2 id="tocS_LeaveAllocation">LeaveAllocation</h2>
 <!-- backwards compatibility -->
@@ -3910,8 +3914,8 @@ bearerAuth
   "leave_type_id": 0,
   "allocated_days": 0,
   "used_days": 0,
-  "year": 0,
-  "name": "string",
+  "year": 2026,
+  "name": "Annual Leave",
   "max_days_per_year": 0,
   "remaining": 0
 }
@@ -3922,15 +3926,15 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer|false|none|none|
-|employee_id|integer|false|none|none|
-|leave_type_id|integer|false|none|none|
-|allocated_days|integer|false|none|none|
-|used_days|integer|false|none|none|
-|year|integer|false|none|none|
-|name|string|false|none|none|
-|max_days_per_year|integer|false|none|none|
-|remaining|integer|false|none|none|
+|id|integer|false|none|Unique record identifier.|
+|employee_id|integer|false|none|Identifier of the employee.|
+|leave_type_id|integer|false|none|Identifier of the leave type.|
+|allocated_days|integer|false|none|Number of leave days allocated.|
+|used_days|integer|false|none|Number of allocated leave days already used.|
+|year|integer|false|none|Calendar year.|
+|name|string|false|none|Display name.|
+|max_days_per_year|integer|false|none|Maximum leave days allowed per year.|
+|remaining|integer|false|none|Number of allocated leave days still available.|
 
 <h2 id="tocS_LeaveRequest">LeaveRequest</h2>
 <!-- backwards compatibility -->
@@ -3944,19 +3948,19 @@ bearerAuth
   "id": 0,
   "employee_id": 0,
   "leave_type_id": 0,
-  "start_date": "2019-08-24",
-  "end_date": "2019-08-24",
+  "start_date": "2026-08-10",
+  "end_date": "2026-08-14",
   "total_days": 0,
-  "reason": "string",
+  "reason": "Family event",
   "status": "pending",
   "reviewed_by": 0,
   "reviewed_at": "2019-08-24T14:15:22Z",
   "created_at": "2019-08-24T14:15:22Z",
   "leave_type_name": "string",
-  "full_name": "string",
-  "email": "user@example.com",
-  "department": "string",
-  "designation": "string",
+  "full_name": "Ada Okafor",
+  "email": "ada@example.com",
+  "department": "Engineering",
+  "designation": "Software Engineer",
   "reviewer_name": "string"
 }
 
@@ -3966,23 +3970,23 @@ bearerAuth
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer|false|none|none|
-|employee_id|integer|false|none|none|
-|leave_type_id|integer|false|none|none|
-|start_date|string(date)|false|none|none|
-|end_date|string(date)|false|none|none|
-|total_days|integer|false|none|none|
-|reason|string¦null|false|none|none|
-|status|string|false|none|none|
-|reviewed_by|integer¦null|false|none|none|
-|reviewed_at|string(date-time)¦null|false|none|none|
-|created_at|string(date-time)|false|none|none|
-|leave_type_name|string|false|none|none|
-|full_name|string|false|none|none|
-|email|string(email)|false|none|none|
-|department|string¦null|false|none|none|
-|designation|string¦null|false|none|none|
-|reviewer_name|string¦null|false|none|none|
+|id|integer|false|none|Unique record identifier.|
+|employee_id|integer|false|none|Identifier of the employee.|
+|leave_type_id|integer|false|none|Identifier of the leave type.|
+|start_date|string(date)|false|none|First date of the leave period.|
+|end_date|string(date)|false|none|Last date of the leave period.|
+|total_days|integer|false|none|Number of working days in the leave request.|
+|reason|string¦null|false|none|Reason supplied for the leave request.|
+|status|string|false|none|Current status of the record.|
+|reviewed_by|integer¦null|false|none|Identifier of the user who reviewed the request.|
+|reviewed_at|string(date-time)¦null|false|none|Time at which the request was reviewed.|
+|created_at|string(date-time)|false|none|Time at which the record was created.|
+|leave_type_name|string|false|none|Display name of the leave type.|
+|full_name|string|false|none|Full name of the user.|
+|email|string(email)|false|none|Email address of the user.|
+|department|string¦null|false|none|Organizational department.|
+|designation|string¦null|false|none|Employee job title.|
+|reviewer_name|string¦null|false|none|Full name of the reviewer.|
 
 #### Enumerated Values
 
@@ -4002,23 +4006,25 @@ bearerAuth
 ```json
 {
   "employee_id": 0,
-  "basic_salary": 0.1,
+  "basic_salary": 250000,
   "hra_percent": 40,
   "special_allowance": 0,
-  "effective_from": "2019-08-24"
+  "effective_from": "2026-08-01"
 }
 
 ```
+
+Salary values assigned to an employee.
 
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|employee_id|integer|true|none|none|
-|basic_salary|number(double)|true|none|none|
-|hra_percent|number(double)|false|none|none|
-|special_allowance|number(double)|false|none|none|
-|effective_from|string(date)|false|none|none|
+|employee_id|integer|true|none|Identifier of the employee.|
+|basic_salary|number(double)|true|none|Employee base salary before additions and deductions.|
+|hra_percent|number(double)|false|none|Housing allowance percentage.|
+|special_allowance|number(double)|false|none|Fixed special-allowance amount.|
+|effective_from|string(date)|false|none|Date from which the salary structure applies.|
 
 <h2 id="tocS_SalaryStructure">SalaryStructure</h2>
 <!-- backwards compatibility -->
@@ -4030,19 +4036,21 @@ bearerAuth
 ```json
 {
   "employee_id": 0,
-  "basic_salary": 0.1,
+  "basic_salary": 250000,
   "hra_percent": 40,
   "special_allowance": 0,
-  "effective_from": "2019-08-24",
+  "effective_from": "2026-08-01",
   "id": 0,
   "created_at": "2019-08-24T14:15:22Z",
-  "full_name": "string",
-  "email": "user@example.com",
-  "department": "string",
-  "designation": "string"
+  "full_name": "Ada Okafor",
+  "email": "ada@example.com",
+  "department": "Engineering",
+  "designation": "Software Engineer"
 }
 
 ```
+
+Persisted salary structure with employee details.
 
 ### Properties
 
@@ -4050,19 +4058,19 @@ allOf
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|*anonymous*|[SalaryStructureRequest](#schemasalarystructurerequest)|false|none|none|
+|*anonymous*|[SalaryStructureRequest](#schemasalarystructurerequest)|false|none|Salary values assigned to an employee.|
 
 and
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|*anonymous*|object|false|none|none|
-|» id|integer|false|none|none|
-|» created_at|string(date-time)|false|none|none|
-|» full_name|string|false|none|none|
-|» email|string(email)|false|none|none|
-|» department|string¦null|false|none|none|
-|» designation|string¦null|false|none|none|
+|*anonymous*|object|false|none|Database and employee fields added to the salary values.|
+|» id|integer|false|none|Unique record identifier.|
+|» created_at|string(date-time)|false|none|Time at which the record was created.|
+|» full_name|string|false|none|Full name of the user.|
+|» email|string(email)|false|none|Email address of the user.|
+|» department|string¦null|false|none|Organizational department.|
+|» designation|string¦null|false|none|Employee job title.|
 
 <h2 id="tocS_Payrun">Payrun</h2>
 <!-- backwards compatibility -->
@@ -4074,8 +4082,8 @@ and
 ```json
 {
   "id": 0,
-  "month": 1,
-  "year": 0,
+  "month": 7,
+  "year": 2026,
   "status": "draft",
   "generated_by": 0,
   "generated_at": "2019-08-24T14:15:22Z",
@@ -4090,13 +4098,13 @@ and
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer|false|none|none|
-|month|integer|false|none|none|
-|year|integer|false|none|none|
-|status|string|false|none|none|
-|generated_by|integer¦null|false|none|none|
-|generated_at|string(date-time)|false|none|none|
-|generated_by_name|string¦null|false|none|none|
+|id|integer|false|none|Unique record identifier.|
+|month|integer|false|none|Calendar month number from 1 to 12.|
+|year|integer|false|none|Calendar year.|
+|status|string|false|none|Current status of the record.|
+|generated_by|integer¦null|false|none|Identifier of the user who generated the pay run.|
+|generated_at|string(date-time)|false|none|Time at which the pay run was generated.|
+|generated_by_name|string¦null|false|none|Full name of the pay-run generator.|
 |total_cost|string¦null|false|none|PostgreSQL numeric aggregate|
 |employee_count|string|false|none|PostgreSQL count value|
 
@@ -4134,14 +4142,14 @@ and
   "total_deductions": "string",
   "net_pay": "string",
   "created_at": "2019-08-24T14:15:22Z",
-  "month": 0,
-  "year": 0,
+  "month": 7,
+  "year": 2026,
   "payrun_status": "string",
-  "full_name": "string",
-  "email": "user@example.com",
-  "department": "string",
-  "designation": "string",
-  "date_joined": "2019-08-24",
+  "full_name": "Ada Okafor",
+  "email": "ada@example.com",
+  "department": "Engineering",
+  "designation": "Software Engineer",
+  "date_joined": "2026-01-15",
   "user_id": 0
 }
 
@@ -4151,33 +4159,33 @@ and
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer|false|none|none|
-|payrun_id|integer|false|none|none|
-|employee_id|integer|false|none|none|
-|working_days|integer|false|none|none|
+|id|integer|false|none|Unique record identifier.|
+|payrun_id|integer|false|none|Identifier of the pay run.|
+|employee_id|integer|false|none|Identifier of the employee.|
+|working_days|integer|false|none|Number of working days in the pay period.|
 |present_days|string|false|none|PostgreSQL numeric value|
-|leaves_approved|integer|false|none|none|
-|unpaid_leave_days|integer|false|none|none|
-|unpaid_deduction|string|false|none|none|
-|basic|string|false|none|none|
-|hra|string|false|none|none|
-|special_allowance|string|false|none|none|
-|gross_salary|string|false|none|none|
-|pf_employee|string|false|none|none|
-|pf_employer|string|false|none|none|
-|professional_tax|string|false|none|none|
-|total_deductions|string|false|none|none|
-|net_pay|string|false|none|none|
-|created_at|string(date-time)|false|none|none|
-|month|integer|false|none|none|
-|year|integer|false|none|none|
-|payrun_status|string|false|none|none|
-|full_name|string|false|none|none|
-|email|string(email)|false|none|none|
-|department|string¦null|false|none|none|
-|designation|string¦null|false|none|none|
-|date_joined|string(date)|false|none|none|
-|user_id|integer|false|none|none|
+|leaves_approved|integer|false|none|Number of approved leave days.|
+|unpaid_leave_days|integer|false|none|Number of unpaid leave days.|
+|unpaid_deduction|string|false|none|Salary amount deducted for unpaid leave.|
+|basic|string|false|none|Effective basic salary for the pay period.|
+|hra|string|false|none|Housing allowance amount.|
+|special_allowance|string|false|none|Fixed special-allowance amount.|
+|gross_salary|string|false|none|Total earnings before deductions.|
+|pf_employee|string|false|none|Employee provident-fund contribution.|
+|pf_employer|string|false|none|Employer provident-fund contribution.|
+|professional_tax|string|false|none|Professional tax deducted.|
+|total_deductions|string|false|none|Combined deductions for the pay period.|
+|net_pay|string|false|none|Final salary after deductions.|
+|created_at|string(date-time)|false|none|Time at which the record was created.|
+|month|integer|false|none|Calendar month number from 1 to 12.|
+|year|integer|false|none|Calendar year.|
+|payrun_status|string|false|none|Status of the associated pay run.|
+|full_name|string|false|none|Full name of the user.|
+|email|string(email)|false|none|Email address of the user.|
+|department|string¦null|false|none|Organizational department.|
+|designation|string¦null|false|none|Employee job title.|
+|date_joined|string(date)|false|none|Date the employee joined the organization.|
+|user_id|integer|false|none|Identifier of the associated user.|
 
 <h2 id="tocS_Notification">Notification</h2>
 <!-- backwards compatibility -->
@@ -4190,8 +4198,8 @@ and
 {
   "id": 0,
   "user_id": 0,
-  "title": "string",
-  "message": "string",
+  "title": "Leave request approved",
+  "message": "Operation completed successfully",
   "type": "string",
   "is_read": true,
   "created_at": "2019-08-24T14:15:22Z"
@@ -4203,13 +4211,13 @@ and
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer|false|none|none|
-|user_id|integer|false|none|none|
-|title|string|false|none|none|
-|message|string|false|none|none|
-|type|string|false|none|none|
-|is_read|boolean|false|none|none|
-|created_at|string(date-time)|false|none|none|
+|id|integer|false|none|Unique record identifier.|
+|user_id|integer|false|none|Identifier of the associated user.|
+|title|string|false|none|Notification title.|
+|message|string|false|none|Human-readable result or error message.|
+|type|string|false|none|Category of the returned record.|
+|is_read|boolean|false|none|Whether the notification has been read.|
+|created_at|string(date-time)|false|none|Time at which the record was created.|
 
 <h2 id="tocS_Settings">Settings</h2>
 <!-- backwards compatibility -->
@@ -4246,14 +4254,14 @@ Dynamic key/value application settings.
 {
   "id": 0,
   "user_id": 0,
-  "action": "string",
+  "action": "LEAVE_APPROVED",
   "target_id": 0,
-  "target_type": "string",
+  "target_type": "LEAVE_REQUEST",
   "metadata": {},
-  "ip_address": "string",
+  "ip_address": "203.0.113.10",
   "created_at": "2019-08-24T14:15:22Z",
-  "full_name": "string",
-  "email": "user@example.com"
+  "full_name": "Ada Okafor",
+  "email": "ada@example.com"
 }
 
 ```
@@ -4262,14 +4270,14 @@ Dynamic key/value application settings.
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|integer(int64)|false|none|none|
-|user_id|integer|false|none|none|
-|action|string|false|none|none|
-|target_id|integer(int64)|false|none|none|
-|target_type|string|false|none|none|
-|metadata|object¦null|false|none|none|
-|ip_address|string|false|none|none|
-|created_at|string(date-time)|false|none|none|
-|full_name|string¦null|false|none|none|
-|email|string(email)¦null|false|none|none|
+|id|integer(int64)|false|none|Unique record identifier.|
+|user_id|integer|false|none|Identifier of the associated user.|
+|action|string|false|none|Action performed by the operation or recorded audit event.|
+|target_id|integer(int64)|false|none|Identifier of the affected resource.|
+|target_type|string|false|none|Type of resource affected by the action.|
+|metadata|object¦null|false|none|Additional structured details about the audited action.|
+|ip_address|string|false|none|Client IP address recorded for the action.|
+|created_at|string(date-time)|false|none|Time at which the record was created.|
+|full_name|string¦null|false|none|Full name of the user.|
+|email|string(email)¦null|false|none|Email address of the user.|
 

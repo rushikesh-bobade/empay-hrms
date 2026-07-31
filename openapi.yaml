@@ -7,6 +7,9 @@ info:
     database schema. Protected operations require the `Authorization: Bearer <JWT>`
     request header. Individual operation descriptions identify additional role
     restrictions.
+  contact:
+    name: EmPay Support
+    email: support@empay.com
 servers:
   - url: http://localhost:5000
     description: Local development
@@ -46,6 +49,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -86,6 +90,7 @@ paths:
       summary: Log in
       operationId: login
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -143,6 +148,7 @@ paths:
       summary: Request a password reset
       operationId: forgotPassword
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -150,7 +156,7 @@ paths:
               type: object
               required: [email]
               properties:
-                email: { type: string, format: email }
+                email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
             example:
               email: employee@example.com
       responses:
@@ -168,6 +174,7 @@ paths:
       summary: Reset a password
       operationId: resetPassword
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -175,8 +182,8 @@ paths:
               type: object
               required: [token, newPassword]
               properties:
-                token: { type: string }
-                newPassword: { type: string, format: password }
+                token: { type: string, description: "Password-reset token received by email.", example: "reset-token-from-email" }
+                newPassword: { type: string, format: password, description: "New password to assign to the account.", example: "NewPassword@123" }
             example:
               token: reset-token-from-email
               newPassword: NewPassword@123
@@ -198,13 +205,14 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: false
         content:
           application/json:
             schema:
               type: object
               properties:
-                email: { type: string, format: email }
+                email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
             example:
               email: admin@example.com
       responses:
@@ -258,6 +266,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           multipart/form-data:
@@ -282,7 +291,7 @@ paths:
                       data:
                         type: object
                         properties:
-                          profile_pic: { type: string, format: uri, nullable: true }
+                          profile_pic: { type: string, format: uri, nullable: true, description: "Profile-picture URL.", example: "https://cdn.example.com/avatars/ada.jpg" }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -320,6 +329,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -415,7 +425,7 @@ paths:
                       data:
                         type: object
                         properties:
-                          action: { type: string, enum: [checked_in, checked_out] }
+                          action: { type: string, enum: [checked_in, checked_out], description: "Attendance action performed by this request.", example: "checked_in" }
                           record: { $ref: '#/components/schemas/AttendanceRecord' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -557,6 +567,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -564,9 +575,9 @@ paths:
               type: object
               required: [name, max_days_per_year]
               properties:
-                name: { type: string, minLength: 2 }
-                description: { type: string, nullable: true }
-                max_days_per_year: { type: integer, minimum: 0, maximum: 365 }
+                name: { type: string, minLength: 2, description: "Display name.", example: "Annual Leave" }
+                description: { type: string, nullable: true, description: "Additional explanatory text.", example: "Paid annual leave" }
+                max_days_per_year: { type: integer, minimum: 0, maximum: 365, description: "Maximum leave days allowed per year." }
             example:
               name: Annual Leave
               description: Paid annual leave
@@ -646,6 +657,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -653,10 +665,10 @@ paths:
               type: object
               required: [employee_id, leave_type_id, allocated_days]
               properties:
-                employee_id: { type: integer }
-                leave_type_id: { type: integer }
-                allocated_days: { type: integer, minimum: 0 }
-                year: { type: integer, minimum: 2000 }
+                employee_id: { type: integer, description: "Identifier of the employee." }
+                leave_type_id: { type: integer, description: "Identifier of the leave type." }
+                allocated_days: { type: integer, minimum: 0, description: "Number of leave days allocated." }
+                year: { type: integer, minimum: 2000, description: "Calendar year.", example: 2026 }
             example:
               employee_id: 42
               leave_type_id: 1
@@ -685,6 +697,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -692,10 +705,10 @@ paths:
               type: object
               required: [leave_type_id, start_date, end_date]
               properties:
-                leave_type_id: { type: integer }
-                start_date: { type: string, format: date }
-                end_date: { type: string, format: date }
-                reason: { type: string, minLength: 5, nullable: true }
+                leave_type_id: { type: integer, description: "Identifier of the leave type." }
+                start_date: { type: string, format: date, description: "First date of the leave period.", example: "2026-08-10" }
+                end_date: { type: string, format: date, description: "Last date of the leave period.", example: "2026-08-14" }
+                reason: { type: string, minLength: 5, nullable: true, description: "Reason supplied for the leave request.", example: "Family event" }
             example:
               leave_type_id: 1
               start_date: '2026-08-10'
@@ -750,6 +763,7 @@ paths:
       parameters:
         - name: status
           in: query
+          description: Filter requests by their review status.
           schema: { type: string, enum: [pending, approved, rejected] }
         - $ref: '#/components/parameters/EmployeeIdQuery'
       responses:
@@ -832,6 +846,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -916,6 +931,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -923,8 +939,8 @@ paths:
               type: object
               required: [month, year]
               properties:
-                month: { type: integer, minimum: 1, maximum: 12 }
-                year: { type: integer, minimum: 2000 }
+                month: { type: integer, minimum: 1, maximum: 12, description: "Calendar month number from 1 to 12.", example: 7 }
+                year: { type: integer, minimum: 2000, description: "Calendar year.", example: 2026 }
             example:
               month: 7
               year: 2026
@@ -941,8 +957,8 @@ paths:
                       data:
                         type: object
                         properties:
-                          payrun_id: { type: integer }
-                          payslips_generated_count: { type: integer }
+                          payrun_id: { type: integer, description: "Identifier of the pay run." }
+                          payslips_generated_count: { type: integer, description: "Number of payslips produced by the pay run." }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
@@ -1210,6 +1226,7 @@ paths:
       operationId: updateSettings
       security: [{ bearerAuth: [] }]
       requestBody:
+        description: Payload supplied to this operation.
         required: true
         content:
           application/json:
@@ -1289,7 +1306,7 @@ paths:
                             - $ref: '#/components/schemas/User'
                             - type: object
                               properties:
-                                type: { type: string, enum: [user] }
+                                type: { type: string, enum: [user], description: "Category of the returned record." }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '500': { $ref: '#/components/responses/ServerError' }
 
@@ -1303,24 +1320,31 @@ paths:
       parameters:
         - name: user_id
           in: query
+          description: Filter audit records by the acting user's identifier.
           schema: { type: integer }
         - name: action
           in: query
+          description: Filter by an exact audited action name.
           schema: { type: string }
         - name: target_type
           in: query
+          description: Filter by the affected resource type.
           schema: { type: string }
         - name: start_date
           in: query
+          description: Include records created on or after this date.
           schema: { type: string, format: date }
         - name: end_date
           in: query
+          description: Include records created on or before this date.
           schema: { type: string, format: date }
         - name: page
           in: query
+          description: One-based results page number.
           schema: { type: integer, minimum: 1, default: 1 }
         - name: limit
           in: query
+          description: Maximum number of records returned per page.
           schema: { type: integer, minimum: 1, maximum: 50, default: 20 }
       responses:
         '200':
@@ -1331,14 +1355,15 @@ paths:
                 type: object
                 required: [success, message, data, total, page, totalPages]
                 properties:
-                  success: { type: boolean, enum: [true] }
-                  message: { type: string }
+                  success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
+                  message: { type: string, description: "Human-readable result or error message.", example: "Operation completed successfully" }
                   data:
+                    description: Audit records for the current page.
                     type: array
                     items: { $ref: '#/components/schemas/AuditLog' }
-                  total: { type: integer }
-                  page: { type: integer }
-                  totalPages: { type: integer }
+                  total: { type: integer, description: "Total number of matching records." }
+                  page: { type: integer, description: "Current results page." }
+                  totalPages: { type: integer, description: "Total number of available pages." }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -1355,21 +1380,25 @@ components:
       name: id
       in: path
       required: true
+      description: Unique identifier of the requested resource.
       schema: { type: integer }
     UserId:
       name: id
       in: path
       required: true
+      description: Unique integer identifier of the user.
       schema: { type: integer }
     EmployeeIdPath:
       name: employee_id
       in: path
       required: true
+      description: Unique integer identifier of the employee.
       schema: { type: integer }
     EmployeeIdQuery:
       name: employee_id
       in: query
       required: false
+      description: Filter results to the specified employee.
       schema: { type: integer }
     MonthQuery:
       name: month
@@ -1384,14 +1413,17 @@ components:
     RoleQuery:
       name: role
       in: query
+      description: Filter users by their assigned access role.
       schema: { $ref: '#/components/schemas/UserRole' }
     DepartmentQuery:
       name: department
       in: query
+      description: Filter results by a partial department-name match.
       schema: { type: string }
     SearchQuery:
       name: search
       in: query
+      description: Search users by partial full-name or email match.
       schema: { type: string }
 
   responses:
@@ -1436,94 +1468,95 @@ components:
   schemas:
     UserRole:
       type: string
+      description: Access role assigned to a user.
       enum: [admin, hr_officer, employee, payroll_officer]
     SuccessResponse:
       type: object
       required: [success]
       properties:
-        success: { type: boolean, enum: [true] }
-        message: { type: string }
+        success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
+        message: { type: string, description: "Human-readable success message.", example: "Operation completed successfully" }
     MessageResponse:
       type: object
       required: [success, message]
       properties:
-        success: { type: boolean, enum: [true] }
-        message: { type: string }
+        success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
+        message: { type: string, description: "Human-readable success message.", example: "Operation completed successfully" }
     ErrorResponse:
       type: object
       required: [success, message]
       properties:
-        success: { type: boolean, enum: [false] }
-        message: { type: string }
-        error: { type: string }
-        hint: { type: string }
+        success: { type: boolean, enum: [false], description: "Indicates whether the request completed successfully." }
+        message: { type: string, description: "Human-readable error message.", example: "Invalid request" }
+        error: { type: string, description: "Underlying error detail when available." }
+        hint: { type: string, description: "Suggested corrective action when available." }
     HealthResponse:
       type: object
       required: [success, message, timestamp]
       properties:
-        success: { type: boolean, enum: [true] }
-        message: { type: string }
-        timestamp: { type: string, format: date-time }
+        success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
+        message: { type: string, description: "Human-readable health status.", example: "EmPay API is running" }
+        timestamp: { type: string, format: date-time, description: "Time at which the response was generated." }
     User:
       type: object
       properties:
-        id: { type: integer }
-        full_name: { type: string }
-        email: { type: string, format: email }
+        id: { type: integer, description: "Unique record identifier." }
+        full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
         role: { $ref: '#/components/schemas/UserRole' }
-        department: { type: string, nullable: true }
-        designation: { type: string, nullable: true }
-        phone: { type: string, nullable: true }
-        profile_pic: { type: string, nullable: true }
-        date_joined: { type: string, format: date }
-        is_active: { type: boolean }
-        created_at: { type: string, format: date-time }
-        updated_at: { type: string, format: date-time }
+        department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+        phone: { type: string, nullable: true, description: "Contact telephone number.", example: "+234 800 000 0000" }
+        profile_pic: { type: string, nullable: true, description: "Profile-picture URL.", example: "https://cdn.example.com/avatars/ada.jpg" }
+        date_joined: { type: string, format: date, description: "Date the employee joined the organization.", example: "2026-01-15" }
+        is_active: { type: boolean, description: "Whether the user account is active." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        updated_at: { type: string, format: date-time, description: "Time at which the record was last updated." }
     RegisterRequest:
       type: object
       required: [full_name, email, password, role]
       properties:
-        full_name: { type: string, minLength: 2, maxLength: 100 }
-        email: { type: string, format: email, maxLength: 150 }
-        password: { type: string, format: password }
+        full_name: { type: string, minLength: 2, maxLength: 100, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, maxLength: 150, description: "Email address of the user.", example: "ada@example.com" }
+        password: { type: string, format: password, description: "Plain-text password submitted for authentication or account setup.", example: "Password@123" }
         role: { $ref: '#/components/schemas/UserRole' }
-        department: { type: string, nullable: true, minLength: 2, maxLength: 100 }
-        designation: { type: string, nullable: true, minLength: 2, maxLength: 100 }
-        phone: { type: string, nullable: true, maxLength: 20 }
+        department: { type: string, nullable: true, minLength: 2, maxLength: 100, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, minLength: 2, maxLength: 100, description: "Employee job title.", example: "Software Engineer" }
+        phone: { type: string, nullable: true, maxLength: 20, description: "Contact telephone number.", example: "+234 800 000 0000" }
     LoginRequest:
       type: object
       required: [email, password]
       properties:
-        email: { type: string, format: email }
-        password: { type: string, format: password }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        password: { type: string, format: password, description: "Plain-text password submitted for authentication or account setup.", example: "Password@123" }
     UpdateUserRequest:
       type: object
       minProperties: 1
       properties:
-        full_name: { type: string, minLength: 2, maxLength: 100 }
-        department: { type: string, minLength: 2, maxLength: 100 }
-        designation: { type: string, minLength: 2, maxLength: 100 }
-        phone: { type: string, maxLength: 20 }
-        profile_pic: { type: string }
+        full_name: { type: string, minLength: 2, maxLength: 100, description: "Full name of the user.", example: "Ada Okafor" }
+        department: { type: string, minLength: 2, maxLength: 100, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, minLength: 2, maxLength: 100, description: "Employee job title.", example: "Software Engineer" }
+        phone: { type: string, maxLength: 20, description: "Contact telephone number.", example: "+234 800 000 0000" }
+        profile_pic: { type: string, description: "Profile-picture URL.", example: "https://cdn.example.com/avatars/ada.jpg" }
         role: { $ref: '#/components/schemas/UserRole' }
-        password: { type: string, format: password }
+        password: { type: string, format: password, description: "Plain-text password submitted for authentication or account setup.", example: "Password@123" }
     AttendanceRecord:
       type: object
       properties:
-        id: { type: integer }
-        employee_id: { type: integer }
-        date: { type: string, format: date }
-        check_in: { type: string, nullable: true }
-        check_out: { type: string, nullable: true }
-        accumulated_minutes: { type: integer }
-        duration_minutes: { type: integer, nullable: true }
-        status: { type: string, enum: [present, absent, half_day, on_leave, unpaid_leave] }
-        created_at: { type: string, format: date-time }
-        full_name: { type: string }
-        email: { type: string, format: email }
-        department: { type: string, nullable: true }
-        designation: { type: string, nullable: true }
-        profile_pic: { type: string, nullable: true }
+        id: { type: integer, description: "Unique record identifier." }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        date: { type: string, format: date, description: "Calendar date of the attendance record.", example: "2026-07-31" }
+        check_in: { type: string, nullable: true, description: "Most recent check-in time.", example: "09:00:00" }
+        check_out: { type: string, nullable: true, description: "Most recent check-out time.", example: "17:00:00" }
+        accumulated_minutes: { type: integer, description: "Minutes accumulated during earlier attendance sessions that day." }
+        duration_minutes: { type: integer, nullable: true, description: "Total calculated attendance duration in minutes." }
+        status: { type: string, enum: [present, absent, half_day, on_leave, unpaid_leave], description: "Current status of the record." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+        profile_pic: { type: string, nullable: true, description: "Profile-picture URL.", example: "https://cdn.example.com/avatars/ada.jpg" }
     AttendanceSummary:
       type: object
       properties:
@@ -1535,115 +1568,118 @@ components:
     LeaveType:
       type: object
       properties:
-        id: { type: integer }
-        name: { type: string }
-        description: { type: string, nullable: true }
-        max_days_per_year: { type: integer }
-        is_paid: { type: boolean }
+        id: { type: integer, description: "Unique record identifier." }
+        name: { type: string, description: "Display name.", example: "Annual Leave" }
+        description: { type: string, nullable: true, description: "Additional explanatory text.", example: "Paid annual leave" }
+        max_days_per_year: { type: integer, description: "Maximum leave days allowed per year." }
+        is_paid: { type: boolean, description: "Whether the leave type is paid." }
     LeaveAllocation:
       type: object
       properties:
-        id: { type: integer }
-        employee_id: { type: integer }
-        leave_type_id: { type: integer }
-        allocated_days: { type: integer }
-        used_days: { type: integer }
-        year: { type: integer }
-        name: { type: string }
-        max_days_per_year: { type: integer }
-        remaining: { type: integer }
+        id: { type: integer, description: "Unique record identifier." }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        leave_type_id: { type: integer, description: "Identifier of the leave type." }
+        allocated_days: { type: integer, description: "Number of leave days allocated." }
+        used_days: { type: integer, description: "Number of allocated leave days already used." }
+        year: { type: integer, description: "Calendar year.", example: 2026 }
+        name: { type: string, description: "Display name.", example: "Annual Leave" }
+        max_days_per_year: { type: integer, description: "Maximum leave days allowed per year." }
+        remaining: { type: integer, description: "Number of allocated leave days still available." }
     LeaveRequest:
       type: object
       properties:
-        id: { type: integer }
-        employee_id: { type: integer }
-        leave_type_id: { type: integer }
-        start_date: { type: string, format: date }
-        end_date: { type: string, format: date }
-        total_days: { type: integer }
-        reason: { type: string, nullable: true }
-        status: { type: string, enum: [pending, approved, rejected] }
-        reviewed_by: { type: integer, nullable: true }
-        reviewed_at: { type: string, format: date-time, nullable: true }
-        created_at: { type: string, format: date-time }
-        leave_type_name: { type: string }
-        full_name: { type: string }
-        email: { type: string, format: email }
-        department: { type: string, nullable: true }
-        designation: { type: string, nullable: true }
-        reviewer_name: { type: string, nullable: true }
+        id: { type: integer, description: "Unique record identifier." }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        leave_type_id: { type: integer, description: "Identifier of the leave type." }
+        start_date: { type: string, format: date, description: "First date of the leave period.", example: "2026-08-10" }
+        end_date: { type: string, format: date, description: "Last date of the leave period.", example: "2026-08-14" }
+        total_days: { type: integer, description: "Number of working days in the leave request." }
+        reason: { type: string, nullable: true, description: "Reason supplied for the leave request.", example: "Family event" }
+        status: { type: string, enum: [pending, approved, rejected], description: "Current status of the record." }
+        reviewed_by: { type: integer, nullable: true, description: "Identifier of the user who reviewed the request." }
+        reviewed_at: { type: string, format: date-time, nullable: true, description: "Time at which the request was reviewed." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        leave_type_name: { type: string, description: "Display name of the leave type." }
+        full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+        reviewer_name: { type: string, nullable: true, description: "Full name of the reviewer." }
     SalaryStructureRequest:
       type: object
+      description: Salary values assigned to an employee.
       required: [employee_id, basic_salary]
       properties:
-        employee_id: { type: integer }
-        basic_salary: { type: number, format: double, exclusiveMinimum: true, minimum: 0 }
-        hra_percent: { type: number, format: double, minimum: 0, maximum: 100, default: 40 }
-        special_allowance: { type: number, format: double, minimum: 0, default: 0 }
-        effective_from: { type: string, format: date }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        basic_salary: { type: number, format: double, exclusiveMinimum: true, minimum: 0, description: "Employee base salary before additions and deductions.", example: 250000 }
+        hra_percent: { type: number, format: double, minimum: 0, maximum: 100, default: 40, description: "Housing allowance percentage." }
+        special_allowance: { type: number, format: double, minimum: 0, default: 0, description: "Fixed special-allowance amount." }
+        effective_from: { type: string, format: date, description: "Date from which the salary structure applies.", example: "2026-08-01" }
     SalaryStructure:
+      description: Persisted salary structure with employee details.
       allOf:
         - $ref: '#/components/schemas/SalaryStructureRequest'
         - type: object
+          description: Database and employee fields added to the salary values.
           properties:
-            id: { type: integer }
-            created_at: { type: string, format: date-time }
-            full_name: { type: string }
-            email: { type: string, format: email }
-            department: { type: string, nullable: true }
-            designation: { type: string, nullable: true }
+            id: { type: integer, description: "Unique record identifier." }
+            created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+            full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+            email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+            department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+            designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
     Payrun:
       type: object
       properties:
-        id: { type: integer }
-        month: { type: integer, minimum: 1, maximum: 12 }
-        year: { type: integer }
-        status: { type: string, enum: [draft, finalized] }
-        generated_by: { type: integer, nullable: true }
-        generated_at: { type: string, format: date-time }
-        generated_by_name: { type: string, nullable: true }
+        id: { type: integer, description: "Unique record identifier." }
+        month: { type: integer, minimum: 1, maximum: 12, description: "Calendar month number from 1 to 12.", example: 7 }
+        year: { type: integer, description: "Calendar year.", example: 2026 }
+        status: { type: string, enum: [draft, finalized], description: "Current status of the record." }
+        generated_by: { type: integer, nullable: true, description: "Identifier of the user who generated the pay run." }
+        generated_at: { type: string, format: date-time, description: "Time at which the pay run was generated." }
+        generated_by_name: { type: string, nullable: true, description: "Full name of the pay-run generator." }
         total_cost: { type: string, nullable: true, description: PostgreSQL numeric aggregate }
         employee_count: { type: string, description: PostgreSQL count value }
     Payslip:
       type: object
       properties:
-        id: { type: integer }
-        payrun_id: { type: integer }
-        employee_id: { type: integer }
-        working_days: { type: integer }
+        id: { type: integer, description: "Unique record identifier." }
+        payrun_id: { type: integer, description: "Identifier of the pay run." }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        working_days: { type: integer, description: "Number of working days in the pay period." }
         present_days: { type: string, description: PostgreSQL numeric value }
-        leaves_approved: { type: integer }
-        unpaid_leave_days: { type: integer }
-        unpaid_deduction: { type: string }
-        basic: { type: string }
-        hra: { type: string }
-        special_allowance: { type: string }
-        gross_salary: { type: string }
-        pf_employee: { type: string }
-        pf_employer: { type: string }
-        professional_tax: { type: string }
-        total_deductions: { type: string }
-        net_pay: { type: string }
-        created_at: { type: string, format: date-time }
-        month: { type: integer }
-        year: { type: integer }
-        payrun_status: { type: string }
-        full_name: { type: string }
-        email: { type: string, format: email }
-        department: { type: string, nullable: true }
-        designation: { type: string, nullable: true }
-        date_joined: { type: string, format: date }
-        user_id: { type: integer }
+        leaves_approved: { type: integer, description: "Number of approved leave days." }
+        unpaid_leave_days: { type: integer, description: "Number of unpaid leave days." }
+        unpaid_deduction: { type: string, description: "Salary amount deducted for unpaid leave." }
+        basic: { type: string, description: "Effective basic salary for the pay period." }
+        hra: { type: string, description: "Housing allowance amount." }
+        special_allowance: { type: string, description: "Fixed special-allowance amount." }
+        gross_salary: { type: string, description: "Total earnings before deductions." }
+        pf_employee: { type: string, description: "Employee provident-fund contribution." }
+        pf_employer: { type: string, description: "Employer provident-fund contribution." }
+        professional_tax: { type: string, description: "Professional tax deducted." }
+        total_deductions: { type: string, description: "Combined deductions for the pay period." }
+        net_pay: { type: string, description: "Final salary after deductions." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        month: { type: integer, description: "Calendar month number from 1 to 12.", example: 7 }
+        year: { type: integer, description: "Calendar year.", example: 2026 }
+        payrun_status: { type: string, description: "Status of the associated pay run." }
+        full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+        date_joined: { type: string, format: date, description: "Date the employee joined the organization.", example: "2026-01-15" }
+        user_id: { type: integer, description: "Identifier of the associated user." }
     Notification:
       type: object
       properties:
-        id: { type: integer }
-        user_id: { type: integer }
-        title: { type: string }
-        message: { type: string }
-        type: { type: string }
-        is_read: { type: boolean }
-        created_at: { type: string, format: date-time }
+        id: { type: integer, description: "Unique record identifier." }
+        user_id: { type: integer, description: "Identifier of the associated user." }
+        title: { type: string, description: "Notification title.", example: "Leave request approved" }
+        message: { type: string, description: "Human-readable result or error message.", example: "Operation completed successfully" }
+        type: { type: string, description: "Category of the returned record." }
+        is_read: { type: boolean, description: "Whether the notification has been read." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
     Settings:
       type: object
       additionalProperties: true
@@ -1657,13 +1693,13 @@ components:
     AuditLog:
       type: object
       properties:
-        id: { type: integer, format: int64 }
-        user_id: { type: integer }
-        action: { type: string }
-        target_id: { type: integer, format: int64 }
-        target_type: { type: string }
-        metadata: { type: object, nullable: true, additionalProperties: true }
-        ip_address: { type: string }
-        created_at: { type: string, format: date-time }
-        full_name: { type: string, nullable: true }
-        email: { type: string, format: email, nullable: true }
+        id: { type: integer, format: int64, description: "Unique record identifier." }
+        user_id: { type: integer, description: "Identifier of the associated user." }
+        action: { type: string, description: "Action performed by the operation or recorded audit event.", example: "LEAVE_APPROVED" }
+        target_id: { type: integer, format: int64, description: "Identifier of the affected resource." }
+        target_type: { type: string, description: "Type of resource affected by the action.", example: "LEAVE_REQUEST" }
+        metadata: { type: object, nullable: true, additionalProperties: true, description: "Additional structured details about the audited action." }
+        ip_address: { type: string, description: "Client IP address recorded for the action.", example: "203.0.113.10" }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        full_name: { type: string, nullable: true, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, nullable: true, description: "Email address of the user.", example: "ada@example.com" }
