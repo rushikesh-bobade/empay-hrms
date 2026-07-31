@@ -37,6 +37,10 @@ paths:
           description: API is running
           content:
             application/json:
+              example:
+                success: true
+                message: "EmPay API is running"
+                timestamp: "2026-08-01T09:00:00.000Z"
               schema:
                 $ref: '#/components/schemas/HealthResponse'
 
@@ -68,6 +72,22 @@ paths:
           description: User registered
           content:
             application/json:
+              example:
+                success: true
+                message: "User registered successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -104,6 +124,24 @@ paths:
           description: Login successful
           content:
             application/json:
+              example:
+                success: true
+                message: "Login successful"
+                data:
+                  token: "string"
+                  user:
+                    id: 1
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    role: "admin"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    phone: "+234 800 000 0000"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                    date_joined: "2026-01-15"
+                    is_active: true
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    updated_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -132,6 +170,22 @@ paths:
           description: Profile fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Profile fetched successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -164,6 +218,9 @@ paths:
           description: Generic success response, whether or not the account exists
           content:
             application/json:
+              example:
+                success: true
+                message: "If an account exists, a reset link has been sent"
               schema: { $ref: '#/components/schemas/MessageResponse' }
         '400': { $ref: '#/components/responses/BadRequest' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -192,6 +249,9 @@ paths:
           description: Password reset
           content:
             application/json:
+              example:
+                success: true
+                message: "Password reset successfully"
               schema: { $ref: '#/components/schemas/MessageResponse' }
         '400': { $ref: '#/components/responses/BadRequest' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -220,6 +280,9 @@ paths:
           description: Test email sent
           content:
             application/json:
+              example:
+                success: true
+                message: "Test email sent successfully! Check your inbox."
               schema: { $ref: '#/components/schemas/MessageResponse' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
@@ -246,6 +309,22 @@ paths:
           description: Users fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Users fetched successfully"
+                data:
+                  - id: 1
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    role: "admin"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    phone: "+234 800 000 0000"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                    date_joined: "2026-01-15"
+                    is_active: true
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    updated_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -283,6 +362,11 @@ paths:
           description: Profile picture updated
           content:
             application/json:
+              example:
+                success: true
+                message: "Profile picture updated"
+                data:
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -311,6 +395,22 @@ paths:
           description: User fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "User fetched successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -344,6 +444,22 @@ paths:
           description: User updated
           content:
             application/json:
+              example:
+                success: true
+                message: "User updated successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -367,6 +483,22 @@ paths:
           description: User deactivated
           content:
             application/json:
+              example:
+                success: true
+                message: "User deactivated successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -393,6 +525,22 @@ paths:
           description: User status toggled
           content:
             application/json:
+              example:
+                success: true
+                message: "User activated successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -417,6 +565,26 @@ paths:
           description: Attendance marked
           content:
             application/json:
+              example:
+                success: true
+                message: "Successfully checked in"
+                data:
+                  action: "checked_in"
+                  record:
+                    id: 1
+                    employee_id: 1
+                    date: "2026-07-31"
+                    check_in: "09:00:00"
+                    check_out: "17:00:00"
+                    accumulated_minutes: 0
+                    duration_minutes: null
+                    status: "present"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -445,6 +613,24 @@ paths:
           description: Attendance fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Attendance fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    date: "2026-07-31"
+                    check_in: "09:00:00"
+                    check_out: "17:00:00"
+                    accumulated_minutes: 0
+                    duration_minutes: null
+                    status: "present"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -473,6 +659,15 @@ paths:
           description: Summary fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Summary fetched"
+                data:
+                  present: "string"
+                  absent: "string"
+                  half_day: "string"
+                  on_leave: "string"
+                  total_working_days: "string"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -500,6 +695,24 @@ paths:
           description: Attendance fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "All attendance fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    date: "2026-07-31"
+                    check_in: "09:00:00"
+                    check_out: "17:00:00"
+                    accumulated_minutes: 0
+                    duration_minutes: null
+                    status: "present"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -525,6 +738,24 @@ paths:
           description: Today's attendance fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Today attendance fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    date: "2026-07-31"
+                    check_in: "09:00:00"
+                    check_out: "17:00:00"
+                    accumulated_minutes: 0
+                    duration_minutes: null
+                    status: "present"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -549,6 +780,15 @@ paths:
           description: Leave types fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Leave types fetched"
+                data:
+                  - id: 1
+                    name: "Annual Leave"
+                    description: "Paid annual leave"
+                    max_days_per_year: 0
+                    is_paid: true
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -587,6 +827,15 @@ paths:
           description: Leave type created
           content:
             application/json:
+              example:
+                success: true
+                message: "Leave type created"
+                data:
+                  id: 1
+                  name: "Annual Leave"
+                  description: "Paid annual leave"
+                  max_days_per_year: 0
+                  is_paid: true
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -610,6 +859,19 @@ paths:
           description: Allocations fetched when the route implementation is corrected
           content:
             application/json:
+              example:
+                success: true
+                message: "Allocations fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    leave_type_id: 1
+                    allocated_days: 0
+                    used_days: 0
+                    year: 2026
+                    name: "Annual Leave"
+                    max_days_per_year: 0
+                    remaining: 0
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -636,6 +898,19 @@ paths:
           description: Allocations fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Allocations fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    leave_type_id: 1
+                    allocated_days: 0
+                    used_days: 0
+                    year: 2026
+                    name: "Annual Leave"
+                    max_days_per_year: 0
+                    remaining: 0
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -679,6 +954,19 @@ paths:
           description: Allocation saved
           content:
             application/json:
+              example:
+                success: true
+                message: "Allocation saved"
+                data:
+                  id: 1
+                  employee_id: 1
+                  leave_type_id: 1
+                  allocated_days: 0
+                  used_days: 0
+                  year: 2026
+                  name: "Annual Leave"
+                  max_days_per_year: 0
+                  remaining: 0
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -719,6 +1007,27 @@ paths:
           description: Leave request submitted
           content:
             application/json:
+              example:
+                success: true
+                message: "Leave request submitted"
+                data:
+                  id: 1
+                  employee_id: 1
+                  leave_type_id: 1
+                  start_date: "2026-08-10"
+                  end_date: "2026-08-14"
+                  total_days: 0
+                  reason: "Family event"
+                  status: "pending"
+                  reviewed_by: null
+                  reviewed_at: null
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  leave_type_name: "string"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  reviewer_name: null
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -741,6 +1050,27 @@ paths:
           description: Requests fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Requests fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    leave_type_id: 1
+                    start_date: "2026-08-10"
+                    end_date: "2026-08-14"
+                    total_days: 0
+                    reason: "Family event"
+                    status: "pending"
+                    reviewed_by: null
+                    reviewed_at: null
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    leave_type_name: "string"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    reviewer_name: null
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -771,6 +1101,27 @@ paths:
           description: Requests fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "All requests fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    leave_type_id: 1
+                    start_date: "2026-08-10"
+                    end_date: "2026-08-14"
+                    total_days: 0
+                    reason: "Family event"
+                    status: "pending"
+                    reviewed_by: null
+                    reviewed_at: null
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    leave_type_name: "string"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    reviewer_name: null
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -798,6 +1149,27 @@ paths:
           description: Leave approved
           content:
             application/json:
+              example:
+                success: true
+                message: "Leave approved"
+                data:
+                  id: 1
+                  employee_id: 1
+                  leave_type_id: 1
+                  start_date: "2026-08-10"
+                  end_date: "2026-08-14"
+                  total_days: 0
+                  reason: "Family event"
+                  status: "pending"
+                  reviewed_by: null
+                  reviewed_at: null
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  leave_type_name: "string"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  reviewer_name: null
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -825,6 +1197,27 @@ paths:
           description: Leave rejected
           content:
             application/json:
+              example:
+                success: true
+                message: "Leave rejected"
+                data:
+                  id: 1
+                  employee_id: 1
+                  leave_type_id: 1
+                  start_date: "2026-08-10"
+                  end_date: "2026-08-14"
+                  total_days: 0
+                  reason: "Family event"
+                  status: "pending"
+                  reviewed_by: null
+                  reviewed_at: null
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  leave_type_name: "string"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  reviewer_name: null
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -863,6 +1256,21 @@ paths:
           description: Salary structure saved
           content:
             application/json:
+              example:
+                success: true
+                message: "Salary structure saved"
+                data:
+                  employee_id: 1
+                  basic_salary: 250000
+                  hra_percent: 0
+                  special_allowance: 0
+                  effective_from: "2026-08-01"
+                  id: 1
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -884,6 +1292,21 @@ paths:
           description: Salary structures fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Salary structures fetched"
+                data:
+                  - employee_id: 1
+                    basic_salary: 250000
+                    hra_percent: 0
+                    special_allowance: 0
+                    effective_from: "2026-08-01"
+                    id: 1
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -911,6 +1334,21 @@ paths:
           description: Salary structure fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Salary structure fetched"
+                data:
+                  employee_id: 1
+                  basic_salary: 250000
+                  hra_percent: 0
+                  special_allowance: 0
+                  effective_from: "2026-08-01"
+                  id: 1
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -949,6 +1387,12 @@ paths:
           description: Pay run generated
           content:
             application/json:
+              example:
+                success: true
+                message: "Payrun generated successfully"
+                data:
+                  payrun_id: 1
+                  payslips_generated_count: 0
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -977,6 +1421,19 @@ paths:
           description: Pay runs fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Payruns fetched"
+                data:
+                  - id: 1
+                    month: 7
+                    year: 2026
+                    status: "draft"
+                    generated_by: null
+                    generated_at: "2026-08-01T09:00:00.000Z"
+                    generated_by_name: null
+                    total_cost: null
+                    employee_count: "string"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1004,6 +1461,37 @@ paths:
           description: Payslips fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Payslips fetched"
+                data:
+                  - id: 1
+                    payrun_id: 1
+                    employee_id: 1
+                    working_days: 0
+                    present_days: "string"
+                    leaves_approved: 0
+                    unpaid_leave_days: 1
+                    unpaid_deduction: "string"
+                    basic: "string"
+                    hra: "string"
+                    special_allowance: "string"
+                    gross_salary: "string"
+                    pf_employee: "string"
+                    pf_employer: "string"
+                    professional_tax: "string"
+                    total_deductions: "string"
+                    net_pay: "string"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    month: 7
+                    year: 2026
+                    payrun_status: "string"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    date_joined: "2026-01-15"
+                    user_id: 1
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1028,6 +1516,37 @@ paths:
           description: Payslips fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Payslips fetched"
+                data:
+                  - id: 1
+                    payrun_id: 1
+                    employee_id: 1
+                    working_days: 0
+                    present_days: "string"
+                    leaves_approved: 0
+                    unpaid_leave_days: 1
+                    unpaid_deduction: "string"
+                    basic: "string"
+                    hra: "string"
+                    special_allowance: "string"
+                    gross_salary: "string"
+                    pf_employee: "string"
+                    pf_employer: "string"
+                    professional_tax: "string"
+                    total_deductions: "string"
+                    net_pay: "string"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    month: 7
+                    year: 2026
+                    payrun_status: "string"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    date_joined: "2026-01-15"
+                    user_id: 1
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1054,6 +1573,37 @@ paths:
           description: Payslip fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Payslip fetched"
+                data:
+                  id: 1
+                  payrun_id: 1
+                  employee_id: 1
+                  working_days: 0
+                  present_days: "string"
+                  leaves_approved: 0
+                  unpaid_leave_days: 1
+                  unpaid_deduction: "string"
+                  basic: "string"
+                  hra: "string"
+                  special_allowance: "string"
+                  gross_salary: "string"
+                  pf_employee: "string"
+                  pf_employer: "string"
+                  professional_tax: "string"
+                  total_deductions: "string"
+                  net_pay: "string"
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  month: 7
+                  year: 2026
+                  payrun_status: "string"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  date_joined: "2026-01-15"
+                  user_id: 1
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1098,7 +1648,15 @@ paths:
       operationId: getAdminDashboard
       security: [{ bearerAuth: [] }]
       responses:
-        '200': { $ref: '#/components/responses/DashboardSuccess' }
+        '200':
+          description: Admin dashboard data fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: Admin dashboard data fetched
+                data: {}
+              schema: { $ref: '#/components/schemas/DashboardResponse' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -1110,7 +1668,15 @@ paths:
       operationId: getEmployeeDashboard
       security: [{ bearerAuth: [] }]
       responses:
-        '200': { $ref: '#/components/responses/DashboardSuccess' }
+        '200':
+          description: Employee dashboard data fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: Employee dashboard data fetched
+                data: {}
+              schema: { $ref: '#/components/schemas/DashboardResponse' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '500': { $ref: '#/components/responses/ServerError' }
 
@@ -1122,7 +1688,15 @@ paths:
       operationId: getHrDashboard
       security: [{ bearerAuth: [] }]
       responses:
-        '200': { $ref: '#/components/responses/DashboardSuccess' }
+        '200':
+          description: HR dashboard data fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: HR dashboard data fetched
+                data: {}
+              schema: { $ref: '#/components/schemas/DashboardResponse' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -1135,7 +1709,15 @@ paths:
       operationId: getPayrollDashboard
       security: [{ bearerAuth: [] }]
       responses:
-        '200': { $ref: '#/components/responses/DashboardSuccess' }
+        '200':
+          description: Payroll dashboard data fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: Payroll dashboard data fetched
+                data: {}
+              schema: { $ref: '#/components/schemas/DashboardResponse' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -1151,6 +1733,17 @@ paths:
           description: Notifications fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Notifications fetched"
+                data:
+                  - id: 1
+                    user_id: 1
+                    title: "Leave request approved"
+                    message: "Today's attendance summary is available"
+                    type: "string"
+                    is_read: true
+                    created_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1175,6 +1768,17 @@ paths:
           description: Notification marked as read
           content:
             application/json:
+              example:
+                success: true
+                message: "Notification marked as read"
+                data:
+                  id: 1
+                  user_id: 1
+                  title: "Leave request approved"
+                  message: "Today's attendance summary is available"
+                  type: "string"
+                  is_read: true
+                  created_at: "2026-08-01T09:00:00.000Z"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1196,6 +1800,9 @@ paths:
           description: All notifications marked as read
           content:
             application/json:
+              example:
+                success: true
+                message: "All notifications marked as read"
               schema: { $ref: '#/components/schemas/MessageResponse' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '500': { $ref: '#/components/responses/ServerError' }
@@ -1211,6 +1818,14 @@ paths:
           description: Settings fetched
           content:
             application/json:
+              example:
+                success: true
+                data:
+                  company_name: "EmPay Ltd"
+                  company_email: "hr@example.com"
+                  timezone: "Africa/Lagos"
+                  work_start_time: "09:00"
+                  work_end_time: "17:00"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1242,6 +1857,15 @@ paths:
           description: Settings updated
           content:
             application/json:
+              example:
+                success: true
+                message: "Settings updated successfully"
+                data:
+                  company_name: "EmPay Ltd"
+                  company_email: "hr@example.com"
+                  timezone: "Africa/Lagos"
+                  work_start_time: "09:00"
+                  work_end_time: "17:00"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1264,6 +1888,10 @@ paths:
           description: Database statistics fetched
           content:
             application/json:
+              example:
+                success: true
+                data:
+                  {}
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1294,6 +1922,22 @@ paths:
           description: Search results
           content:
             application/json:
+              example:
+                success: true
+                data:
+                  - id: 1
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    role: "admin"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    phone: "+234 800 000 0000"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                    date_joined: "2026-01-15"
+                    is_active: true
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    updated_at: "2026-08-01T09:00:00.000Z"
+                    type: "user"
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SuccessResponse'
@@ -1351,6 +1995,24 @@ paths:
           description: Audit logs fetched
           content:
             application/json:
+              example:
+                success: true
+                message: "Audit logs fetched"
+                data:
+                  - id: 1
+                    user_id: 1
+                    action: "LEAVE_APPROVED"
+                    target_id: 1
+                    target_type: "LEAVE_REQUEST"
+                    metadata:
+                      {}
+                    ip_address: "203.0.113.10"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                total: 0
+                page: 0
+                totalPages: 0
               schema:
                 type: object
                 required: [success, message, data, total, page, totalPages]
@@ -1452,19 +2114,6 @@ components:
       content:
         application/json:
           schema: { $ref: '#/components/schemas/ErrorResponse' }
-    DashboardSuccess:
-      description: Dashboard data fetched
-      content:
-        application/json:
-          schema:
-            allOf:
-              - $ref: '#/components/schemas/SuccessResponse'
-              - type: object
-                properties:
-                  data:
-                    type: object
-                    additionalProperties: true
-
   schemas:
     UserRole:
       type: string
@@ -1497,6 +2146,21 @@ components:
         success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
         message: { type: string, description: "Message returned by the endpoint.", example: "EmPay API is running" }
         timestamp: { type: string, format: date-time, description: "Time at which the response was generated." }
+    DashboardResponse:
+      type: object
+      required: [success, message, data]
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+          description: Indicates whether the request completed successfully.
+        message:
+          type: string
+          description: Message returned by the endpoint.
+        data:
+          type: object
+          description: Dashboard metrics and recent activity for the authenticated role.
+          additionalProperties: true
     User:
       type: object
       properties:
@@ -1676,7 +2340,7 @@ components:
         id: { type: integer, description: "Unique record identifier." }
         user_id: { type: integer, description: "Identifier of the associated user." }
         title: { type: string, description: "Notification title.", example: "Leave request approved" }
-        message: { type: string, description: "Notification content." }
+        message: { type: string, description: "Notification content.", example: "Today's attendance summary is available" }
         type: { type: string, description: "Category of the returned record." }
         is_read: { type: boolean, description: "Whether the notification has been read." }
         created_at: { type: string, format: date-time, description: "Time at which the record was created." }

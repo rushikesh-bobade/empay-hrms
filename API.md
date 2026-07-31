@@ -42,7 +42,7 @@ Accept: application/json
 {
   "success": true,
   "message": "EmPay API is running",
-  "timestamp": "2019-08-24T14:15:22Z"
+  "timestamp": "2026-08-01T09:00:00.000Z"
 }
 ```
 
@@ -119,9 +119,9 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "User registered successfully",
   "data": {
-    "id": 0,
+    "id": 1,
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "role": "admin",
@@ -131,8 +131,8 @@ Requires the `admin` or `hr_officer` role.
     "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
     "date_joined": "2026-01-15",
     "is_active": true,
-    "created_at": "2019-08-24T14:15:22Z",
-    "updated_at": "2019-08-24T14:15:22Z"
+    "created_at": "2026-08-01T09:00:00.000Z",
+    "updated_at": "2026-08-01T09:00:00.000Z"
   }
 }
 ```
@@ -204,11 +204,11 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Login successful",
   "data": {
     "token": "string",
     "user": {
-      "id": 0,
+      "id": 1,
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "role": "admin",
@@ -218,8 +218,8 @@ Accept: application/json
       "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
       "date_joined": "2026-01-15",
       "is_active": true,
-      "created_at": "2019-08-24T14:15:22Z",
-      "updated_at": "2019-08-24T14:15:22Z"
+      "created_at": "2026-08-01T09:00:00.000Z",
+      "updated_at": "2026-08-01T09:00:00.000Z"
     }
   }
 }
@@ -273,9 +273,9 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Profile fetched successfully",
   "data": {
-    "id": 0,
+    "id": 1,
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "role": "admin",
@@ -285,8 +285,8 @@ Accept: application/json
     "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
     "date_joined": "2026-01-15",
     "is_active": true,
-    "created_at": "2019-08-24T14:15:22Z",
-    "updated_at": "2019-08-24T14:15:22Z"
+    "created_at": "2026-08-01T09:00:00.000Z",
+    "updated_at": "2026-08-01T09:00:00.000Z"
   }
 }
 ```
@@ -355,7 +355,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "If an account exists, a reset link has been sent"
 }
 ```
 
@@ -411,7 +411,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "Password reset successfully"
 }
 ```
 
@@ -467,7 +467,7 @@ Requires the `admin` role. If `email` is omitted, the authenticated user's email
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "Test email sent successfully! Check your inbox."
 }
 ```
 
@@ -529,10 +529,10 @@ Available to all authenticated roles.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Users fetched successfully",
   "data": [
     {
-      "id": 0,
+      "id": 1,
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "role": "admin",
@@ -542,8 +542,8 @@ Available to all authenticated roles.
       "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
       "date_joined": "2026-01-15",
       "is_active": true,
-      "created_at": "2019-08-24T14:15:22Z",
-      "updated_at": "2019-08-24T14:15:22Z"
+      "created_at": "2026-08-01T09:00:00.000Z",
+      "updated_at": "2026-08-01T09:00:00.000Z"
     }
   ]
 }
@@ -612,7 +612,7 @@ avatar: string
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Profile picture updated",
   "data": {
     "profile_pic": "https://cdn.example.com/avatars/ada.jpg"
   }
@@ -671,9 +671,9 @@ Employees may only view their own profile.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "User fetched successfully",
   "data": {
-    "id": 0,
+    "id": 1,
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "role": "admin",
@@ -683,8 +683,8 @@ Employees may only view their own profile.
     "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
     "date_joined": "2026-01-15",
     "is_active": true,
-    "created_at": "2019-08-24T14:15:22Z",
-    "updated_at": "2019-08-24T14:15:22Z"
+    "created_at": "2026-08-01T09:00:00.000Z",
+    "updated_at": "2026-08-01T09:00:00.000Z"
   }
 }
 ```
@@ -778,9 +778,9 @@ Employees and payroll officers may update only themselves; HR officers may updat
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "User updated successfully",
   "data": {
-    "id": 0,
+    "id": 1,
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "role": "admin",
@@ -790,8 +790,8 @@ Employees and payroll officers may update only themselves; HR officers may updat
     "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
     "date_joined": "2026-01-15",
     "is_active": true,
-    "created_at": "2019-08-24T14:15:22Z",
-    "updated_at": "2019-08-24T14:15:22Z"
+    "created_at": "2026-08-01T09:00:00.000Z",
+    "updated_at": "2026-08-01T09:00:00.000Z"
   }
 }
 ```
@@ -854,9 +854,9 @@ Requires the `admin` role. This is a soft delete that sets `is_active` to false.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "User deactivated successfully",
   "data": {
-    "id": 0,
+    "id": 1,
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "role": "admin",
@@ -866,8 +866,8 @@ Requires the `admin` role. This is a soft delete that sets `is_active` to false.
     "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
     "date_joined": "2026-01-15",
     "is_active": true,
-    "created_at": "2019-08-24T14:15:22Z",
-    "updated_at": "2019-08-24T14:15:22Z"
+    "created_at": "2026-08-01T09:00:00.000Z",
+    "updated_at": "2026-08-01T09:00:00.000Z"
   }
 }
 ```
@@ -929,9 +929,9 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "User activated successfully",
   "data": {
-    "id": 0,
+    "id": 1,
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "role": "admin",
@@ -941,8 +941,8 @@ Requires the `admin` role.
     "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
     "date_joined": "2026-01-15",
     "is_active": true,
-    "created_at": "2019-08-24T14:15:22Z",
-    "updated_at": "2019-08-24T14:15:22Z"
+    "created_at": "2026-08-01T09:00:00.000Z",
+    "updated_at": "2026-08-01T09:00:00.000Z"
   }
 }
 ```
@@ -1000,19 +1000,19 @@ Marks attendance for the authenticated user. Repeated calls alternate between ch
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Successfully checked in",
   "data": {
     "action": "checked_in",
     "record": {
-      "id": 0,
-      "employee_id": 0,
+      "id": 1,
+      "employee_id": 1,
       "date": "2026-07-31",
       "check_in": "09:00:00",
       "check_out": "17:00:00",
       "accumulated_minutes": 0,
-      "duration_minutes": 0,
+      "duration_minutes": null,
       "status": "present",
-      "created_at": "2019-08-24T14:15:22Z",
+      "created_at": "2026-08-01T09:00:00.000Z",
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "department": "Engineering",
@@ -1080,18 +1080,18 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Attendance fetched",
   "data": [
     {
-      "id": 0,
-      "employee_id": 0,
+      "id": 1,
+      "employee_id": 1,
       "date": "2026-07-31",
       "check_in": "09:00:00",
       "check_out": "17:00:00",
       "accumulated_minutes": 0,
-      "duration_minutes": 0,
+      "duration_minutes": null,
       "status": "present",
-      "created_at": "2019-08-24T14:15:22Z",
+      "created_at": "2026-08-01T09:00:00.000Z",
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "department": "Engineering",
@@ -1160,7 +1160,7 @@ Defaults to the authenticated user when `employee_id` is omitted.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Summary fetched",
   "data": {
     "present": "string",
     "absent": "string",
@@ -1225,18 +1225,18 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "All attendance fetched",
   "data": [
     {
-      "id": 0,
-      "employee_id": 0,
+      "id": 1,
+      "employee_id": 1,
       "date": "2026-07-31",
       "check_in": "09:00:00",
       "check_out": "17:00:00",
       "accumulated_minutes": 0,
-      "duration_minutes": 0,
+      "duration_minutes": null,
       "status": "present",
-      "created_at": "2019-08-24T14:15:22Z",
+      "created_at": "2026-08-01T09:00:00.000Z",
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "department": "Engineering",
@@ -1298,18 +1298,18 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Today attendance fetched",
   "data": [
     {
-      "id": 0,
-      "employee_id": 0,
+      "id": 1,
+      "employee_id": 1,
       "date": "2026-07-31",
       "check_in": "09:00:00",
       "check_out": "17:00:00",
       "accumulated_minutes": 0,
-      "duration_minutes": 0,
+      "duration_minutes": null,
       "status": "present",
-      "created_at": "2019-08-24T14:15:22Z",
+      "created_at": "2026-08-01T09:00:00.000Z",
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "department": "Engineering",
@@ -1371,10 +1371,10 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Leave types fetched",
   "data": [
     {
-      "id": 0,
+      "id": 1,
       "name": "Annual Leave",
       "description": "Paid annual leave",
       "max_days_per_year": 0,
@@ -1449,9 +1449,9 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Leave type created",
   "data": {
-    "id": 0,
+    "id": 1,
     "name": "Annual Leave",
     "description": "Paid annual leave",
     "max_days_per_year": 0,
@@ -1506,12 +1506,12 @@ The route is intended to use the authenticated user but currently passes a missi
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Allocations fetched",
   "data": [
     {
-      "id": 0,
-      "employee_id": 0,
-      "leave_type_id": 0,
+      "id": 1,
+      "employee_id": 1,
+      "leave_type_id": 1,
       "allocated_days": 0,
       "used_days": 0,
       "year": 2026,
@@ -1574,12 +1574,12 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Allocations fetched",
   "data": [
     {
-      "id": 0,
-      "employee_id": 0,
-      "leave_type_id": 0,
+      "id": 1,
+      "employee_id": 1,
+      "leave_type_id": 1,
       "allocated_days": 0,
       "used_days": 0,
       "year": 2026,
@@ -1659,11 +1659,11 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Allocation saved",
   "data": {
-    "id": 0,
-    "employee_id": 0,
-    "leave_type_id": 0,
+    "id": 1,
+    "employee_id": 1,
+    "leave_type_id": 1,
     "allocated_days": 0,
     "used_days": 0,
     "year": 2026,
@@ -1740,25 +1740,25 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Leave request submitted",
   "data": {
-    "id": 0,
-    "employee_id": 0,
-    "leave_type_id": 0,
+    "id": 1,
+    "employee_id": 1,
+    "leave_type_id": 1,
     "start_date": "2026-08-10",
     "end_date": "2026-08-14",
     "total_days": 0,
     "reason": "Family event",
     "status": "pending",
-    "reviewed_by": 0,
-    "reviewed_at": "2019-08-24T14:15:22Z",
-    "created_at": "2019-08-24T14:15:22Z",
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2026-08-01T09:00:00.000Z",
     "leave_type_name": "string",
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "department": "Engineering",
     "designation": "Software Engineer",
-    "reviewer_name": "string"
+    "reviewer_name": null
   }
 }
 ```
@@ -1810,26 +1810,26 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Requests fetched",
   "data": [
     {
-      "id": 0,
-      "employee_id": 0,
-      "leave_type_id": 0,
+      "id": 1,
+      "employee_id": 1,
+      "leave_type_id": 1,
       "start_date": "2026-08-10",
       "end_date": "2026-08-14",
       "total_days": 0,
       "reason": "Family event",
       "status": "pending",
-      "reviewed_by": 0,
-      "reviewed_at": "2019-08-24T14:15:22Z",
-      "created_at": "2019-08-24T14:15:22Z",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "created_at": "2026-08-01T09:00:00.000Z",
       "leave_type_name": "string",
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "department": "Engineering",
       "designation": "Software Engineer",
-      "reviewer_name": "string"
+      "reviewer_name": null
     }
   ]
 }
@@ -1898,26 +1898,26 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "All requests fetched",
   "data": [
     {
-      "id": 0,
-      "employee_id": 0,
-      "leave_type_id": 0,
+      "id": 1,
+      "employee_id": 1,
+      "leave_type_id": 1,
       "start_date": "2026-08-10",
       "end_date": "2026-08-14",
       "total_days": 0,
       "reason": "Family event",
       "status": "pending",
-      "reviewed_by": 0,
-      "reviewed_at": "2019-08-24T14:15:22Z",
-      "created_at": "2019-08-24T14:15:22Z",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "created_at": "2026-08-01T09:00:00.000Z",
       "leave_type_name": "string",
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "department": "Engineering",
       "designation": "Software Engineer",
-      "reviewer_name": "string"
+      "reviewer_name": null
     }
   ]
 }
@@ -1978,25 +1978,25 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Leave approved",
   "data": {
-    "id": 0,
-    "employee_id": 0,
-    "leave_type_id": 0,
+    "id": 1,
+    "employee_id": 1,
+    "leave_type_id": 1,
     "start_date": "2026-08-10",
     "end_date": "2026-08-14",
     "total_days": 0,
     "reason": "Family event",
     "status": "pending",
-    "reviewed_by": 0,
-    "reviewed_at": "2019-08-24T14:15:22Z",
-    "created_at": "2019-08-24T14:15:22Z",
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2026-08-01T09:00:00.000Z",
     "leave_type_name": "string",
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "department": "Engineering",
     "designation": "Software Engineer",
-    "reviewer_name": "string"
+    "reviewer_name": null
   }
 }
 ```
@@ -2058,25 +2058,25 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Leave rejected",
   "data": {
-    "id": 0,
-    "employee_id": 0,
-    "leave_type_id": 0,
+    "id": 1,
+    "employee_id": 1,
+    "leave_type_id": 1,
     "start_date": "2026-08-10",
     "end_date": "2026-08-14",
     "total_days": 0,
     "reason": "Family event",
     "status": "pending",
-    "reviewed_by": 0,
-    "reviewed_at": "2019-08-24T14:15:22Z",
-    "created_at": "2019-08-24T14:15:22Z",
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2026-08-01T09:00:00.000Z",
     "leave_type_name": "string",
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "department": "Engineering",
     "designation": "Software Engineer",
-    "reviewer_name": "string"
+    "reviewer_name": null
   }
 }
 ```
@@ -2158,15 +2158,15 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Salary structure saved",
   "data": {
-    "employee_id": 0,
+    "employee_id": 1,
     "basic_salary": 250000,
-    "hra_percent": 40,
+    "hra_percent": 0,
     "special_allowance": 0,
     "effective_from": "2026-08-01",
-    "id": 0,
-    "created_at": "2019-08-24T14:15:22Z",
+    "id": 1,
+    "created_at": "2026-08-01T09:00:00.000Z",
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "department": "Engineering",
@@ -2221,16 +2221,16 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Salary structures fetched",
   "data": [
     {
-      "employee_id": 0,
+      "employee_id": 1,
       "basic_salary": 250000,
-      "hra_percent": 40,
+      "hra_percent": 0,
       "special_allowance": 0,
       "effective_from": "2026-08-01",
-      "id": 0,
-      "created_at": "2019-08-24T14:15:22Z",
+      "id": 1,
+      "created_at": "2026-08-01T09:00:00.000Z",
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "department": "Engineering",
@@ -2292,15 +2292,15 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Salary structure fetched",
   "data": {
-    "employee_id": 0,
+    "employee_id": 1,
     "basic_salary": 250000,
-    "hra_percent": 40,
+    "hra_percent": 0,
     "special_allowance": 0,
     "effective_from": "2026-08-01",
-    "id": 0,
-    "created_at": "2019-08-24T14:15:22Z",
+    "id": 1,
+    "created_at": "2026-08-01T09:00:00.000Z",
     "full_name": "Ada Okafor",
     "email": "ada@example.com",
     "department": "Engineering",
@@ -2374,9 +2374,9 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Payrun generated successfully",
   "data": {
-    "payrun_id": 0,
+    "payrun_id": 1,
     "payslips_generated_count": 0
   }
 }
@@ -2429,17 +2429,17 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Payruns fetched",
   "data": [
     {
-      "id": 0,
+      "id": 1,
       "month": 7,
       "year": 2026,
       "status": "draft",
-      "generated_by": 0,
-      "generated_at": "2019-08-24T14:15:22Z",
-      "generated_by_name": "string",
-      "total_cost": "string",
+      "generated_by": null,
+      "generated_at": "2026-08-01T09:00:00.000Z",
+      "generated_by_name": null,
+      "total_cost": null,
       "employee_count": "string"
     }
   ]
@@ -2500,16 +2500,16 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Payslips fetched",
   "data": [
     {
-      "id": 0,
-      "payrun_id": 0,
-      "employee_id": 0,
+      "id": 1,
+      "payrun_id": 1,
+      "employee_id": 1,
       "working_days": 0,
       "present_days": "string",
       "leaves_approved": 0,
-      "unpaid_leave_days": 0,
+      "unpaid_leave_days": 1,
       "unpaid_deduction": "string",
       "basic": "string",
       "hra": "string",
@@ -2520,7 +2520,7 @@ Requires the `admin` or `payroll_officer` role.
       "professional_tax": "string",
       "total_deductions": "string",
       "net_pay": "string",
-      "created_at": "2019-08-24T14:15:22Z",
+      "created_at": "2026-08-01T09:00:00.000Z",
       "month": 7,
       "year": 2026,
       "payrun_status": "string",
@@ -2529,7 +2529,7 @@ Requires the `admin` or `payroll_officer` role.
       "department": "Engineering",
       "designation": "Software Engineer",
       "date_joined": "2026-01-15",
-      "user_id": 0
+      "user_id": 1
     }
   ]
 }
@@ -2579,16 +2579,16 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Payslips fetched",
   "data": [
     {
-      "id": 0,
-      "payrun_id": 0,
-      "employee_id": 0,
+      "id": 1,
+      "payrun_id": 1,
+      "employee_id": 1,
       "working_days": 0,
       "present_days": "string",
       "leaves_approved": 0,
-      "unpaid_leave_days": 0,
+      "unpaid_leave_days": 1,
       "unpaid_deduction": "string",
       "basic": "string",
       "hra": "string",
@@ -2599,7 +2599,7 @@ Accept: application/json
       "professional_tax": "string",
       "total_deductions": "string",
       "net_pay": "string",
-      "created_at": "2019-08-24T14:15:22Z",
+      "created_at": "2026-08-01T09:00:00.000Z",
       "month": 7,
       "year": 2026,
       "payrun_status": "string",
@@ -2608,7 +2608,7 @@ Accept: application/json
       "department": "Engineering",
       "designation": "Software Engineer",
       "date_joined": "2026-01-15",
-      "user_id": 0
+      "user_id": 1
     }
   ]
 }
@@ -2665,15 +2665,15 @@ Employees may only access their own payslips.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Payslip fetched",
   "data": {
-    "id": 0,
-    "payrun_id": 0,
-    "employee_id": 0,
+    "id": 1,
+    "payrun_id": 1,
+    "employee_id": 1,
     "working_days": 0,
     "present_days": "string",
     "leaves_approved": 0,
-    "unpaid_leave_days": 0,
+    "unpaid_leave_days": 1,
     "unpaid_deduction": "string",
     "basic": "string",
     "hra": "string",
@@ -2684,7 +2684,7 @@ Employees may only access their own payslips.
     "professional_tax": "string",
     "total_deductions": "string",
     "net_pay": "string",
-    "created_at": "2019-08-24T14:15:22Z",
+    "created_at": "2026-08-01T09:00:00.000Z",
     "month": 7,
     "year": 2026,
     "payrun_status": "string",
@@ -2693,7 +2693,7 @@ Employees may only access their own payslips.
     "department": "Engineering",
     "designation": "Software Engineer",
     "date_joined": "2026-01-15",
-    "user_id": 0
+    "user_id": 1
   }
 }
 ```
@@ -2748,17 +2748,6 @@ Employees may only download their own payslips.
 
 > 200 Response
 
-> 401 Response
-
-```json
-{
-  "success": false,
-  "message": "string",
-  "error": "string",
-  "hint": "string"
-}
-```
-
 <h3 id="download-a-payslip-pdf-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
@@ -2806,7 +2795,7 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Admin dashboard data fetched",
   "data": {}
 }
 ```
@@ -2815,18 +2804,10 @@ Requires the `admin` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|OK|Dashboard data fetched|Inline|
+|200|OK|Admin dashboard data fetched|[DashboardResponse](#schemadashboardresponse)|
 |401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
 |403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
 |500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
-
-<h3 id="get-the-admin-dashboard-responseschema">Response Schema</h3>
-
-#### Enumerated Values
-
-|Property|Value|
-|---|---|
-|success|true|
 
 <aside class="warning">
 To perform this operation, you must be authenticated by means of one of the following methods:
@@ -2855,7 +2836,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Employee dashboard data fetched",
   "data": {}
 }
 ```
@@ -2864,17 +2845,9 @@ Accept: application/json
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|OK|Dashboard data fetched|Inline|
+|200|OK|Employee dashboard data fetched|[DashboardResponse](#schemadashboardresponse)|
 |401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
 |500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
-
-<h3 id="get-the-authenticated-employee-dashboard-responseschema">Response Schema</h3>
-
-#### Enumerated Values
-
-|Property|Value|
-|---|---|
-|success|true|
 
 <aside class="warning">
 To perform this operation, you must be authenticated by means of one of the following methods:
@@ -2905,7 +2878,7 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "HR dashboard data fetched",
   "data": {}
 }
 ```
@@ -2914,18 +2887,10 @@ Requires the `admin` or `hr_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|OK|Dashboard data fetched|Inline|
+|200|OK|HR dashboard data fetched|[DashboardResponse](#schemadashboardresponse)|
 |401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
 |403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
 |500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
-
-<h3 id="get-the-hr-dashboard-responseschema">Response Schema</h3>
-
-#### Enumerated Values
-
-|Property|Value|
-|---|---|
-|success|true|
 
 <aside class="warning">
 To perform this operation, you must be authenticated by means of one of the following methods:
@@ -2956,7 +2921,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Payroll dashboard data fetched",
   "data": {}
 }
 ```
@@ -2965,18 +2930,10 @@ Requires the `admin` or `payroll_officer` role.
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|OK|Dashboard data fetched|Inline|
+|200|OK|Payroll dashboard data fetched|[DashboardResponse](#schemadashboardresponse)|
 |401|Unauthorized|Missing, expired, or invalid bearer token, or invalid login credentials|[ErrorResponse](#schemaerrorresponse)|
 |403|Forbidden|Authenticated user lacks permission|[ErrorResponse](#schemaerrorresponse)|
 |500|Internal Server Error|Internal server error|[ErrorResponse](#schemaerrorresponse)|
-
-<h3 id="get-the-payroll-dashboard-responseschema">Response Schema</h3>
-
-#### Enumerated Values
-
-|Property|Value|
-|---|---|
-|success|true|
 
 <aside class="warning">
 To perform this operation, you must be authenticated by means of one of the following methods:
@@ -3007,16 +2964,16 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Notifications fetched",
   "data": [
     {
-      "id": 0,
-      "user_id": 0,
+      "id": 1,
+      "user_id": 1,
       "title": "Leave request approved",
-      "message": "string",
+      "message": "Today's attendance summary is available",
       "type": "string",
       "is_read": true,
-      "created_at": "2019-08-24T14:15:22Z"
+      "created_at": "2026-08-01T09:00:00.000Z"
     }
   ]
 }
@@ -3071,15 +3028,15 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Notification marked as read",
   "data": {
-    "id": 0,
-    "user_id": 0,
+    "id": 1,
+    "user_id": 1,
     "title": "Leave request approved",
-    "message": "string",
+    "message": "Today's attendance summary is available",
     "type": "string",
     "is_read": true,
-    "created_at": "2019-08-24T14:15:22Z"
+    "created_at": "2026-08-01T09:00:00.000Z"
   }
 }
 ```
@@ -3128,7 +3085,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string"
+  "message": "All notifications marked as read"
 }
 ```
 
@@ -3169,7 +3126,6 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "string",
   "data": {
     "company_name": "EmPay Ltd",
     "company_email": "hr@example.com",
@@ -3244,7 +3200,7 @@ Requires the `admin` role. Each supplied key is stored as a setting.
 ```json
 {
   "success": true,
-  "message": "string",
+  "message": "Settings updated successfully",
   "data": {
     "company_name": "EmPay Ltd",
     "company_email": "hr@example.com",
@@ -3301,7 +3257,6 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "string",
   "data": {}
 }
 ```
@@ -3360,10 +3315,9 @@ Queries shorter than two characters return an empty array.
 ```json
 {
   "success": true,
-  "message": "string",
   "data": [
     {
-      "id": 0,
+      "id": 1,
       "full_name": "Ada Okafor",
       "email": "ada@example.com",
       "role": "admin",
@@ -3373,8 +3327,8 @@ Queries shorter than two characters return an empty array.
       "profile_pic": "https://cdn.example.com/avatars/ada.jpg",
       "date_joined": "2026-01-15",
       "is_active": true,
-      "created_at": "2019-08-24T14:15:22Z",
-      "updated_at": "2019-08-24T14:15:22Z",
+      "created_at": "2026-08-01T09:00:00.000Z",
+      "updated_at": "2026-08-01T09:00:00.000Z",
       "type": "user"
     }
   ]
@@ -3448,14 +3402,14 @@ Requires the `admin` role.
   "message": "Audit logs fetched",
   "data": [
     {
-      "id": 0,
-      "user_id": 0,
+      "id": 1,
+      "user_id": 1,
       "action": "LEAVE_APPROVED",
-      "target_id": 0,
+      "target_id": 1,
       "target_type": "LEAVE_REQUEST",
       "metadata": {},
       "ip_address": "203.0.113.10",
-      "created_at": "2019-08-24T14:15:22Z",
+      "created_at": "2026-08-01T09:00:00.000Z",
       "full_name": "Ada Okafor",
       "email": "ada@example.com"
     }
@@ -3547,14 +3501,6 @@ Access role assigned to a user.
 <a id="tocSsuccessresponse"></a>
 <a id="tocssuccessresponse"></a>
 
-```json
-{
-  "success": true,
-  "message": "string"
-}
-
-```
-
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
@@ -3575,14 +3521,6 @@ Access role assigned to a user.
 <a id="tocSmessageresponse"></a>
 <a id="tocsmessageresponse"></a>
 
-```json
-{
-  "success": true,
-  "message": "string"
-}
-
-```
-
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
@@ -3602,16 +3540,6 @@ Access role assigned to a user.
 <a id="schema_ErrorResponse"></a>
 <a id="tocSerrorresponse"></a>
 <a id="tocserrorresponse"></a>
-
-```json
-{
-  "success": false,
-  "message": "string",
-  "error": "string",
-  "hint": "string"
-}
-
-```
 
 ### Properties
 
@@ -3651,6 +3579,27 @@ Access role assigned to a user.
 |success|boolean|true|none|Indicates whether the request completed successfully.|
 |message|string|true|none|Message returned by the endpoint.|
 |timestamp|string(date-time)|true|none|Time at which the response was generated.|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|success|true|
+
+<h2 id="tocS_DashboardResponse">DashboardResponse</h2>
+<!-- backwards compatibility -->
+<a id="schemadashboardresponse"></a>
+<a id="schema_DashboardResponse"></a>
+<a id="tocSdashboardresponse"></a>
+<a id="tocsdashboardresponse"></a>
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|success|boolean|true|none|Indicates whether the request completed successfully.|
+|message|string|true|none|Message returned by the endpoint.|
+|data|object|true|none|Dashboard metrics and recent activity for the authenticated role.|
 
 #### Enumerated Values
 
@@ -4197,7 +4146,7 @@ and
   "id": 0,
   "user_id": 0,
   "title": "Leave request approved",
-  "message": "string",
+  "message": "Today's attendance summary is available",
   "type": "string",
   "is_read": true,
   "created_at": "2019-08-24T14:15:22Z"
