@@ -1356,7 +1356,7 @@ paths:
                 required: [success, message, data, total, page, totalPages]
                 properties:
                   success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
-                  message: { type: string, description: "Human-readable result or error message.", example: "Operation completed successfully" }
+                  message: { type: string, description: "Message returned by the endpoint.", example: "Audit logs fetched" }
                   data:
                     description: Audit records for the current page.
                     type: array
@@ -1475,19 +1475,19 @@ components:
       required: [success]
       properties:
         success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
-        message: { type: string, description: "Human-readable success message.", example: "Operation completed successfully" }
+        message: { type: string, description: "Message returned by the endpoint." }
     MessageResponse:
       type: object
       required: [success, message]
       properties:
         success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
-        message: { type: string, description: "Human-readable success message.", example: "Operation completed successfully" }
+        message: { type: string, description: "Message returned by the endpoint." }
     ErrorResponse:
       type: object
       required: [success, message]
       properties:
         success: { type: boolean, enum: [false], description: "Indicates whether the request completed successfully." }
-        message: { type: string, description: "Human-readable error message.", example: "Invalid request" }
+        message: { type: string, description: "Message returned by the endpoint." }
         error: { type: string, description: "Underlying error detail when available." }
         hint: { type: string, description: "Suggested corrective action when available." }
     HealthResponse:
@@ -1495,7 +1495,7 @@ components:
       required: [success, message, timestamp]
       properties:
         success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
-        message: { type: string, description: "Human-readable health status.", example: "EmPay API is running" }
+        message: { type: string, description: "Message returned by the endpoint.", example: "EmPay API is running" }
         timestamp: { type: string, format: date-time, description: "Time at which the response was generated." }
     User:
       type: object
@@ -1676,7 +1676,7 @@ components:
         id: { type: integer, description: "Unique record identifier." }
         user_id: { type: integer, description: "Identifier of the associated user." }
         title: { type: string, description: "Notification title.", example: "Leave request approved" }
-        message: { type: string, description: "Human-readable result or error message.", example: "Operation completed successfully" }
+        message: { type: string, description: "Notification content." }
         type: { type: string, description: "Category of the returned record." }
         is_read: { type: boolean, description: "Whether the notification has been read." }
         created_at: { type: string, format: date-time, description: "Time at which the record was created." }

@@ -121,7 +121,7 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "full_name": "Ada Okafor",
@@ -206,7 +206,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "token": "string",
     "user": {
@@ -275,7 +275,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "full_name": "Ada Okafor",
@@ -357,7 +357,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully"
+  "message": "string"
 }
 ```
 
@@ -413,7 +413,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully"
+  "message": "string"
 }
 ```
 
@@ -469,7 +469,7 @@ Requires the `admin` role. If `email` is omitted, the authenticated user's email
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully"
+  "message": "string"
 }
 ```
 
@@ -531,7 +531,7 @@ Available to all authenticated roles.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -614,7 +614,7 @@ avatar: string
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "profile_pic": "https://cdn.example.com/avatars/ada.jpg"
   }
@@ -673,7 +673,7 @@ Employees may only view their own profile.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "full_name": "Ada Okafor",
@@ -780,7 +780,7 @@ Employees and payroll officers may update only themselves; HR officers may updat
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "full_name": "Ada Okafor",
@@ -856,7 +856,7 @@ Requires the `admin` role. This is a soft delete that sets `is_active` to false.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "full_name": "Ada Okafor",
@@ -931,7 +931,7 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "full_name": "Ada Okafor",
@@ -1002,7 +1002,7 @@ Marks attendance for the authenticated user. Repeated calls alternate between ch
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "action": "checked_in",
     "record": {
@@ -1082,7 +1082,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -1162,7 +1162,7 @@ Defaults to the authenticated user when `employee_id` is omitted.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "present": "string",
     "absent": "string",
@@ -1227,7 +1227,7 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -1300,7 +1300,7 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -1373,7 +1373,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -1451,7 +1451,7 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "name": "Annual Leave",
@@ -1508,7 +1508,7 @@ The route is intended to use the authenticated user but currently passes a missi
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -1576,7 +1576,7 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -1661,7 +1661,7 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "employee_id": 0,
@@ -1742,7 +1742,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "employee_id": 0,
@@ -1812,7 +1812,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -1900,7 +1900,7 @@ Requires the `admin`, `hr_officer`, or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -1980,7 +1980,7 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "employee_id": 0,
@@ -2060,7 +2060,7 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "employee_id": 0,
@@ -2160,7 +2160,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "employee_id": 0,
     "basic_salary": 250000,
@@ -2223,7 +2223,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "employee_id": 0,
@@ -2294,7 +2294,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "employee_id": 0,
     "basic_salary": 250000,
@@ -2376,7 +2376,7 @@ Requires the `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "payrun_id": 0,
     "payslips_generated_count": 0
@@ -2431,7 +2431,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -2502,7 +2502,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -2581,7 +2581,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -2667,7 +2667,7 @@ Employees may only access their own payslips.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "payrun_id": 0,
@@ -2755,7 +2755,7 @@ Employees may only download their own payslips.
 ```json
 {
   "success": false,
-  "message": "Invalid request",
+  "message": "string",
   "error": "string",
   "hint": "string"
 }
@@ -2808,7 +2808,7 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {}
 }
 ```
@@ -2857,7 +2857,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {}
 }
 ```
@@ -2907,7 +2907,7 @@ Requires the `admin` or `hr_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {}
 }
 ```
@@ -2958,7 +2958,7 @@ Requires the `admin` or `payroll_officer` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {}
 }
 ```
@@ -3009,13 +3009,13 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
       "user_id": 0,
       "title": "Leave request approved",
-      "message": "Operation completed successfully",
+      "message": "string",
       "type": "string",
       "is_read": true,
       "created_at": "2019-08-24T14:15:22Z"
@@ -3073,12 +3073,12 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "id": 0,
     "user_id": 0,
     "title": "Leave request approved",
-    "message": "Operation completed successfully",
+    "message": "string",
     "type": "string",
     "is_read": true,
     "created_at": "2019-08-24T14:15:22Z"
@@ -3130,7 +3130,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully"
+  "message": "string"
 }
 ```
 
@@ -3171,7 +3171,7 @@ Accept: application/json
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "company_name": "EmPay Ltd",
     "company_email": "hr@example.com",
@@ -3246,7 +3246,7 @@ Requires the `admin` role. Each supplied key is stored as a setting.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {
     "company_name": "EmPay Ltd",
     "company_email": "hr@example.com",
@@ -3303,7 +3303,7 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": {}
 }
 ```
@@ -3362,7 +3362,7 @@ Queries shorter than two characters return an empty array.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "string",
   "data": [
     {
       "id": 0,
@@ -3447,7 +3447,7 @@ Requires the `admin` role.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully",
+  "message": "Audit logs fetched",
   "data": [
     {
       "id": 0,
@@ -3484,7 +3484,7 @@ Status Code **200**
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |» success|boolean|true|none|Indicates whether the request completed successfully.|
-|» message|string|true|none|Human-readable result or error message.|
+|» message|string|true|none|Message returned by the endpoint.|
 |» data|[[AuditLog](#schemaauditlog)]|true|none|Audit records for the current page.|
 |»» id|integer(int64)|false|none|Unique record identifier.|
 |»» user_id|integer|false|none|Identifier of the associated user.|
@@ -3552,7 +3552,7 @@ Access role assigned to a user.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully"
+  "message": "string"
 }
 
 ```
@@ -3562,7 +3562,7 @@ Access role assigned to a user.
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |success|boolean|true|none|Indicates whether the request completed successfully.|
-|message|string|false|none|Human-readable success message.|
+|message|string|false|none|Message returned by the endpoint.|
 
 #### Enumerated Values
 
@@ -3580,7 +3580,7 @@ Access role assigned to a user.
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully"
+  "message": "string"
 }
 
 ```
@@ -3590,7 +3590,7 @@ Access role assigned to a user.
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |success|boolean|true|none|Indicates whether the request completed successfully.|
-|message|string|true|none|Human-readable success message.|
+|message|string|true|none|Message returned by the endpoint.|
 
 #### Enumerated Values
 
@@ -3608,7 +3608,7 @@ Access role assigned to a user.
 ```json
 {
   "success": false,
-  "message": "Invalid request",
+  "message": "string",
   "error": "string",
   "hint": "string"
 }
@@ -3620,7 +3620,7 @@ Access role assigned to a user.
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |success|boolean|true|none|Indicates whether the request completed successfully.|
-|message|string|true|none|Human-readable error message.|
+|message|string|true|none|Message returned by the endpoint.|
 |error|string|false|none|Underlying error detail when available.|
 |hint|string|false|none|Suggested corrective action when available.|
 
@@ -3651,7 +3651,7 @@ Access role assigned to a user.
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |success|boolean|true|none|Indicates whether the request completed successfully.|
-|message|string|true|none|Human-readable health status.|
+|message|string|true|none|Message returned by the endpoint.|
 |timestamp|string(date-time)|true|none|Time at which the response was generated.|
 
 #### Enumerated Values
@@ -4199,7 +4199,7 @@ and
   "id": 0,
   "user_id": 0,
   "title": "Leave request approved",
-  "message": "Operation completed successfully",
+  "message": "string",
   "type": "string",
   "is_read": true,
   "created_at": "2019-08-24T14:15:22Z"
@@ -4214,7 +4214,7 @@ and
 |id|integer|false|none|Unique record identifier.|
 |user_id|integer|false|none|Identifier of the associated user.|
 |title|string|false|none|Notification title.|
-|message|string|false|none|Human-readable result or error message.|
+|message|string|false|none|Notification content.|
 |type|string|false|none|Category of the returned record.|
 |is_read|boolean|false|none|Whether the notification has been read.|
 |created_at|string(date-time)|false|none|Time at which the record was created.|
