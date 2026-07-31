@@ -15,6 +15,7 @@ import HRDashboard from './pages/hr/HRDashboard';
 import Employees from './pages/hr/Employees';
 import HRAttendance from './pages/hr/HRAttendance';
 import HRLeaves from './pages/hr/HRLeaves';
+import HRLeaveCalendar from './pages/hr/HRLeaveCalendar';
 import PayrollDashboard from './pages/payroll/PayrollDashboard';
 import LeaveApprovals from './pages/payroll/LeaveApprovals';
 import Payruns from './pages/payroll/Payruns';
@@ -82,6 +83,7 @@ function AppRoutes() {
         <Route path="hr/employees" element={<ProtectedRoute roles={['admin', 'hr_officer']}><Employees /></ProtectedRoute>} />
         <Route path="hr/attendance" element={<ProtectedRoute roles={['admin', 'hr_officer', 'payroll_officer']}><HRAttendance /></ProtectedRoute>} />
         <Route path="hr/leaves" element={<ProtectedRoute roles={['admin', 'hr_officer', 'payroll_officer']}><HRLeaves /></ProtectedRoute>} />
+        <Route path="hr/leave-calendar" element={<ProtectedRoute roles={['admin', 'hr_officer']}><HRLeaveCalendar /></ProtectedRoute>} />
         {/* Payroll */}
         <Route path="payroll/dashboard" element={<ProtectedRoute roles={['admin', 'payroll_officer']}><PayrollDashboard /></ProtectedRoute>} />
         <Route path="payroll/leaves" element={<ProtectedRoute roles={['admin', 'payroll_officer']}><LeaveApprovals /></ProtectedRoute>} />

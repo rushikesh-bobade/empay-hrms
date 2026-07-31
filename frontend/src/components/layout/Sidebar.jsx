@@ -3,7 +3,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useSidebar } from '../../context/SidebarContext';
 import UserAvatar from '../shared/UserAvatar';
 import {
-  LayoutDashboard, Users, CalendarCheck, CalendarOff, Banknote,
+  LayoutDashboard, Users, CalendarCheck, CalendarOff, CalendarRange,
+  Banknote,
   Settings, UserPlus, CheckSquare, Receipt, DollarSign,
   BookUser, LogOut, Building2, ChevronsLeft, ChevronsRight, ScrollText
 } from 'lucide-react';
@@ -14,6 +15,7 @@ const roleMenus = {
     { label: 'User Management', path: '/admin/users', icon: Users },
     { label: 'Attendance', path: '/hr/attendance', icon: CalendarCheck },
     { label: 'Leaves', path: '/hr/leaves', icon: CalendarOff },
+    { label: 'Leave Calendar', path: '/hr/leave-calendar', icon: CalendarRange },
     { label: 'Payroll', path: '/payroll/payruns', icon: Banknote },
     { label: 'Salary Structures', path: '/payroll/salary', icon: DollarSign },
     { label: 'Audit Logs', path: '/admin/audit-logs', icon: ScrollText },
@@ -24,6 +26,7 @@ const roleMenus = {
     { label: 'Employees', path: '/hr/employees', icon: UserPlus },
     { label: 'Attendance', path: '/hr/attendance', icon: CalendarCheck },
     { label: 'Leaves', path: '/hr/leaves', icon: CalendarOff },
+    { label: 'Leave Calendar', path: '/hr/leave-calendar', icon: CalendarRange },
   ],
   payroll_officer: [
     { label: 'Dashboard', path: '/payroll/dashboard', icon: LayoutDashboard },

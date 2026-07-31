@@ -3,3 +3,9 @@ node_modules/
 dist/
 uploads/
 *.log
+
+# Planning and review artifacts (not for production)
+.planning/
+**/*PLAN*.md
+**/*SUMMARY*.md
+**/*REVIEW*.md

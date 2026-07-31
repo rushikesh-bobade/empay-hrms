@@ -623,3 +623,125 @@ body {
 .theme-toggle-btn:hover .theme-toggle-icon {
   transform: rotate(15deg);
 }
+
+/* ═══════════════════════════════════════════════
+   REACT-BIG-CALENDAR THEME - Light + Dark
+   ═══════════════════════════════════════════════ */
+@import "react-big-calendar/lib/css/react-big-calendar.css";
+
+.rbc-calendar {
+  background: transparent;
+}
+
+.rbc-header {
+  color: var(--color-on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--table-border);
+}
+
+.rbc-header + .rbc-header {
+  border-left: 1px solid var(--table-border);
+}
+
+.rbc-month-view {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+}
+
+.rbc-day-bg + .rbc-day-bg {
+  border-left: 1px solid var(--table-border);
+}
+
+.rbc-month-row + .rbc-month-row {
+  border-top: 1px solid var(--table-border);
+}
+
+.rbc-off-range-bg {
+  background: var(--table-row-hover);
+}
+
+.rbc-today {
+  background: var(--sidebar-active-bg);
+}
+
+.rbc-date-cell {
+  padding: 4px;
+  font-size: 0.8rem;
+}
+
+.rbc-date-cell a {
+  color: var(--color-on-surface);
+}
+
+.rbc-button-link {
+  color: var(--color-on-surface);
+}
+
+.rbc-event {
+  background-color: transparent;
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+
+.rbc-event-label {
+  display: none;
+}
+
+.rbc-show-more {
+  color: var(--color-primary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: transparent;
+}
+
+.rbc-toolbar {
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+
+.rbc-toolbar button {
+  color: var(--color-on-surface);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rbc-toolbar button:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+}
+
+.rbc-toolbar button.rbc-active {
+  background: var(--sidebar-active-bg);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.rbc-toolbar-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+}
+
+/* dark mode specific overrides */
+.dark .rbc-month-view {
+  background: transparent;
+}
+
+.dark .rbc-day-bg {
+  background: transparent;
+}
+
+.dark .rbc-off-range-bg {
+  background: rgba(255,255,255,0.03);
+}
