@@ -36,18 +36,18 @@ export default function MyAttendance() {
     <div className="space-y-6">
       <PageHeader title="My Attendance" subtitle="Track your daily presence and history.">
         <div className="flex items-center gap-2">
-          <select value={month} onChange={e => setMonth(parseInt(e.target.value))} className="input-glass px-3 py-2 text-sm rounded-xl">
+          <select value={month} onChange={e => setMonth(parseInt(e.target.value, 10))} className="input-glass px-3 py-2 text-sm rounded-xl">
             {Array.from({ length: 12 }, (_, i) => <option key={i + 1} value={i + 1}>{new Date(2024, i).toLocaleString('default', { month: 'long' })}</option>)}
           </select>
-          <input type="number" value={year} onChange={e => setYear(parseInt(e.target.value))} className="input-glass w-24 px-3 py-2 text-sm rounded-xl" />
+          <input type="number" value={year} onChange={e => setYear(parseInt(e.target.value, 10))} className="input-glass w-24 px-3 py-2 text-sm rounded-xl" />
         </div>
       </PageHeader>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-        <StatCard title="Present" value={parseInt(summary.present) || 0} icon={CalendarCheck} color="success" />
-        <StatCard title="Absent" value={parseInt(summary.absent) || 0} icon={UserX} color="danger" />
-        <StatCard title="Half Day" value={parseInt(summary.half_day) || 0} icon={Clock} color="warning" />
-        <StatCard title="On Leave" value={parseInt(summary.on_leave) || 0} icon={CalendarOff} color="primary" />
+        <StatCard title="Present" value={parseInt(summary.present, 10) || 0} icon={CalendarCheck} color="success" />
+        <StatCard title="Absent" value={parseInt(summary.absent, 10) || 0} icon={UserX} color="danger" />
+        <StatCard title="Half Day" value={parseInt(summary.half_day, 10) || 0} icon={Clock} color="warning" />
+        <StatCard title="On Leave" value={parseInt(summary.on_leave, 10) || 0} icon={CalendarOff} color="primary" />
       </div>
 
       {/* Calendar Grid */}
