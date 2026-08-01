@@ -1,0 +1,2384 @@
+openapi: 3.0.3
+info:
+  title: EmPay HRMS API
+  version: 1.0.0
+  description: |
+    REST API contract derived from the Express routes, controllers, services, and
+    database schema. Protected operations require the `Authorization: Bearer <JWT>`
+    request header. Individual operation descriptions identify additional role
+    restrictions.
+  contact:
+    name: EmPay Support
+    email: support@empay.com
+servers:
+  - url: http://localhost:5000
+    description: Local development
+tags:
+  - name: Health
+  - name: Auth
+  - name: Users
+  - name: Attendance
+  - name: Leave
+  - name: Payroll
+  - name: Dashboard
+  - name: Notifications
+  - name: Settings
+  - name: Search
+  - name: Audit
+
+paths:
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Check API health
+      operationId: getHealth
+      responses:
+        '200':
+          description: API is running
+          content:
+            application/json:
+              example:
+                success: true
+                message: "EmPay API is running"
+                timestamp: "2026-08-01T09:00:00.000Z"
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /api/auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a user
+      description: Creates a user account with employee details and an assigned role; requires the `admin` or `hr_officer` role.
+      operationId: registerUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            example:
+              full_name: Ada Okafor
+              email: ada@example.com
+              password: Password@123
+              role: employee
+              department: Engineering
+              designation: Software Engineer
+              phone: '+234 800 000 0000'
+      responses:
+        '201':
+          description: User registered
+          content:
+            application/json:
+              example:
+                success: true
+                message: "User registered successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Log in
+      description: Authenticates an active user with an email address and password and returns a signed access token with the user profile.
+      operationId: login
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: employee@example.com
+              password: Password@123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Login successful"
+                data:
+                  token: "string"
+                  user:
+                    id: 1
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    role: "admin"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    phone: "+234 800 000 0000"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                    date_joined: "2026-01-15"
+                    is_active: true
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    updated_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        required: [token, user]
+                        properties:
+                          token: { type: string, description: Signed JWT }
+                          user: { $ref: '#/components/schemas/User' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/auth/me:
+    get:
+      tags: [Auth]
+      summary: Get the authenticated user's profile
+      description: Returns the profile associated with the authenticated user's access token.
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Profile fetched successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/User' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/auth/forgot-password:
+    post:
+      tags: [Auth]
+      summary: Request a password reset
+      description: Sends a password-reset link when the supplied email belongs to an account while returning the same response when no account exists.
+      operationId: forgotPassword
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+            example:
+              email: employee@example.com
+      responses:
+        '200':
+          description: Generic success response, whether or not the account exists
+          content:
+            application/json:
+              example:
+                success: true
+                message: "If an account exists, a reset link has been sent"
+              schema: { $ref: '#/components/schemas/MessageResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/auth/reset-password:
+    post:
+      tags: [Auth]
+      summary: Reset a password
+      description: Replaces the account password when supplied with a valid, unexpired password-reset token.
+      operationId: resetPassword
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, newPassword]
+              properties:
+                token: { type: string, description: "Password-reset token received by email.", example: "reset-token-from-email" }
+                newPassword: { type: string, format: password, description: "New password to assign to the account.", example: "NewPassword@123" }
+            example:
+              token: reset-token-from-email
+              newPassword: NewPassword@123
+      responses:
+        '200':
+          description: Password reset
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Password reset successfully"
+              schema: { $ref: '#/components/schemas/MessageResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/auth/test-email:
+    post:
+      tags: [Auth]
+      summary: Send an SMTP test email
+      description: Sends a test email to verify SMTP configuration; requires the `admin` role and defaults to the authenticated user's email when `email` is omitted.
+      operationId: testEmail
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+            example:
+              email: admin@example.com
+      responses:
+        '200':
+          description: Test email sent
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Test email sent successfully! Check your inbox."
+              schema: { $ref: '#/components/schemas/MessageResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/users:
+    get:
+      tags: [Users]
+      summary: List users
+      description: Returns users matching the optional role, department, name, email, and active-status filters; available to all authenticated roles.
+      operationId: listUsers
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RoleQuery'
+        - $ref: '#/components/parameters/DepartmentQuery'
+        - $ref: '#/components/parameters/SearchQuery'
+        - name: is_active
+          in: query
+          schema: { type: boolean }
+          description: Filter by active status.
+      responses:
+        '200':
+          description: Users fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Users fetched successfully"
+                data:
+                  - id: 1
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    role: "admin"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    phone: "+234 800 000 0000"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                    date_joined: "2026-01-15"
+                    is_active: true
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    updated_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/User' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/users/me/avatar:
+    post:
+      tags: [Users]
+      summary: Upload the authenticated user's avatar
+      description: Uploads an image and stores its URL as the authenticated user's profile picture.
+      operationId: uploadAvatar
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [avatar]
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                  description: JPG, JPEG, PNG, or WebP image, maximum 5 MB.
+      responses:
+        '200':
+          description: Profile picture updated
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Profile picture updated"
+                data:
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          profile_pic: { type: string, format: uri, nullable: true, description: "Profile-picture URL.", example: "https://cdn.example.com/avatars/ada.jpg" }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/users/{id}:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+    get:
+      tags: [Users]
+      summary: Get a user
+      description: Returns a user profile by ID, while employees may access only their own profile.
+      operationId: getUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "User fetched successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/User' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+    put:
+      tags: [Users]
+      summary: Update a user
+      description: Updates permitted profile fields according to the authenticated user's role; only admins may change another user's role or password.
+      operationId: updateUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateUserRequest' }
+            example:
+              full_name: Ada Okafor
+              department: Engineering
+              designation: Senior Software Engineer
+              phone: '+234 800 000 0000'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              example:
+                success: true
+                message: "User updated successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/User' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+    delete:
+      tags: [Users]
+      summary: Deactivate a user
+      description: Deactivates a user without deleting the database record by setting `is_active` to false; requires the `admin` role.
+      operationId: deleteUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User deactivated
+          content:
+            application/json:
+              example:
+                success: true
+                message: "User deactivated successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/User' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/users/{id}/toggle-active:
+    patch:
+      tags: [Users]
+      summary: Toggle a user's active status
+      description: Switches a user between active and inactive states; requires the `admin` role.
+      operationId: toggleUserActive
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User status toggled
+          content:
+            application/json:
+              example:
+                success: true
+                message: "User activated successfully"
+                data:
+                  id: 1
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  role: "admin"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  phone: "+234 800 000 0000"
+                  profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                  date_joined: "2026-01-15"
+                  is_active: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  updated_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/User' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/attendance/mark:
+    post:
+      tags: [Attendance]
+      summary: Check in or check out
+      description: Records a check-in or check-out for the authenticated user according to their attendance state for the current day.
+      operationId: markAttendance
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Attendance marked
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Successfully checked in"
+                data:
+                  action: "checked_in"
+                  record:
+                    id: 1
+                    employee_id: 1
+                    date: "2026-07-31"
+                    check_in: "09:00:00"
+                    check_out: "17:00:00"
+                    accumulated_minutes: 0
+                    duration_minutes: null
+                    status: "present"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          action: { type: string, enum: [checked_in, checked_out], description: "Attendance action performed by this request.", example: "checked_in" }
+                          record: { $ref: '#/components/schemas/AttendanceRecord' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/attendance/my:
+    get:
+      tags: [Attendance]
+      summary: Get the authenticated user's monthly attendance
+      description: Returns the authenticated user's attendance records for the requested month and year.
+      operationId: getMyAttendance
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MonthQuery'
+        - $ref: '#/components/parameters/YearQuery'
+      responses:
+        '200':
+          description: Attendance fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Attendance fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    date: "2026-07-31"
+                    check_in: "09:00:00"
+                    check_out: "17:00:00"
+                    accumulated_minutes: 0
+                    duration_minutes: null
+                    status: "present"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AttendanceRecord' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/attendance/monthly-summary:
+    get:
+      tags: [Attendance]
+      summary: Get a monthly attendance summary
+      description: Returns monthly attendance totals for the selected employee, defaulting to the authenticated user when `employee_id` is omitted.
+      operationId: getMonthlyAttendanceSummary
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EmployeeIdQuery'
+        - $ref: '#/components/parameters/MonthQuery'
+        - $ref: '#/components/parameters/YearQuery'
+      responses:
+        '200':
+          description: Summary fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Summary fetched"
+                data:
+                  present: "string"
+                  absent: "string"
+                  half_day: "string"
+                  on_leave: "string"
+                  total_working_days: "string"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AttendanceSummary' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/attendance/all:
+    get:
+      tags: [Attendance]
+      summary: List monthly attendance for all employees
+      description: Returns employee attendance for a month with optional department and employee filters; requires an administrative, HR, or payroll role.
+      operationId: listAllAttendance
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MonthQuery'
+        - $ref: '#/components/parameters/YearQuery'
+        - $ref: '#/components/parameters/DepartmentQuery'
+        - $ref: '#/components/parameters/EmployeeIdQuery'
+      responses:
+        '200':
+          description: Attendance fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "All attendance fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    date: "2026-07-31"
+                    check_in: "09:00:00"
+                    check_out: "17:00:00"
+                    accumulated_minutes: 0
+                    duration_minutes: null
+                    status: "present"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AttendanceRecord' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/attendance/today:
+    get:
+      tags: [Attendance]
+      summary: List today's attendance
+      description: Returns attendance records for the current day; requires an administrative, HR, or payroll role.
+      operationId: getTodayAttendance
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Today's attendance fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Today attendance fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    date: "2026-07-31"
+                    check_in: "09:00:00"
+                    check_out: "17:00:00"
+                    accumulated_minutes: 0
+                    duration_minutes: null
+                    status: "present"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AttendanceRecord' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/types:
+    get:
+      tags: [Leave]
+      summary: List leave types
+      description: Returns the configured leave categories and their default annual day allowances.
+      operationId: listLeaveTypes
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Leave types fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Leave types fetched"
+                data:
+                  - id: 1
+                    name: "Annual Leave"
+                    description: "Paid annual leave"
+                    max_days_per_year: 0
+                    is_paid: true
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/LeaveType' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+    post:
+      tags: [Leave]
+      summary: Create a leave type
+      description: Creates a leave category with its default annual allowance; requires the `admin` role.
+      operationId: createLeaveType
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, max_days_per_year]
+              properties:
+                name: { type: string, minLength: 2, description: "Display name.", example: "Annual Leave" }
+                description: { type: string, nullable: true, description: "Additional explanatory text.", example: "Paid annual leave" }
+                max_days_per_year: { type: integer, minimum: 0, maximum: 365, description: "Maximum leave days allowed per year." }
+            example:
+              name: Annual Leave
+              description: Paid annual leave
+              max_days_per_year: 20
+      responses:
+        '201':
+          description: Leave type created
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Leave type created"
+                data:
+                  id: 1
+                  name: "Annual Leave"
+                  description: "Paid annual leave"
+                  max_days_per_year: 0
+                  is_paid: true
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/LeaveType' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/allocation/my:
+    get:
+      tags: [Leave]
+      summary: Get the authenticated user's leave allocations
+      description: Returns leave allocations intended for the authenticated user; the current route passes a missing employee parameter to the service.
+      operationId: getMyLeaveAllocations
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Allocations fetched when the route implementation is corrected
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Allocations fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    leave_type_id: 1
+                    allocated_days: 0
+                    used_days: 0
+                    year: 2026
+                    name: "Annual Leave"
+                    max_days_per_year: 0
+                    remaining: 0
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/LeaveAllocation' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/allocation/{employee_id}:
+    get:
+      tags: [Leave]
+      summary: Get an employee's leave allocations
+      description: Returns leave balances allocated to the selected employee; requires the `admin` or `hr_officer` role.
+      operationId: getEmployeeLeaveAllocations
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EmployeeIdPath'
+      responses:
+        '200':
+          description: Allocations fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Allocations fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    leave_type_id: 1
+                    allocated_days: 0
+                    used_days: 0
+                    year: 2026
+                    name: "Annual Leave"
+                    max_days_per_year: 0
+                    remaining: 0
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/LeaveAllocation' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/allocation:
+    post:
+      tags: [Leave]
+      summary: Create or update a leave allocation
+      description: Creates or updates an employee's yearly allocation for a leave type; requires the `admin` or `hr_officer` role.
+      operationId: upsertLeaveAllocation
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [employee_id, leave_type_id, allocated_days]
+              properties:
+                employee_id: { type: integer, description: "Identifier of the employee." }
+                leave_type_id: { type: integer, description: "Identifier of the leave type." }
+                allocated_days: { type: integer, minimum: 0, description: "Number of leave days allocated." }
+                year: { type: integer, minimum: 2000, description: "Calendar year.", example: 2026 }
+            example:
+              employee_id: 42
+              leave_type_id: 1
+              allocated_days: 20
+              year: 2026
+      responses:
+        '200':
+          description: Allocation saved
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Allocation saved"
+                data:
+                  id: 1
+                  employee_id: 1
+                  leave_type_id: 1
+                  allocated_days: 0
+                  used_days: 0
+                  year: 2026
+                  name: "Annual Leave"
+                  max_days_per_year: 0
+                  remaining: 0
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/LeaveAllocation' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/request:
+    post:
+      tags: [Leave]
+      summary: Submit a leave request
+      description: Submits a dated leave request for the authenticated employee after validating the date range and available balance.
+      operationId: createLeaveRequest
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [leave_type_id, start_date, end_date]
+              properties:
+                leave_type_id: { type: integer, description: "Identifier of the leave type." }
+                start_date: { type: string, format: date, description: "First date of the leave period.", example: "2026-08-10" }
+                end_date: { type: string, format: date, description: "Last date of the leave period.", example: "2026-08-14" }
+                reason: { type: string, minLength: 5, nullable: true, description: "Reason supplied for the leave request.", example: "Family event" }
+            example:
+              leave_type_id: 1
+              start_date: '2026-08-10'
+              end_date: '2026-08-14'
+              reason: Family event
+      responses:
+        '201':
+          description: Leave request submitted
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Leave request submitted"
+                data:
+                  id: 1
+                  employee_id: 1
+                  leave_type_id: 1
+                  start_date: "2026-08-10"
+                  end_date: "2026-08-14"
+                  total_days: 0
+                  reason: "Family event"
+                  status: "pending"
+                  reviewed_by: null
+                  reviewed_at: null
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  leave_type_name: "string"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  reviewer_name: null
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/LeaveRequest' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/requests/my:
+    get:
+      tags: [Leave]
+      summary: List the authenticated user's leave requests
+      description: Returns leave requests submitted by the authenticated employee.
+      operationId: listMyLeaveRequests
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Requests fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Requests fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    leave_type_id: 1
+                    start_date: "2026-08-10"
+                    end_date: "2026-08-14"
+                    total_days: 0
+                    reason: "Family event"
+                    status: "pending"
+                    reviewed_by: null
+                    reviewed_at: null
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    leave_type_name: "string"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    reviewer_name: null
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/LeaveRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/requests/all:
+    get:
+      tags: [Leave]
+      summary: List all leave requests
+      description: Returns leave requests across employees with optional status, department, and date filters; requires an administrative, HR, or payroll role.
+      operationId: listAllLeaveRequests
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          description: Filter requests by their review status.
+          schema: { type: string, enum: [pending, approved, rejected] }
+        - $ref: '#/components/parameters/EmployeeIdQuery'
+      responses:
+        '200':
+          description: Requests fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "All requests fetched"
+                data:
+                  - id: 1
+                    employee_id: 1
+                    leave_type_id: 1
+                    start_date: "2026-08-10"
+                    end_date: "2026-08-14"
+                    total_days: 0
+                    reason: "Family event"
+                    status: "pending"
+                    reviewed_by: null
+                    reviewed_at: null
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    leave_type_name: "string"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    reviewer_name: null
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/LeaveRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/requests/{id}/approve:
+    patch:
+      tags: [Leave]
+      summary: Approve a leave request
+      description: Approves a pending leave request and records the payroll officer who reviewed it; requires the `payroll_officer` role.
+      operationId: approveLeaveRequest
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Leave approved
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Leave approved"
+                data:
+                  id: 1
+                  employee_id: 1
+                  leave_type_id: 1
+                  start_date: "2026-08-10"
+                  end_date: "2026-08-14"
+                  total_days: 0
+                  reason: "Family event"
+                  status: "pending"
+                  reviewed_by: null
+                  reviewed_at: null
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  leave_type_name: "string"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  reviewer_name: null
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/LeaveRequest' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/leave/requests/{id}/reject:
+    patch:
+      tags: [Leave]
+      summary: Reject a leave request
+      description: Rejects a pending leave request with an optional reason and records the reviewer; requires the `payroll_officer` role.
+      operationId: rejectLeaveRequest
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Leave rejected
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Leave rejected"
+                data:
+                  id: 1
+                  employee_id: 1
+                  leave_type_id: 1
+                  start_date: "2026-08-10"
+                  end_date: "2026-08-14"
+                  total_days: 0
+                  reason: "Family event"
+                  status: "pending"
+                  reviewed_by: null
+                  reviewed_at: null
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  leave_type_name: "string"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  reviewer_name: null
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/LeaveRequest' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/payroll/salary-structure:
+    post:
+      tags: [Payroll]
+      summary: Create or update a salary structure
+      description: Creates or updates an employee's salary components and effective date; requires the `admin` or `payroll_officer` role.
+      operationId: upsertSalaryStructure
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryStructureRequest'
+            example:
+              employee_id: 42
+              basic_salary: 250000
+              hra_percent: 40
+              special_allowance: 25000
+              effective_from: '2026-08-01'
+      responses:
+        '200':
+          description: Salary structure saved
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Salary structure saved"
+                data:
+                  employee_id: 1
+                  basic_salary: 250000
+                  hra_percent: 0
+                  special_allowance: 0
+                  effective_from: "2026-08-01"
+                  id: 1
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/SalaryStructure' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+    get:
+      tags: [Payroll]
+      summary: List salary structures
+      description: Returns salary structures for all employees; requires the `admin` or `payroll_officer` role.
+      operationId: listSalaryStructures
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Salary structures fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Salary structures fetched"
+                data:
+                  - employee_id: 1
+                    basic_salary: 250000
+                    hra_percent: 0
+                    special_allowance: 0
+                    effective_from: "2026-08-01"
+                    id: 1
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/SalaryStructure' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/payroll/salary-structure/{employee_id}:
+    get:
+      tags: [Payroll]
+      summary: Get an employee's salary structure
+      description: Returns the salary structure assigned to the selected employee; requires the `admin` or `payroll_officer` role.
+      operationId: getSalaryStructure
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EmployeeIdPath'
+      responses:
+        '200':
+          description: Salary structure fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Salary structure fetched"
+                data:
+                  employee_id: 1
+                  basic_salary: 250000
+                  hra_percent: 0
+                  special_allowance: 0
+                  effective_from: "2026-08-01"
+                  id: 1
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/SalaryStructure' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/payroll/payrun/generate:
+    post:
+      tags: [Payroll]
+      summary: Generate or regenerate a pay run
+      description: Generates or recalculates the pay run and employee payslips for the supplied month and year; requires the `payroll_officer` role.
+      operationId: generatePayrun
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [month, year]
+              properties:
+                month: { type: integer, minimum: 1, maximum: 12, description: "Calendar month number from 1 to 12.", example: 7 }
+                year: { type: integer, minimum: 2000, description: "Calendar year.", example: 2026 }
+            example:
+              month: 7
+              year: 2026
+      responses:
+        '200':
+          description: Pay run generated
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Payrun generated successfully"
+                data:
+                  payrun_id: 1
+                  payslips_generated_count: 0
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          payrun_id: { type: integer, description: "Identifier of the pay run." }
+                          payslips_generated_count: { type: integer, description: "Number of payslips produced by the pay run." }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/payroll/payruns:
+    get:
+      tags: [Payroll]
+      summary: List pay runs
+      description: Returns generated pay runs ordered by payroll period; requires the `admin` or `payroll_officer` role.
+      operationId: listPayruns
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Pay runs fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Payruns fetched"
+                data:
+                  - id: 1
+                    month: 7
+                    year: 2026
+                    status: "draft"
+                    generated_by: null
+                    generated_at: "2026-08-01T09:00:00.000Z"
+                    generated_by_name: null
+                    total_cost: null
+                    employee_count: "string"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Payrun' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/payroll/payruns/{id}/payslips:
+    get:
+      tags: [Payroll]
+      summary: List payslips in a pay run
+      description: Returns all employee payslips generated for the selected pay run; requires the `admin` or `payroll_officer` role.
+      operationId: listPayrunPayslips
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Payslips fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Payslips fetched"
+                data:
+                  - id: 1
+                    payrun_id: 1
+                    employee_id: 1
+                    working_days: 0
+                    present_days: "string"
+                    leaves_approved: 0
+                    unpaid_leave_days: 1
+                    unpaid_deduction: "string"
+                    basic: "string"
+                    hra: "string"
+                    special_allowance: "string"
+                    gross_salary: "string"
+                    pf_employee: "string"
+                    pf_employer: "string"
+                    professional_tax: "string"
+                    total_deductions: "string"
+                    net_pay: "string"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    month: 7
+                    year: 2026
+                    payrun_status: "string"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    date_joined: "2026-01-15"
+                    user_id: 1
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Payslip' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/payroll/payslips/my:
+    get:
+      tags: [Payroll]
+      summary: List the authenticated user's payslips
+      description: Returns payslips belonging to the authenticated employee.
+      operationId: listMyPayslips
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Payslips fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Payslips fetched"
+                data:
+                  - id: 1
+                    payrun_id: 1
+                    employee_id: 1
+                    working_days: 0
+                    present_days: "string"
+                    leaves_approved: 0
+                    unpaid_leave_days: 1
+                    unpaid_deduction: "string"
+                    basic: "string"
+                    hra: "string"
+                    special_allowance: "string"
+                    gross_salary: "string"
+                    pf_employee: "string"
+                    pf_employer: "string"
+                    professional_tax: "string"
+                    total_deductions: "string"
+                    net_pay: "string"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    month: 7
+                    year: 2026
+                    payrun_status: "string"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    date_joined: "2026-01-15"
+                    user_id: 1
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Payslip' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/payroll/payslips/{id}:
+    get:
+      tags: [Payroll]
+      summary: Get a payslip
+      description: Returns one payslip by ID, while employees may access only their own payslips.
+      operationId: getPayslip
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Payslip fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Payslip fetched"
+                data:
+                  id: 1
+                  payrun_id: 1
+                  employee_id: 1
+                  working_days: 0
+                  present_days: "string"
+                  leaves_approved: 0
+                  unpaid_leave_days: 1
+                  unpaid_deduction: "string"
+                  basic: "string"
+                  hra: "string"
+                  special_allowance: "string"
+                  gross_salary: "string"
+                  pf_employee: "string"
+                  pf_employer: "string"
+                  professional_tax: "string"
+                  total_deductions: "string"
+                  net_pay: "string"
+                  created_at: "2026-08-01T09:00:00.000Z"
+                  month: 7
+                  year: 2026
+                  payrun_status: "string"
+                  full_name: "Ada Okafor"
+                  email: "ada@example.com"
+                  department: "Engineering"
+                  designation: "Software Engineer"
+                  date_joined: "2026-01-15"
+                  user_id: 1
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Payslip' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/payroll/payslips/{id}/pdf:
+    get:
+      tags: [Payroll]
+      summary: Download a payslip PDF
+      description: Generates and downloads a payslip as a PDF file, while employees may download only their own payslips.
+      operationId: downloadPayslipPdf
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Payslip PDF
+          headers:
+            Content-Disposition:
+              schema: { type: string }
+              description: Attachment filename.
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/dashboard/admin:
+    get:
+      tags: [Dashboard]
+      summary: Get the admin dashboard
+      description: Returns organization-wide workforce, attendance, leave, payroll, and recent-activity metrics; requires the `admin` role.
+      operationId: getAdminDashboard
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Admin dashboard data fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: Admin dashboard data fetched
+                data: {}
+              schema: { $ref: '#/components/schemas/DashboardResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/dashboard/employee:
+    get:
+      tags: [Dashboard]
+      summary: Get the authenticated employee dashboard
+      description: Returns personal attendance, leave, payslip, notification, and profile information for the authenticated employee.
+      operationId: getEmployeeDashboard
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Employee dashboard data fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: Employee dashboard data fetched
+                data: {}
+              schema: { $ref: '#/components/schemas/DashboardResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/dashboard/hr:
+    get:
+      tags: [Dashboard]
+      summary: Get the HR dashboard
+      description: Returns workforce, attendance, leave, and recent-joiner metrics for HR operations; requires the `admin` or `hr_officer` role.
+      operationId: getHrDashboard
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: HR dashboard data fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: HR dashboard data fetched
+                data: {}
+              schema: { $ref: '#/components/schemas/DashboardResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/dashboard/payroll:
+    get:
+      tags: [Dashboard]
+      summary: Get the payroll dashboard
+      description: Returns payroll totals, pay-run status, salary coverage, and recent payslip metrics; requires the `admin` or `payroll_officer` role.
+      operationId: getPayrollDashboard
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Payroll dashboard data fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: Payroll dashboard data fetched
+                data: {}
+              schema: { $ref: '#/components/schemas/DashboardResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/notifications:
+    get:
+      tags: [Notifications]
+      summary: List the authenticated user's notifications
+      description: Returns notifications addressed to the authenticated user, including their read status.
+      operationId: listNotifications
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Notifications fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Notifications fetched"
+                data:
+                  - id: 1
+                    user_id: 1
+                    title: "Leave request approved"
+                    message: "Today's attendance summary is available"
+                    type: "string"
+                    is_read: true
+                    created_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Notification' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/notifications/{id}/read:
+    put:
+      tags: [Notifications]
+      summary: Mark a notification as read
+      description: Marks one notification belonging to the authenticated user as read.
+      operationId: markNotificationRead
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Notification marked as read
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Notification marked as read"
+                data:
+                  id: 1
+                  user_id: 1
+                  title: "Leave request approved"
+                  message: "Today's attendance summary is available"
+                  type: "string"
+                  is_read: true
+                  created_at: "2026-08-01T09:00:00.000Z"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Notification' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/notifications/read-all:
+    put:
+      tags: [Notifications]
+      summary: Mark all notifications as read
+      description: Marks every unread notification belonging to the authenticated user as read.
+      operationId: markAllNotificationsRead
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: All notifications marked as read
+          content:
+            application/json:
+              example:
+                success: true
+                message: "All notifications marked as read"
+              schema: { $ref: '#/components/schemas/MessageResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/settings:
+    get:
+      tags: [Settings]
+      summary: Get application settings
+      description: Returns the current application settings as key-value pairs.
+      operationId: getSettings
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Settings fetched
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  company_name: "EmPay Ltd"
+                  company_email: "hr@example.com"
+                  timezone: "Africa/Lagos"
+                  work_start_time: "09:00"
+                  work_end_time: "17:00"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Settings' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+    put:
+      tags: [Settings]
+      summary: Update application settings
+      description: Stores each supplied key as an application setting; requires the `admin` role.
+      operationId: updateSettings
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        description: Payload supplied to this operation.
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Settings' }
+            example:
+              company_name: EmPay Ltd
+              company_email: hr@example.com
+              timezone: Africa/Lagos
+              work_start_time: '09:00'
+              work_end_time: '17:00'
+      responses:
+        '200':
+          description: Settings updated
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Settings updated successfully"
+                data:
+                  company_name: "EmPay Ltd"
+                  company_email: "hr@example.com"
+                  timezone: "Africa/Lagos"
+                  work_start_time: "09:00"
+                  work_end_time: "17:00"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Settings' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/settings/db-stats:
+    get:
+      tags: [Settings]
+      summary: Get database statistics
+      description: Returns database size, connection, and table statistics; requires the `admin` role.
+      operationId: getDatabaseStats
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Database statistics fetched
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  {}
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        additionalProperties: true
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/search:
+    get:
+      tags: [Search]
+      summary: Search users
+      description: Searches users by name or email and returns no matches when the query is shorter than two characters.
+      operationId: searchUsers
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+          description: Search text matched against name, email, department, and designation.
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - id: 1
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                    role: "admin"
+                    department: "Engineering"
+                    designation: "Software Engineer"
+                    phone: "+234 800 000 0000"
+                    profile_pic: "https://cdn.example.com/avatars/ada.jpg"
+                    date_joined: "2026-01-15"
+                    is_active: true
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    updated_at: "2026-08-01T09:00:00.000Z"
+                    type: "user"
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          allOf:
+                            - $ref: '#/components/schemas/User'
+                            - type: object
+                              properties:
+                                type: { type: string, enum: [user], description: "Category of the returned record." }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /api/admin/audit-logs:
+    get:
+      tags: [Audit]
+      summary: List audit logs
+      description: Returns paginated audit events with optional action, entity, user, and date filters; requires the `admin` role.
+      operationId: listAuditLogs
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: user_id
+          in: query
+          description: Filter audit records by the acting user's identifier.
+          schema: { type: integer }
+        - name: action
+          in: query
+          description: Filter by an exact audited action name.
+          schema: { type: string }
+        - name: target_type
+          in: query
+          description: Filter by the affected resource type.
+          schema: { type: string }
+        - name: start_date
+          in: query
+          description: Include records created on or after this date.
+          schema: { type: string, format: date }
+        - name: end_date
+          in: query
+          description: Include records created on or before this date.
+          schema: { type: string, format: date }
+        - name: page
+          in: query
+          description: One-based results page number.
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          description: Maximum number of records returned per page.
+          schema: { type: integer, minimum: 1, maximum: 50, default: 20 }
+      responses:
+        '200':
+          description: Audit logs fetched
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Audit logs fetched"
+                data:
+                  - id: 1
+                    user_id: 1
+                    action: "LEAVE_APPROVED"
+                    target_id: 1
+                    target_type: "LEAVE_REQUEST"
+                    metadata:
+                      {}
+                    ip_address: "203.0.113.10"
+                    created_at: "2026-08-01T09:00:00.000Z"
+                    full_name: "Ada Okafor"
+                    email: "ada@example.com"
+                total: 0
+                page: 0
+                totalPages: 0
+              schema:
+                type: object
+                required: [success, message, data, total, page, totalPages]
+                properties:
+                  success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
+                  message: { type: string, description: "Message returned by the endpoint.", example: "Audit logs fetched" }
+                  data:
+                    description: Audit records for the current page.
+                    type: array
+                    items: { $ref: '#/components/schemas/AuditLog' }
+                  total: { type: integer, description: "Total number of matching records." }
+                  page: { type: integer, description: "Current results page." }
+                  totalPages: { type: integer, description: "Total number of available pages." }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier of the requested resource.
+      schema: { type: integer }
+    UserId:
+      name: id
+      in: path
+      required: true
+      description: Unique integer identifier of the user.
+      schema: { type: integer }
+    EmployeeIdPath:
+      name: employee_id
+      in: path
+      required: true
+      description: Unique integer identifier of the employee.
+      schema: { type: integer }
+    EmployeeIdQuery:
+      name: employee_id
+      in: query
+      required: false
+      description: Filter results to the specified employee.
+      schema: { type: integer }
+    MonthQuery:
+      name: month
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 12 }
+      description: Defaults to the current month.
+    YearQuery:
+      name: year
+      in: query
+      schema: { type: integer, minimum: 2000 }
+      description: Defaults to the current year.
+    RoleQuery:
+      name: role
+      in: query
+      description: Filter users by their assigned access role.
+      schema: { $ref: '#/components/schemas/UserRole' }
+    DepartmentQuery:
+      name: department
+      in: query
+      description: Filter results by a partial department-name match.
+      schema: { type: string }
+    SearchQuery:
+      name: search
+      in: query
+      description: Search users by partial full-name or email match.
+      schema: { type: string }
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    Unauthorized:
+      description: Missing, expired, or invalid bearer token, or invalid login credentials
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    Forbidden:
+      description: Authenticated user lacks permission
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+  schemas:
+    UserRole:
+      type: string
+      description: Access role assigned to a user.
+      enum: [admin, hr_officer, employee, payroll_officer]
+    SuccessResponse:
+      type: object
+      required: [success]
+      properties:
+        success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
+        message: { type: string, description: "Message returned by the endpoint." }
+    MessageResponse:
+      type: object
+      required: [success, message]
+      properties:
+        success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
+        message: { type: string, description: "Message returned by the endpoint." }
+    ErrorResponse:
+      type: object
+      required: [success, message]
+      properties:
+        success: { type: boolean, enum: [false], description: "Indicates whether the request completed successfully." }
+        message: { type: string, description: "Message returned by the endpoint." }
+        error: { type: string, description: "Underlying error detail when available." }
+        hint: { type: string, description: "Suggested corrective action when available." }
+    HealthResponse:
+      type: object
+      required: [success, message, timestamp]
+      properties:
+        success: { type: boolean, enum: [true], description: "Indicates whether the request completed successfully." }
+        message: { type: string, description: "Message returned by the endpoint.", example: "EmPay API is running" }
+        timestamp: { type: string, format: date-time, description: "Time at which the response was generated." }
+    DashboardResponse:
+      type: object
+      required: [success, message, data]
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+          description: Indicates whether the request completed successfully.
+        message:
+          type: string
+          description: Message returned by the endpoint.
+        data:
+          type: object
+          description: Dashboard metrics and recent activity for the authenticated role.
+          additionalProperties: true
+    User:
+      type: object
+      properties:
+        id: { type: integer, description: "Unique record identifier." }
+        full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        role: { $ref: '#/components/schemas/UserRole' }
+        department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+        phone: { type: string, nullable: true, description: "Contact telephone number.", example: "+234 800 000 0000" }
+        profile_pic: { type: string, nullable: true, description: "Profile-picture URL.", example: "https://cdn.example.com/avatars/ada.jpg" }
+        date_joined: { type: string, format: date, description: "Date the employee joined the organization.", example: "2026-01-15" }
+        is_active: { type: boolean, description: "Whether the user account is active." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        updated_at: { type: string, format: date-time, description: "Time at which the record was last updated." }
+    RegisterRequest:
+      type: object
+      required: [full_name, email, password, role]
+      properties:
+        full_name: { type: string, minLength: 2, maxLength: 100, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, maxLength: 150, description: "Email address of the user.", example: "ada@example.com" }
+        password: { type: string, format: password, description: "Plain-text password submitted for authentication or account setup.", example: "Password@123" }
+        role: { $ref: '#/components/schemas/UserRole' }
+        department: { type: string, nullable: true, minLength: 2, maxLength: 100, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, minLength: 2, maxLength: 100, description: "Employee job title.", example: "Software Engineer" }
+        phone: { type: string, nullable: true, maxLength: 20, description: "Contact telephone number.", example: "+234 800 000 0000" }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        password: { type: string, format: password, description: "Plain-text password submitted for authentication or account setup.", example: "Password@123" }
+    UpdateUserRequest:
+      type: object
+      minProperties: 1
+      properties:
+        full_name: { type: string, minLength: 2, maxLength: 100, description: "Full name of the user.", example: "Ada Okafor" }
+        department: { type: string, minLength: 2, maxLength: 100, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, minLength: 2, maxLength: 100, description: "Employee job title.", example: "Software Engineer" }
+        phone: { type: string, maxLength: 20, description: "Contact telephone number.", example: "+234 800 000 0000" }
+        profile_pic: { type: string, description: "Profile-picture URL.", example: "https://cdn.example.com/avatars/ada.jpg" }
+        role: { $ref: '#/components/schemas/UserRole' }
+        password: { type: string, format: password, description: "Plain-text password submitted for authentication or account setup.", example: "Password@123" }
+    AttendanceRecord:
+      type: object
+      properties:
+        id: { type: integer, description: "Unique record identifier." }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        date: { type: string, format: date, description: "Calendar date of the attendance record.", example: "2026-07-31" }
+        check_in: { type: string, nullable: true, description: "Most recent check-in time.", example: "09:00:00" }
+        check_out: { type: string, nullable: true, description: "Most recent check-out time.", example: "17:00:00" }
+        accumulated_minutes: { type: integer, description: "Minutes accumulated during earlier attendance sessions that day." }
+        duration_minutes: { type: integer, nullable: true, description: "Total calculated attendance duration in minutes." }
+        status: { type: string, enum: [present, absent, half_day, on_leave, unpaid_leave], description: "Current status of the record." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+        profile_pic: { type: string, nullable: true, description: "Profile-picture URL.", example: "https://cdn.example.com/avatars/ada.jpg" }
+    AttendanceSummary:
+      type: object
+      properties:
+        present: { type: string, description: PostgreSQL count value }
+        absent: { type: string, description: PostgreSQL count value }
+        half_day: { type: string, description: PostgreSQL count value }
+        on_leave: { type: string, description: PostgreSQL count value }
+        total_working_days: { type: string, description: PostgreSQL count value }
+    LeaveType:
+      type: object
+      properties:
+        id: { type: integer, description: "Unique record identifier." }
+        name: { type: string, description: "Display name.", example: "Annual Leave" }
+        description: { type: string, nullable: true, description: "Additional explanatory text.", example: "Paid annual leave" }
+        max_days_per_year: { type: integer, description: "Maximum leave days allowed per year." }
+        is_paid: { type: boolean, description: "Whether the leave type is paid." }
+    LeaveAllocation:
+      type: object
+      properties:
+        id: { type: integer, description: "Unique record identifier." }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        leave_type_id: { type: integer, description: "Identifier of the leave type." }
+        allocated_days: { type: integer, description: "Number of leave days allocated." }
+        used_days: { type: integer, description: "Number of allocated leave days already used." }
+        year: { type: integer, description: "Calendar year.", example: 2026 }
+        name: { type: string, description: "Display name.", example: "Annual Leave" }
+        max_days_per_year: { type: integer, description: "Maximum leave days allowed per year." }
+        remaining: { type: integer, description: "Number of allocated leave days still available." }
+    LeaveRequest:
+      type: object
+      properties:
+        id: { type: integer, description: "Unique record identifier." }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        leave_type_id: { type: integer, description: "Identifier of the leave type." }
+        start_date: { type: string, format: date, description: "First date of the leave period.", example: "2026-08-10" }
+        end_date: { type: string, format: date, description: "Last date of the leave period.", example: "2026-08-14" }
+        total_days: { type: integer, description: "Number of working days in the leave request." }
+        reason: { type: string, nullable: true, description: "Reason supplied for the leave request.", example: "Family event" }
+        status: { type: string, enum: [pending, approved, rejected], description: "Current status of the record." }
+        reviewed_by: { type: integer, nullable: true, description: "Identifier of the user who reviewed the request." }
+        reviewed_at: { type: string, format: date-time, nullable: true, description: "Time at which the request was reviewed." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        leave_type_name: { type: string, description: "Display name of the leave type." }
+        full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+        reviewer_name: { type: string, nullable: true, description: "Full name of the reviewer." }
+    SalaryStructureRequest:
+      type: object
+      description: Salary values assigned to an employee.
+      required: [employee_id, basic_salary]
+      properties:
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        basic_salary: { type: number, format: double, exclusiveMinimum: true, minimum: 0, description: "Employee base salary before additions and deductions.", example: 250000 }
+        hra_percent: { type: number, format: double, minimum: 0, maximum: 100, default: 40, description: "Housing allowance percentage." }
+        special_allowance: { type: number, format: double, minimum: 0, default: 0, description: "Fixed special-allowance amount." }
+        effective_from: { type: string, format: date, description: "Date from which the salary structure applies.", example: "2026-08-01" }
+    SalaryStructure:
+      description: Persisted salary structure with employee details.
+      allOf:
+        - $ref: '#/components/schemas/SalaryStructureRequest'
+        - type: object
+          description: Database and employee fields added to the salary values.
+          properties:
+            id: { type: integer, description: "Unique record identifier." }
+            created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+            full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+            email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+            department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+            designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+    Payrun:
+      type: object
+      properties:
+        id: { type: integer, description: "Unique record identifier." }
+        month: { type: integer, minimum: 1, maximum: 12, description: "Calendar month number from 1 to 12.", example: 7 }
+        year: { type: integer, description: "Calendar year.", example: 2026 }
+        status: { type: string, enum: [draft, finalized], description: "Current status of the record." }
+        generated_by: { type: integer, nullable: true, description: "Identifier of the user who generated the pay run." }
+        generated_at: { type: string, format: date-time, description: "Time at which the pay run was generated." }
+        generated_by_name: { type: string, nullable: true, description: "Full name of the pay-run generator." }
+        total_cost: { type: string, nullable: true, description: PostgreSQL numeric aggregate }
+        employee_count: { type: string, description: PostgreSQL count value }
+    Payslip:
+      type: object
+      properties:
+        id: { type: integer, description: "Unique record identifier." }
+        payrun_id: { type: integer, description: "Identifier of the pay run." }
+        employee_id: { type: integer, description: "Identifier of the employee." }
+        working_days: { type: integer, description: "Number of working days in the pay period." }
+        present_days: { type: string, description: PostgreSQL numeric value }
+        leaves_approved: { type: integer, description: "Number of approved leave days." }
+        unpaid_leave_days: { type: integer, description: "Number of unpaid leave days." }
+        unpaid_deduction: { type: string, description: "Salary amount deducted for unpaid leave." }
+        basic: { type: string, description: "Effective basic salary for the pay period." }
+        hra: { type: string, description: "Housing allowance amount." }
+        special_allowance: { type: string, description: "Fixed special-allowance amount." }
+        gross_salary: { type: string, description: "Total earnings before deductions." }
+        pf_employee: { type: string, description: "Employee provident-fund contribution." }
+        pf_employer: { type: string, description: "Employer provident-fund contribution." }
+        professional_tax: { type: string, description: "Professional tax deducted." }
+        total_deductions: { type: string, description: "Combined deductions for the pay period." }
+        net_pay: { type: string, description: "Final salary after deductions." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        month: { type: integer, description: "Calendar month number from 1 to 12.", example: 7 }
+        year: { type: integer, description: "Calendar year.", example: 2026 }
+        payrun_status: { type: string, description: "Status of the associated pay run." }
+        full_name: { type: string, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, description: "Email address of the user.", example: "ada@example.com" }
+        department: { type: string, nullable: true, description: "Organizational department.", example: "Engineering" }
+        designation: { type: string, nullable: true, description: "Employee job title.", example: "Software Engineer" }
+        date_joined: { type: string, format: date, description: "Date the employee joined the organization.", example: "2026-01-15" }
+        user_id: { type: integer, description: "Identifier of the associated user." }
+    Notification:
+      type: object
+      properties:
+        id: { type: integer, description: "Unique record identifier." }
+        user_id: { type: integer, description: "Identifier of the associated user." }
+        title: { type: string, description: "Notification title.", example: "Leave request approved" }
+        message: { type: string, description: "Notification content.", example: "Today's attendance summary is available" }
+        type: { type: string, description: "Category of the returned record." }
+        is_read: { type: boolean, description: "Whether the notification has been read." }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+    Settings:
+      type: object
+      additionalProperties: true
+      description: Dynamic key/value application settings.
+      example:
+        company_name: EmPay Ltd
+        company_email: hr@example.com
+        timezone: Africa/Lagos
+        work_start_time: '09:00'
+        work_end_time: '17:00'
+    AuditLog:
+      type: object
+      properties:
+        id: { type: integer, format: int64, description: "Unique record identifier." }
+        user_id: { type: integer, description: "Identifier of the associated user." }
+        action: { type: string, description: "Action performed by the operation or recorded audit event.", example: "LEAVE_APPROVED" }
+        target_id: { type: integer, format: int64, description: "Identifier of the affected resource." }
+        target_type: { type: string, description: "Type of resource affected by the action.", example: "LEAVE_REQUEST" }
+        metadata: { type: object, nullable: true, additionalProperties: true, description: "Additional structured details about the audited action." }
+        ip_address: { type: string, description: "Client IP address recorded for the action.", example: "203.0.113.10" }
+        created_at: { type: string, format: date-time, description: "Time at which the record was created." }
+        full_name: { type: string, nullable: true, description: "Full name of the user.", example: "Ada Okafor" }
+        email: { type: string, format: email, nullable: true, description: "Email address of the user.", example: "ada@example.com" }
