@@ -35,7 +35,7 @@ export default function Profile() {
       <div className="glass-card rounded-xl p-6">
         <div className="flex items-center gap-6 mb-8">
           <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-            {user?.full_name?.charAt(0)?.toUpperCase()}
+            {user?.full_name?[0]?.toUpperCase()}
           </div>
           <div>
             <h2 className="text-xl font-bold text-on-surface">{user?.full_name}</h2>
