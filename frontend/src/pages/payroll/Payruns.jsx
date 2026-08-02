@@ -71,7 +71,7 @@ export default function Payruns() {
           <tbody>
             {loading ? Array.from({length:3}).map((_,i) => <tr key={i}>{Array.from({length:6}).map((_,j)=><td key={j}><div className="skeleton h-4 w-20 rounded"/></td>)}</tr>) :
             payruns.length === 0 ? <tr><td colSpan={6} className="text-center py-12 text-on-surface-variant">No payruns yet</td></tr> :
-            payruns.map(p => (
+            (payruns ?? []).map(p => (
               <tr key={p.id}>
                 <td className="font-medium text-on-surface">{months[p.month - 1]} {p.year}</td>
                 <td><span className={`chip-${p.status} inline-flex px-2 py-0.5 rounded-full text-xs font-semibold capitalize`}>{p.status}</span></td>
@@ -95,13 +95,13 @@ export default function Payruns() {
             <form onSubmit={handleGenerate} className="space-y-4">
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Month</label>
-                <select value={genForm.month} onChange={e => setGenForm(f => ({ ...f, month: parseInt(e.target.value) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl">
+                <select value={genForm.month} onChange={e => setGenForm(f => ({ ...f, month: parseInt(e.target.value, 10) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl">
                   {months.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Year</label>
-                <input type="number" value={genForm.year} onChange={e => setGenForm(f => ({ ...f, year: parseInt(e.target.value) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" />
+                <input type="number" value={genForm.year} onChange={e => setGenForm(f => ({ ...f, year: parseInt(e.target.value, 10) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" />
               </div>
               <button type="submit" disabled={generating} className="btn-glow w-full py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50" style={{ background: 'linear-gradient(135deg,#4d8eff,#571bc1)' }}>
                 {generating ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Generate'}
