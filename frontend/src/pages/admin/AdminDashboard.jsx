@@ -79,14 +79,14 @@ export default function AdminDashboard() {
 
   const attendanceTrend = (data?.attendance_trend || []).map(d => ({
     date: new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' }),
-    Present: parseInt(d.present),
-    Absent: parseInt(d.absent),
-    'On Leave': parseInt(d.on_leave),
+    Present: parseInt(d.present, 10),
+    Absent: parseInt(d.absent, 10),
+    'On Leave': parseInt(d.on_leave, 10),
   }));
 
   const deptData = (data?.department_headcount || []).map(d => ({
     name: d.department,
-    value: parseInt(d.count),
+    value: parseInt(d.count, 10),
   }));
 
   return (
@@ -124,7 +124,7 @@ export default function AdminDashboard() {
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie data={deptData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value">
-                {deptData.map((_, idx) => (
+                {(deptData ?? []).map((_, idx) => (
                   <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
                 ))}
               </Pie>
