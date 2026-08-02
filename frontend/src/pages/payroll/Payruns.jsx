@@ -95,13 +95,13 @@ export default function Payruns() {
             <form onSubmit={handleGenerate} className="space-y-4">
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Month</label>
-                <select value={genForm.month} onChange={e => setGenForm(f => ({ ...f, month: parseInt(e.target.value) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl">
+                <select value={genForm.month} onChange={e => setGenForm(f => ({ ...f, month: parseInt(e.target.value, 10) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl">
                   {months.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Year</label>
-                <input type="number" value={genForm.year} onChange={e => setGenForm(f => ({ ...f, year: parseInt(e.target.value) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" />
+                <input type="number" value={genForm.year} onChange={e => setGenForm(f => ({ ...f, year: parseInt(e.target.value, 10) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl" />
               </div>
               <button type="submit" disabled={generating} className="btn-glow w-full py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50" style={{ background: 'linear-gradient(135deg,#4d8eff,#571bc1)' }}>
                 {generating ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Generate'}
