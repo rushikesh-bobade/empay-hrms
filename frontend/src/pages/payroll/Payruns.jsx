@@ -71,7 +71,7 @@ export default function Payruns() {
           <tbody>
             {loading ? Array.from({length:3}).map((_,i) => <tr key={i}>{Array.from({length:6}).map((_,j)=><td key={j}><div className="skeleton h-4 w-20 rounded"/></td>)}</tr>) :
             payruns.length === 0 ? <tr><td colSpan={6} className="text-center py-12 text-on-surface-variant">No payruns yet</td></tr> :
-            payruns.map(p => (
+            (payruns ?? []).map(p => (
               <tr key={p.id}>
                 <td className="font-medium text-on-surface">{months[p.month - 1]} {p.year}</td>
                 <td><span className={`chip-${p.status} inline-flex px-2 py-0.5 rounded-full text-xs font-semibold capitalize`}>{p.status}</span></td>

@@ -31,7 +31,7 @@ export default function HRDashboard() {
           {(data?.on_leave_today || []).length === 0 ? (
             <p className="text-sm text-on-surface-variant py-8 text-center">No employees on leave today</p>
           ) : (
-            <div className="space-y-3">{data.on_leave_today.map(emp => (
+            <div className="space-y-3">{data.(on_leave_today ?? []).map(emp => (
               <div key={emp.id} className="flex items-center gap-3 p-3 rounded-xl bg-[var(--table-row-hover)]">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0" style={{ background: 'linear-gradient(135deg, #4d8eff, #571bc1)', color: 'white' }}>
                   {emp.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2)}
