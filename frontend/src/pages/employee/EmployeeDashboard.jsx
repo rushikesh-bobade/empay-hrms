@@ -86,7 +86,7 @@ export default function EmployeeDashboard() {
     const records = (data?.recent_attendance || []).slice().reverse();
     const today = new Date().toLocaleDateString('en-CA');
 
-    const mapped = records.map(d => {
+    const mapped = (records ?? []).map(d => {
       const dateStr = new Date(d.date).toLocaleDateString('en-CA');
       const isToday = dateStr === today;
 
@@ -173,8 +173,8 @@ export default function EmployeeDashboard() {
             </button>
           </div>
         </div>
-        <StatCard title="Present Days" value={parseInt(att.present) || 0} icon={CalendarCheck} color="success" subtitle={`of ${att.total_working_days || 0} days`} />
-        <StatCard title="On Leave" value={parseInt(att.on_leave) || 0} icon={CalendarOff} color="primary" />
+        <StatCard title="Present Days" value={parseInt(att.present, 10) || 0} icon={CalendarCheck} color="success" subtitle={`of ${att.total_working_days || 0} days`} />
+        <StatCard title="On Leave" value={parseInt(att.on_leave, 10) || 0} icon={CalendarOff} color="primary" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
