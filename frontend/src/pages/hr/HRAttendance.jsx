@@ -29,12 +29,12 @@ export default function HRAttendance() {
     <div className="space-y-6">
       <PageHeader title="Attendance Dashboard" subtitle="Track daily presence, hours, and history.">
         <div className="flex items-center gap-2">
-          <select value={month} onChange={e => setMonth(parseInt(e.target.value))} className="input-glass px-3 py-2 text-sm rounded-xl">
+          <select value={month} onChange={e => setMonth(parseInt(e.target.value, 10))} className="input-glass px-3 py-2 text-sm rounded-xl">
             {Array.from({ length: 12 }, (_, i) => (
               <option key={i + 1} value={i + 1}>{new Date(2024, i).toLocaleString('default', { month: 'long' })}</option>
             ))}
           </select>
-          <input type="number" value={year} onChange={e => setYear(parseInt(e.target.value))} className="input-glass w-24 px-3 py-2 text-sm rounded-xl" />
+          <input type="number" value={year} onChange={e => setYear(parseInt(e.target.value, 10))} className="input-glass w-24 px-3 py-2 text-sm rounded-xl" />
         </div>
       </PageHeader>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -49,7 +49,7 @@ export default function HRAttendance() {
           <tbody>
             {loading ? Array.from({length:8}).map((_,i) => <tr key={i}>{Array.from({length:5}).map((_,j) => <td key={j}><div className="skeleton h-4 w-20 rounded"/></td>)}</tr>) :
             records.length === 0 ? <tr><td colSpan={5} className="text-center py-12 text-on-surface-variant">No attendance records</td></tr> :
-            records.map(r => (
+            (records ?? []).map(r => (
               <tr key={r.id}>
                 <td><div className="flex items-center gap-2"><span className="font-medium text-on-surface">{r.full_name}</span><span className="text-xs text-on-surface-variant">({r.department})</span></div></td>
                 <td>{new Date(r.date).toLocaleDateString()}</td>
