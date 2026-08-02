@@ -86,7 +86,7 @@ export default function EmployeeDashboard() {
     const records = (data?.recent_attendance || []).slice().reverse();
     const today = new Date().toLocaleDateString('en-CA');
 
-    const mapped = records.map(d => {
+    const mapped = (records ?? []).map(d => {
       const dateStr = new Date(d.date).toLocaleDateString('en-CA');
       const isToday = dateStr === today;
 
