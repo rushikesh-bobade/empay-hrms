@@ -49,7 +49,7 @@ export default function HRAttendance() {
           <tbody>
             {loading ? Array.from({length:8}).map((_,i) => <tr key={i}>{Array.from({length:5}).map((_,j) => <td key={j}><div className="skeleton h-4 w-20 rounded"/></td>)}</tr>) :
             records.length === 0 ? <tr><td colSpan={5} className="text-center py-12 text-on-surface-variant">No attendance records</td></tr> :
-            records.map(r => (
+            (records ?? []).map(r => (
               <tr key={r.id}>
                 <td><div className="flex items-center gap-2"><span className="font-medium text-on-surface">{r.full_name}</span><span className="text-xs text-on-surface-variant">({r.department})</span></div></td>
                 <td>{new Date(r.date).toLocaleDateString()}</td>

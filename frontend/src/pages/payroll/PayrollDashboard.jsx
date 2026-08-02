@@ -79,7 +79,7 @@ export default function PayrollDashboard() {
               <div>
                 <label className="block text-xs uppercase tracking-widest font-semibold text-on-surface-variant mb-1.5">Month</label>
                 <select value={genForm.month} onChange={e => setGenForm(f => ({ ...f, month: parseInt(e.target.value, 10) }))} className="input-glass w-full px-3 py-2 text-sm rounded-xl">
-                  {months.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
+                  {(months ?? []).map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
                 </select>
               </div>
               <div>
