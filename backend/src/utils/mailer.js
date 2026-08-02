@@ -17,7 +17,7 @@ const initMailer = async () => {
       transportConfig.service = 'gmail';
     } else {
       transportConfig.host = process.env.SMTP_HOST || 'smtp.gmail.com';
-      transportConfig.port = parseInt(process.env.SMTP_PORT) || 587;
+      transportConfig.port = parseInt(process.env.SMTP_PORT, 10) || 587;
       transportConfig.secure = process.env.SMTP_SECURE === 'true';
     }
 
