@@ -71,7 +71,7 @@ const generatePayrun = async (req, res) => {
     if (!month || !year) {
       return res.status(400).json({ success: false, message: 'Month and year are required' });
     }
-    const data = await payrollService.generatePayrun(parseInt(month), parseInt(year), req.user.id);
+    const data = await payrollService.generatePayrun(parseInt(month, 10), parseInt(year), req.user.id);
     res.json({ success: true, message: 'Payrun generated successfully', data });
   } catch (error) {
     res.status(error.status || 500).json({ success: false, message: error.message });

@@ -173,7 +173,7 @@ export default function EmployeeDashboard() {
             </button>
           </div>
         </div>
-        <StatCard title="Present Days" value={parseInt(att.present) || 0} icon={CalendarCheck} color="success" subtitle={`of ${att.total_working_days || 0} days`} />
+        <StatCard title="Present Days" value={parseInt(att.present, 10) || 0} icon={CalendarCheck} color="success" subtitle={`of ${att.total_working_days || 0} days`} />
         <StatCard title="On Leave" value={parseInt(att.on_leave) || 0} icon={CalendarOff} color="primary" />
       </div>
 
